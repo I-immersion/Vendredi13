@@ -219,7 +219,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.8</div>
+<div id="version-badge">CLIENT v2.8.1</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -611,19 +611,24 @@ async function affecterEquipe(){
 function afficherCarte(){
   const eq   = EQUIPES[equipeKey];
   const role = ROLES.find(r=>r.id===roleKey);
+  if(!eq || !role){ console.error('Equipe ou role introuvable', equipeKey, roleKey); return; }
+
   document.documentElement.style.setProperty('--eq-col',  eq.col);
   document.documentElement.style.setProperty('--eq-glow', eq.glow);
-  document.getElementById('c-emoji').textContent      = eq.emoji;
-  document.getElementById('c-equipe').textContent     = eq.nom;
-  document.getElementById('c-eq-sousnom').textContent = eq.sousnom;
-  document.getElementById('c-eq-desc').textContent    = eq.desc;
-  document.getElementById('c-role').textContent       = role.emoji+' '+role.nom;
-  document.getElementById('c-role-desc').textContent  = role.desc;
-  document.getElementById('c-prenom').textContent     = prenom;
-  document.getElementById('att-role-badge').textContent    = role.emoji+' '+role.nom;
-  document.getElementById('att-prenom').textContent        = prenom;
-  document.getElementById('att-groupe').textContent        = eq.nom;
-  document.getElementById('att-groupe-sousnom').textContent = eq.sousnom;
+
+  const set = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+  set('c-emoji',            eq.emoji);
+  set('c-equipe',           eq.nom);
+  set('c-eq-sousnom',       eq.sousnom);
+  set('c-eq-desc',          eq.desc);
+  set('c-role',             role.emoji+' '+role.nom);
+  set('c-role-desc',        role.desc);
+  set('c-prenom',           prenom);
+  set('att-role-badge',     role.emoji+' '+role.nom);
+  set('att-prenom',         prenom);
+  set('att-groupe',         eq.nom);
+  set('att-groupe-sousnom', eq.sousnom);
+
   showPage('pg-attente');
   listenAdmin();
 }
