@@ -70,6 +70,7 @@ fi
 # ── Git push ──
 echo ""
 echo -e "🚀 Envoi sur GitHub..."
+git pull origin main --rebase 2>&1
 git add -A
 git commit -m "[${CLIENT_VERSION}/${ADMIN_VERSION}] ${COMMIT_MSG}"
 PUSH_RESULT=$(git push origin main 2>&1)
