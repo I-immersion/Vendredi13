@@ -2,498 +2,835 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>LUMIIA · V13 Admin v1.2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMIIA · Vendredi 13 · Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+/* ════════════════════════════════════════════════
+   RESET & VARIABLES
+════════════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --noir:#09080f;--surface:#13111f;--border:rgba(255,255,255,0.09);
-  --texte:#f0e8f8;--texte-dim:rgba(240,232,248,0.45);--or:#ffd700;
-  --intuitif:#a78bfa;--stratege:#38bdf8;--chanceux:#4ade80;--temeraire:#fb923c;
+  --noir:       #09080f;
+  --surface:    rgba(255,255,255,0.06);
+  --surface2:   rgba(255,255,255,0.10);
+  --border:     rgba(255,255,255,0.1);
+  --texte:      #f0e8f8;
+  --texte-dim:  rgba(240,232,248,0.5);
+  --or:         #ffd700;
+  --intuitif:   #a78bfa;
+  --stratege:   #38bdf8;
+  --chanceux:   #4ade80;
+  --temeraire:  #fb923c;
+  --danger:     #ff4444;
+  --success:    #4ade80;
 }
-html,body{min-height:100%;background:var(--noir);color:var(--texte);font-family:'Nunito',sans-serif;font-weight:400;}
-#bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(100,50,200,0.2) 0%,transparent 60%),var(--noir);}
-
-/* TOPBAR */
-#topbar{position:sticky;top:0;z-index:50;background:rgba(9,8,15,.97);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(10px);}
-.logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.2em;color:var(--or);}
-.sep{width:1px;height:18px;background:var(--border);}
-.toptitle{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--texte-dim);}
-.topright{margin-left:auto;display:flex;align-items:center;gap:8px;}
-.livebadge{display:flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--border);border-radius:50px;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--texte-dim);}
-.livebadge b{color:var(--or);}
-.livedot{width:6px;height:6px;border-radius:50%;background:var(--or);animation:pdot 1.5s ease-in-out infinite;}
-@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
-
-main{max-width:500px;margin:0 auto;padding:16px 14px 80px;position:relative;z-index:10;}
-
-/* SECTION */
-.sec{margin-bottom:18px;}
-.sec-title{font-size:.56rem;letter-spacing:.28em;text-transform:uppercase;color:var(--texte-dim);margin-bottom:8px;}
-
-/* CARD */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;position:relative;overflow:hidden;}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);}
-
-/* ÉQUIPES */
-.equipes-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.eq-card{border-radius:10px;padding:12px;border:2px solid transparent;transition:border-color .2s;}
-.eq-card.intuitif{background:rgba(167,139,250,.08);border-color:rgba(167,139,250,.3);}
-.eq-card.stratege{background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.3);}
-.eq-card.chanceux{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.3);}
-.eq-card.temeraire{background:rgba(251,146,60,.08);border-color:rgba(251,146,60,.3);}
-.eq-emoji{font-size:1.6rem;line-height:1;}
-.eq-nom{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.06em;margin-top:2px;}
-.eq-nom.intuitif{color:var(--intuitif);}
-.eq-nom.stratege{color:var(--stratege);}
-.eq-nom.chanceux{color:var(--chanceux);}
-.eq-nom.temeraire{color:var(--temeraire);}
-.eq-count{font-size:.65rem;color:var(--texte-dim);font-weight:700;margin-top:2px;}
-.eq-roles{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
-.role-pill{padding:2px 8px;border-radius:50px;background:rgba(255,255,255,.07);font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;color:var(--texte-dim);}
-
-/* BOUTONS */
-.btn{width:100%;padding:13px;border:none;border-radius:8px;font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.12em;cursor:pointer;transition:all .2s;margin-bottom:6px;}
-.btn:last-child{margin-bottom:0;}
-.btn:active{transform:scale(.97);}
-.btn:disabled{opacity:.35;cursor:not-allowed;}
-.btn-or{background:linear-gradient(135deg,var(--or),#ff9f2e);color:#1a0a00;}
-.btn-rouge{background:#ef4444;color:#fff;}
-.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--texte-dim);font-family:'Nunito',sans-serif;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;}
-.btn-ghost:hover{border-color:var(--or);color:var(--or);}
-
-/* ROUE */
-.roue-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;}
-canvas#roue{border-radius:50%;box-shadow:0 0 40px rgba(255,215,0,.15);}
-.roue-result{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.08em;color:var(--or);min-height:2rem;text-align:center;}
-
-/* MISSIONS */
-.missions-list{display:flex;flex-direction:column;gap:6px;}
-.mission-item{
-  padding:10px 14px;
-  background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;
-  cursor:pointer;transition:all .2s;
-  display:flex;align-items:center;gap:10px;
+html,body{
+  height:100%; overflow:hidden;
+  background:var(--noir);
+  color:var(--texte);
+  font-family:'Nunito',sans-serif;
 }
-.mission-item:active{background:rgba(255,215,0,.08);border-color:rgba(255,215,0,.3);}
-.mi-role{font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;padding:2px 8px;border-radius:50px;border:1px solid var(--border);color:var(--texte-dim);flex-shrink:0;}
-.mi-titre{font-weight:700;font-size:.88rem;flex:1;}
-.mi-arrow{color:var(--texte-dim);font-size:.8rem;}
 
-/* PANEL MISSION */
-.mission-panel{display:none;background:rgba(255,215,0,.05);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:14px;margin-top:8px;}
-.mission-panel.on{display:block;}
-.mp-titre{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.05em;color:var(--or);margin-bottom:4px;}
-.mp-desc{font-size:.8rem;color:var(--texte-dim);line-height:1.6;margin-bottom:10px;}
-.duree-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
-.duree-lbl{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--texte-dim);}
-.step-btn{width:32px;height:32px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--texte);font-size:1rem;cursor:pointer;}
-.step-btn:active{background:rgba(255,215,0,.1);}
-.duree-val{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;min-width:36px;text-align:center;}
+/* ════════════════════════════════════════════════
+   LAYOUT GRAND ÉCRAN 16/9
+   ┌─────────────────────────────────────────────┐
+   │  TOPBAR : logo | scores équipes | stats     │
+   ├──────────┬───────────────────┬──────────────┤
+   │ JOUEURS  │   ZONE CENTRALE   │  MISSIONS    │
+   │ (liste)  │ slot+roue+chrono  │  (liste)     │
+   └──────────┴───────────────────┴──────────────┘
+════════════════════════════════════════════════ */
+body{ display:flex; flex-direction:column; }
 
-/* VOTE LIVE */
-.vote-live{display:flex;flex-direction:column;gap:8px;}
-.vl-stat{display:flex;align-items:center;gap:8px;font-size:.82rem;}
-.vl-label{flex:1;color:var(--texte-dim);font-weight:600;}
-.vl-count{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--or);min-width:32px;text-align:right;}
-.vl-bar-wrap{width:100%;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin-top:-4px;}
-.vl-bar{height:100%;background:linear-gradient(90deg,var(--or),#ff9f2e);border-radius:3px;transition:width .3s ease;}
+/* ── TOPBAR ── */
+#topbar{
+  height:72px; flex-shrink:0;
+  display:flex; align-items:center; gap:16px;
+  padding:0 20px;
+  background:rgba(0,0,0,.4);
+  border-bottom:1px solid var(--border);
+}
+.logo-admin{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem; letter-spacing:.35em;
+  color:rgba(255,255,255,.4);
+  white-space:nowrap;
+}
+.logo-admin span{ color:var(--or); }
+.topbar-sep{ width:1px; height:40px; background:var(--border); flex-shrink:0; }
+.scores-equipes{ display:flex; gap:12px; flex:1; }
+.score-eq{
+  display:flex; align-items:center; gap:8px;
+  padding:6px 14px;
+  background:var(--surface); border-radius:50px;
+  border:1px solid var(--border);
+}
+.score-eq-emoji{ font-size:1.1rem; }
+.score-eq-nom{ font-family:'Bebas Neue',sans-serif; font-size:.9rem; letter-spacing:.06em; }
+.score-eq-pts{ font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:var(--or); margin-left:4px; }
+.topbar-stats{ display:flex; gap:16px; align-items:center; flex-shrink:0; }
+.stat-pill{ font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--texte-dim); }
+.stat-pill b{ color:var(--texte); font-size:.9rem; }
+.btn-reset{
+  padding:6px 14px; background:transparent;
+  border:1px solid rgba(255,68,68,.4); border-radius:50px;
+  color:rgba(255,68,68,.7); font-size:.65rem; letter-spacing:.1em;
+  text-transform:uppercase; cursor:pointer; transition:all .2s;
+}
+.btn-reset:hover{ background:rgba(255,68,68,.1); color:var(--danger); }
 
-.vote-pct-big{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--or);text-align:center;text-shadow:0 0 20px rgba(255,215,0,.4);line-height:1;}
-.vote-seuil{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--texte-dim);text-align:center;}
-.vote-result-badge{margin-top:8px;padding:10px;border-radius:8px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.08em;display:none;}
-.vote-result-badge.gagne{display:block;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);color:#4ade80;}
-.vote-result-badge.perdu{display:block;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#ef4444;}
+/* ── MAIN 3 COLONNES ── */
+#main{ flex:1; display:grid; grid-template-columns:280px 1fr 300px; overflow:hidden; }
 
-/* RÔLES CONFIG */
-.roles-config{display:flex;align-items:center;gap:10px;}
-.rc-lbl{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--texte-dim);flex:1;}
-.rc-val{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--or);min-width:24px;text-align:center;}
-.rc-auto{font-size:.58rem;color:var(--texte-dim);font-style:italic;}
+/* ════════════════════════════════════════════════
+   COLONNE GAUCHE — LISTE JOUEURS
+════════════════════════════════════════════════ */
+#col-joueurs{
+  border-right:1px solid var(--border);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+}
+.col-header{
+  padding:12px 16px; border-bottom:1px solid var(--border);
+  font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:.1em;
+  color:var(--texte-dim); flex-shrink:0;
+}
+#joueurs-list{
+  flex:1; overflow-y:auto; padding:8px;
+  display:flex; flex-direction:column; gap:6px;
+}
+#joueurs-list::-webkit-scrollbar{ width:4px; }
+#joueurs-list::-webkit-scrollbar-track{ background:transparent; }
+#joueurs-list::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.15); border-radius:2px; }
 
-/* CHRONO MISSION */
-.chrono-mission{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--or);text-align:center;min-height:3rem;}
-.chrono-mission.urgent{color:#ef4444;animation:blink .5s step-end infinite;}
+.joueur-card{
+  padding:10px 12px; border-radius:12px;
+  background:var(--surface); border:1px solid var(--border);
+  display:flex; align-items:center; gap:10px;
+  transition:all .3s; cursor:default;
+}
+.joueur-card.performer{
+  background:rgba(255,215,0,.12);
+  border-color:var(--or);
+  box-shadow:0 0 20px rgba(255,215,0,.2);
+  animation:glow-pulse 1.5s ease-in-out infinite;
+}
+@keyframes glow-pulse{0%,100%{box-shadow:0 0 10px rgba(255,215,0,.2)}50%{box-shadow:0 0 30px rgba(255,215,0,.4)}}
+.joueur-eq-dot{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.joueur-nom{ font-weight:800; font-size:.88rem; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.joueur-role{ font-size:.7rem; color:var(--texte-dim); }
+.joueur-pts{ font-family:'Bebas Neue',sans-serif; font-size:.85rem; color:var(--or); }
+.joueur-crown{ font-size:.9rem; }
+.joueur-deja{ opacity:.5; text-decoration:line-through; }
+
+/* ════════════════════════════════════════════════
+   COLONNE CENTRALE — ZONE DE JEU
+════════════════════════════════════════════════ */
+#col-centre{
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:flex-start; padding:20px;
+  gap:16px; overflow-y:auto;
+}
+
+/* ── Slot machine tirage performer ── */
+#slot-wrap{
+  width:100%; max-width:500px;
+  background:var(--surface); border:1px solid var(--border); border-radius:20px;
+  padding:16px 20px; text-align:center;
+}
+.slot-label{ font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:var(--texte-dim); margin-bottom:10px; }
+#slot-display{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(1.8rem,3vw,2.8rem);
+  letter-spacing:.04em; color:var(--texte);
+  min-height:56px; display:flex; align-items:center; justify-content:center;
+  border:2px solid var(--border); border-radius:12px;
+  background:rgba(0,0,0,.3); padding:8px 20px;
+  overflow:hidden; position:relative;
+}
+#slot-display.spinning{ color:var(--or); }
+#slot-display.revealed{
+  color:var(--or);
+  border-color:var(--or);
+  box-shadow:0 0 30px rgba(255,215,0,.3);
+  animation:reveal-pop .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes reveal-pop{ from{transform:scale(.8);opacity:0} to{transform:none;opacity:1} }
+.btn-tirer{
+  margin-top:12px; width:100%;
+  padding:14px; background:linear-gradient(135deg,var(--or),#ff9f2e);
+  border:none; border-radius:50px; color:#1a0a00;
+  font-family:'Bebas Neue',sans-serif; font-size:1.1rem; letter-spacing:.1em;
+  cursor:pointer; transition:all .2s; box-shadow:0 4px 20px rgba(255,160,0,.3);
+}
+.btn-tirer:hover{ transform:translateY(-1px); box-shadow:0 6px 24px rgba(255,160,0,.4); }
+.btn-tirer:active{ transform:scale(.97); }
+.btn-tirer:disabled{ opacity:.4; cursor:default; transform:none; }
+
+/* ── Roue des missions ── */
+#roue-wrap{
+  width:100%; max-width:500px;
+  background:var(--surface); border:1px solid var(--border); border-radius:20px;
+  padding:16px 20px; text-align:center;
+}
+.roue-label{ font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:var(--texte-dim); margin-bottom:10px; }
+#roue-canvas{ border-radius:50%; display:block; margin:0 auto; box-shadow:0 0 30px rgba(255,215,0,.15); }
+.btn-roue{
+  margin-top:12px; width:100%;
+  padding:14px; background:linear-gradient(135deg,#a78bfa,#7c3aed);
+  border:none; border-radius:50px; color:#fff;
+  font-family:'Bebas Neue',sans-serif; font-size:1.1rem; letter-spacing:.1em;
+  cursor:pointer; transition:all .2s; box-shadow:0 4px 20px rgba(124,58,237,.3);
+}
+.btn-roue:hover{ transform:translateY(-1px); }
+.btn-roue:active{ transform:scale(.97); }
+.btn-roue:disabled{ opacity:.4; cursor:default; transform:none; }
+#mission-result{
+  margin-top:12px; padding:12px 16px;
+  background:rgba(255,215,0,.08); border:1px solid rgba(255,215,0,.3);
+  border-radius:12px; display:none;
+}
+#mission-result-titre{ font-family:'Bebas Neue',sans-serif; font-size:1.2rem; letter-spacing:.04em; color:var(--or); }
+#mission-result-desc{ font-size:.82rem; color:var(--texte-dim); margin-top:4px; line-height:1.5; }
+
+/* ── Chrono ── */
+#chrono-wrap{
+  width:100%; max-width:500px;
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+}
+#chrono-display{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(5rem,10vw,8rem); line-height:1;
+  color:var(--or); text-shadow:0 0 40px rgba(255,215,0,.4);
+  display:none;
+}
+#chrono-display.urgent{ color:var(--danger); animation:blink .5s step-end infinite; text-shadow:0 0 40px rgba(255,68,68,.4); }
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.btn-lancer{
+  width:100%; max-width:500px;
+  padding:14px; background:linear-gradient(135deg,#4ade80,#16a34a);
+  border:none; border-radius:50px; color:#0a1a0a;
+  font-family:'Bebas Neue',sans-serif; font-size:1.1rem; letter-spacing:.1em;
+  cursor:pointer; transition:all .2s; box-shadow:0 4px 20px rgba(74,222,128,.3);
+  display:none;
+}
+.btn-lancer:disabled{ opacity:.4; cursor:default; }
+
+/* ── Résultats vote ── */
+#vote-result-wrap{
+  width:100%; max-width:500px;
+  background:var(--surface); border:1px solid var(--border); border-radius:20px;
+  padding:16px 20px; display:none;
+}
+.vr-titre{ font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:.1em; color:var(--texte-dim); margin-bottom:10px; }
+.vr-nb{ font-size:.75rem; color:var(--texte-dim); margin-bottom:8px; }
+.vr-barre-wrap{ background:rgba(255,255,255,.06); border-radius:50px; height:20px; overflow:hidden; margin-bottom:6px; }
+.vr-barre{ height:100%; border-radius:50px; background:linear-gradient(90deg,var(--or),#ff9f2e); transition:width 1s ease; width:0%; }
+.vr-score{ font-family:'Bebas Neue',sans-serif; font-size:2rem; color:var(--or); }
+.vr-detail{ font-size:.72rem; color:var(--texte-dim); margin-top:4px; }
+.btn-vote-open{
+  width:100%; padding:12px;
+  background:linear-gradient(135deg,#38bdf8,#0284c7);
+  border:none; border-radius:50px; color:#fff;
+  font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:.1em;
+  cursor:pointer; transition:all .2s; margin-top:10px;
+}
+.btn-vote-close{
+  width:100%; padding:12px;
+  background:var(--surface); border:1px solid var(--border); border-radius:50px; color:var(--texte-dim);
+  font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:.1em;
+  cursor:pointer; transition:all .2s; margin-top:8px;
+}
+
+/* ════════════════════════════════════════════════
+   COLONNE DROITE — MISSIONS
+════════════════════════════════════════════════ */
+#col-missions{
+  border-left:1px solid var(--border);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+#missions-list{
+  flex:1; overflow-y:auto; padding:8px;
+  display:flex; flex-direction:column; gap:6px;
+}
+.mission-item{
+  padding:10px 12px; border-radius:10px;
+  background:var(--surface); border:1px solid var(--border);
+  cursor:pointer; transition:all .2s;
+}
+.mission-item:hover{ background:var(--surface2); border-color:rgba(255,215,0,.3); }
+.mission-item.active{ background:rgba(255,215,0,.1); border-color:var(--or); }
+.mi-titre{ font-weight:800; font-size:.82rem; margin-bottom:3px; }
+.mi-desc{ font-size:.7rem; color:var(--texte-dim); line-height:1.4; }
+.mi-meta{ margin-top:5px; display:flex; gap:8px; }
+.mi-duree{ font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--or); }
+.mi-roles{ font-size:.62rem; color:var(--texte-dim); }
+
+/* ════════════════════════════════════════════════
+   VERSION BADGE
+════════════════════════════════════════════════ */
+#version-badge{ position:fixed; bottom:6px; right:8px; font-size:.5rem; letter-spacing:.15em; opacity:.25; color:#fff; font-family:monospace; z-index:999; }
 </style>
 </head>
 <body>
-<div id="bg"></div>
-<div style="position:fixed;bottom:8px;right:10px;z-index:999;font-size:.55rem;letter-spacing:.15em;opacity:.3;color:#fff;font-family:monospace;">ADMIN v1.2</div>
 
+<!-- ════════════════════════════════════════════
+     TOPBAR
+════════════════════════════════════════════ -->
 <div id="topbar">
-  <div class="logo">V13</div>
-  <div class="sep"></div>
-  <div class="toptitle">Admin · Vendredi 13</div>
-  <div class="topright">
-    <div class="livedot"></div>
-    <div class="livebadge">Inscrits : <b id="nb-inscrits">0</b></div>
+  <div class="logo-admin">LUMIIA <span>·</span> VENDREDI 13 <span>·</span> ADMIN</div>
+  <div class="topbar-sep"></div>
+  <div class="scores-equipes" id="scores-equipes">
+    <!-- généré dynamiquement -->
+  </div>
+  <div class="topbar-sep"></div>
+  <div class="topbar-stats">
+    <div class="stat-pill">Joueurs : <b id="nb-inscrits">0</b></div>
+    <div class="stat-pill">Tours : <b id="nb-tours">0</b></div>
+    <button class="btn-reset" onclick="resetSoiree()">↺ Reset</button>
   </div>
 </div>
 
-<main>
+<!-- ════════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════ -->
+<div id="main">
 
-  <!-- ÉQUIPES -->
-  <div class="sec">
-    <div class="sec-title">Équipes en temps réel</div>
-    <div class="equipes-grid" id="equipes-grid">
-      <!-- généré JS -->
-    </div>
-  </div>
-
-  <!-- CONFIG RÔLES -->
-  <div class="sec">
-    <div class="sec-title">Rôles actifs</div>
-    <div class="card">
-      <div class="roles-config">
-        <div>
-          <div class="rc-lbl">Nombre de rôles</div>
-          <div class="rc-auto" id="rc-auto">Auto selon affluence</div>
-        </div>
-        <button class="step-btn" onclick="stepRoles(-1)">−</button>
-        <div class="rc-val" id="rc-val">3</div>
-        <button class="step-btn" onclick="stepRoles(1)">+</button>
+  <!-- ── Colonne gauche : joueurs ── -->
+  <div id="col-joueurs">
+    <div class="col-header">👥 Joueurs inscrits</div>
+    <div id="joueurs-list">
+      <div style="padding:20px;text-align:center;color:var(--texte-dim);font-size:.8rem;">
+        En attente de joueurs…
       </div>
     </div>
   </div>
 
-  <!-- ROUE DE LA FORTUNE -->
-  <div class="sec">
-    <div class="sec-title">Roue de la fortune</div>
-    <div class="card">
-      <div class="roue-wrap">
-        <canvas id="roue" width="220" height="220"></canvas>
-        <div class="roue-result" id="roue-result">—</div>
-        <button class="btn btn-or" onclick="lancerRoue()">🎰 Tourner la roue</button>
+  <!-- ── Colonne centrale ── -->
+  <div id="col-centre">
+
+    <!-- Slot machine tirage performer -->
+    <div id="slot-wrap">
+      <div class="slot-label">🎰 Tirage du performer</div>
+      <div id="slot-display">— Appuie pour tirer —</div>
+      <button class="btn-tirer" id="btn-tirer" onclick="tirerPerformer()">🎲 Tirer au sort</button>
+    </div>
+
+    <!-- Roue des missions -->
+    <div id="roue-wrap">
+      <div class="roue-label">🎡 Roue des missions</div>
+      <canvas id="roue-canvas" width="220" height="220"></canvas>
+      <div id="mission-result">
+        <div id="mission-result-titre">—</div>
+        <div id="mission-result-desc">—</div>
       </div>
+      <button class="btn-roue" id="btn-roue" onclick="spinRoue()">🎡 Faire tourner la roue</button>
+    </div>
+
+    <!-- Chrono + Lancer -->
+    <div id="chrono-wrap">
+      <div id="chrono-display">20</div>
+      <button class="btn-lancer" id="btn-lancer" onclick="lancerChrono()">▶ Lancer la mission (20s)</button>
+    </div>
+
+    <!-- Résultats vote -->
+    <div id="vote-result-wrap">
+      <div class="vr-titre">🗳️ Résultats du vote</div>
+      <div class="vr-nb" id="vr-nb">0 vote(s)</div>
+      <div class="vr-barre-wrap"><div class="vr-barre" id="vr-barre"></div></div>
+      <div class="vr-score" id="vr-score">—</div>
+      <div class="vr-detail" id="vr-detail"></div>
+      <button class="btn-vote-open" id="btn-vote-open" onclick="ouvrirVote()">📱 Ouvrir le vote sur les téléphones</button>
+      <button class="btn-vote-close" id="btn-vote-close" onclick="fermerVote()" style="display:none">✕ Fermer le vote</button>
+    </div>
+
+  </div>
+
+  <!-- ── Colonne droite : missions ── -->
+  <div id="col-missions">
+    <div class="col-header">⚡ Missions disponibles</div>
+    <div id="missions-list">
+      <!-- généré dynamiquement -->
     </div>
   </div>
 
-  <!-- MISSIONS -->
-  <div class="sec">
-    <div class="sec-title">Lancer une mission</div>
-    <div class="card">
-      <div class="missions-list" id="missions-list"></div>
-      <div class="mission-panel" id="mission-panel">
-        <div class="mp-titre" id="mp-titre">—</div>
-        <div class="mp-desc" id="mp-desc">—</div>
-        <div class="duree-row">
-          <div class="duree-lbl">Durée</div>
-          <button class="step-btn" onclick="stepDuree(-10)">−</button>
-          <div class="duree-val" id="mp-duree">60</div>
-          <span class="duree-lbl">sec</span>
-          <button class="step-btn" onclick="stepDuree(10)">+</button>
-        </div>
-        <div class="chrono-mission" id="chrono-mission"></div>
-        <button class="btn btn-or" id="btn-lancer-mission" onclick="lancerMission()">⚡ Lancer</button>
-        <button class="btn btn-rouge" id="btn-stop-mission" style="display:none" onclick="stopMission()">⏹ Stopper</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- VOTE -->
-  <div class="sec">
-    <div class="sec-title">Vote du public</div>
-    <div class="card">
-      <div style="margin-bottom:10px;">
-        <input id="performer-nom" type="text" placeholder="Nom du performeur…" style="width:100%;padding:10px 14px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;color:var(--texte);font-family:'Nunito',sans-serif;font-size:.95rem;outline:none;">
-      </div>
-      <button class="btn btn-or" id="btn-ouvrir-vote" onclick="ouvrirVote()">🗳️ Ouvrir le vote</button>
-      <button class="btn btn-rouge" id="btn-fermer-vote" style="display:none" onclick="fermerVote()">Fermer le vote</button>
-
-      <div class="vote-live" id="vote-live" style="margin-top:12px;display:none;">
-        <div class="vl-stat">
-          <div class="vl-label">Votes reçus</div>
-          <div class="vl-count" id="vl-nb">0</div>
-        </div>
-        <div class="vote-pct-big" id="vl-pct">—%</div>
-        <div class="vote-seuil">Seuil victoire : <span id="vl-seuil">70%</span></div>
-        <div class="vl-bar-wrap"><div class="vl-bar" id="vl-bar" style="width:0%"></div></div>
-        <div class="vote-result-badge" id="vote-result-badge">—</div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
-          <div style="font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--texte-dim);">Seuil victoire</div>
-          <button class="step-btn" onclick="stepSeuil(-5)">−</button>
-          <div class="duree-val" id="seuil-val" style="font-size:1rem;">70</div>
-          <span style="font-size:.65rem;color:var(--texte-dim);">%</span>
-          <button class="step-btn" onclick="stepSeuil(5)">+</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- RESET -->
-  <div class="sec">
-    <button class="btn btn-ghost" onclick="resetTout()">↺ Réinitialiser la session</button>
-  </div>
-
-</main>
+</div>
+<div id="version-badge">ADMIN v2.0</div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getDatabase, ref, set, get, onValue, remove, push, serverTimestamp }
+import { getDatabase, ref, push, set, remove, onValue, serverTimestamp, get }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
+/* ════════════════════════════════════════════════
+   CONFIG FIREBASE
+════════════════════════════════════════════════ */
 const firebaseConfig = {
-  apiKey: "AIzaSyBPgjVFkzP88qX_hlFUFqL168XONfNIBA4",
-  authDomain: "lumiia-live.firebaseapp.com",
-  databaseURL: "https://lumiia-live-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "lumiia-live",
-  storageBucket: "lumiia-live.appspot.com",
+  apiKey:            "AIzaSyBPgjVFkzP88qX_hlFUFqL168XONfNIBA4",
+  authDomain:        "lumiia-live.firebaseapp.com",
+  databaseURL:       "https://lumiia-live-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:         "lumiia-live",
+  storageBucket:     "lumiia-live.appspot.com",
   messagingSenderId: "823919513931",
-  appId: "1:823919513931:web:6f6f3c7c6d1699457b18ce"
+  appId:             "1:823919513931:web:6f6f3c7c6d1699457b18ce"
 };
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 
-// ── CONFIG ──
+/* ════════════════════════════════════════════════
+   CONFIG ÉQUIPES
+════════════════════════════════════════════════ */
 const EQUIPES = {
-  intuitif: {nom:"L'Intuitif",  emoji:"🔮", col:"var(--intuitif)"},
-  stratege: {nom:"Le Stratège", emoji:"♟️", col:"var(--stratege)"},
-  chanceux: {nom:"Le Chanceux", emoji:"🍀", col:"var(--chanceux)"},
-  temeraire:{nom:"Le Téméraire",emoji:"⚡", col:"var(--temeraire)"},
+  intuitif:  { nom:"L'Intuitif",   emoji:"🔮", col:"#a78bfa" },
+  stratege:  { nom:"Le Stratège",  emoji:"♟️", col:"#38bdf8" },
+  chanceux:  { nom:"Le Chanceux",  emoji:"🍀", col:"#4ade80" },
+  temeraire: { nom:"Le Téméraire", emoji:"⚡", col:"#fb923c" },
 };
-const ROLES_DEF=[
-  {id:"eclaireur", nom:"L'Éclaireur",  emoji:"🔦"},
-  {id:"funambule", nom:"Le Funambule",  emoji:"🎪"},
-  {id:"oracle",    nom:"L'Oracle",      emoji:"🔮"},
-  {id:"fantome",   nom:"Le Fantôme",    emoji:"👻"},
-  {id:"trickster", nom:"Le Trickster",  emoji:"🃏"},
-];
-const ROUE_ITEMS=[
-  "L'Éclaireur 🔦","Le Funambule 🎪","L'Oracle 🔮","Le Fantôme 👻","Le Trickster 🃏",
-  "TOUTE L'ÉQUIPE 🎉","AU HASARD 🎲","DÉFI COLLECTIF ⚡"
-];
-const MISSIONS=[
-  {titre:"Imitation éclair",desc:"Imite la personne de ton choix dans la salle. Tu as 30 secondes.",roles:["eclaireur","funambule"],duree:30},
-  {titre:"La pose légendaire",desc:"Invente et tiens une pose héroïque pendant 20 secondes sans bouger.",roles:["oracle","fantome"],duree:20},
-  {titre:"Le vendeur fou",desc:"Vends en 45 secondes un objet aléatoire de la salle comme si c'était le plus précieux du monde.",roles:["trickster","eclaireur"],duree:45},
-  {titre:"La prophétie",desc:"Annonce la grande prophétie de la soirée. Elle doit commencer par 'Ce soir…'",roles:["oracle"],duree:40},
-  {titre:"Le mime express",desc:"Mime un film connu. Ton équipe peut deviner. Les autres équipes doivent se taire.",roles:["funambule","fantome"],duree:45},
-  {titre:"Le discours de 30 secondes",desc:"Donne un discours passionné sur n'importe quel sujet ridicule.",roles:["eclaireur","trickster"],duree:30},
-  {titre:"La danse du destin",desc:"Invente et exécute ta propre 'Danse du Vendredi 13' pendant 20 secondes.",roles:["funambule"],duree:20},
-  {titre:"Le sosie vocal",desc:"Imite la voix de quelqu'un de célèbre et dis une phrase du soir.",roles:["trickster","oracle"],duree:30},
-  {titre:"Photo de groupe instantanée",desc:"Convaincs 3 personnes de faire une photo de groupe avec toi en 30 secondes.",roles:["fantome","eclaireur"],duree:30},
-  {titre:"DÉFI D'ÉQUIPE : La pyramide",desc:"Toute l'équipe doit former une pyramide humaine le plus vite possible.",roles:["all"],duree:60},
+
+/* ════════════════════════════════════════════════
+   CONFIG RÔLES
+════════════════════════════════════════════════ */
+const ROLES_DEF = [
+  { id:"eclaireur",  nom:"L'Éclaireur",  emoji:"🔦" },
+  { id:"funambule",  nom:"Le Funambule",  emoji:"🎪" },
+  { id:"oracle",     nom:"L'Oracle",      emoji:"🔮" },
+  { id:"fantome",    nom:"Le Fantôme",    emoji:"👻" },
+  { id:"trickster",  nom:"Le Trickster",  emoji:"🃏" },
 ];
 
-// ── STATE ──
-let nbRoles=3,missionSelectee=null,missionDuree=60,missionChrono=null,seuilVote=70;
-let voteOuvert=false;
+/* ════════════════════════════════════════════════
+   CONFIG MISSIONS
+   → Modifier ICI pour changer les missions
+   → Format : { titre, desc, roles, duree }
+   → roles: ["all"] = tout le monde, ou liste d'ids de rôles
+   → duree: en secondes (default 20)
+════════════════════════════════════════════════ */
+const MISSIONS = [
+  { titre:"Imitation éclair",        desc:"Imite quelqu'un dans la salle sans le nommer. Le public doit deviner qui.",               roles:["eclaireur","funambule"], duree:20 },
+  { titre:"La pose légendaire",       desc:"Invente et tiens une pose héroïque pendant le chrono sans bouger ni rire.",              roles:["oracle","fantome"],     duree:20 },
+  { titre:"Le vendeur fou",           desc:"Vends-nous un objet aléatoire de la salle comme si c'était le trésor du siècle.",       roles:["trickster","eclaireur"],duree:20 },
+  { titre:"La prophétie",             desc:"Annonce la grande prophétie de la soirée. Elle doit commencer par 'Ce soir…'",          roles:["oracle"],               duree:20 },
+  { titre:"Le mime express",          desc:"Mime un film connu. Ton équipe peut deviner, les autres doivent se taire.",              roles:["funambule","fantome"],   duree:20 },
+  { titre:"Le discours passionné",    desc:"Donne un discours enflammé sur un sujet complètement ridicule.",                        roles:["eclaireur","trickster"], duree:20 },
+  { titre:"La danse du Vendredi 13",  desc:"Invente et exécute ta propre 'Danse du Vendredi 13'. Originalité maximale.",            roles:["funambule"],             duree:20 },
+  { titre:"Le sosie vocal",           desc:"Imite la voix d'une célébrité et prononce une phrase de la soirée.",                   roles:["trickster","oracle"],    duree:20 },
+  { titre:"Convaincre en 20s",        desc:"Convaincs 3 personnes de lever la main pour te soutenir. À toi de jouer.",              roles:["fantome","eclaireur"],   duree:20 },
+  { titre:"DÉFI D'ÉQUIPE",            desc:"Toute l'équipe doit se lever et former une figure reconnaissable le plus vite possible.",roles:["all"],                  duree:20 },
+];
 
-// ── INIT ──
-let roueAngle=0,roueSpin=false;
-const COULEURS_ROUE=['#a78bfa','#38bdf8','#4ade80','#fb923c','#ffd700','#ff6b9d','#818cf8','#34d399'];
+/* ════════════════════════════════════════════════
+   CONFIG ROUE
+   → Items affichés sur la roue (peut être différent des missions)
+════════════════════════════════════════════════ */
+const ROUE_ITEMS = MISSIONS.map(m=>m.titre.substring(0,18)+(m.titre.length>18?'…':''));
+const COULEURS_ROUE = ['#a78bfa','#38bdf8','#4ade80','#fb923c','#ffd700','#ff6b9d','#818cf8','#34d399','#f472b6','#60a5fa'];
 
-buildEquipesGrid();
-buildMissionsList();
-drawRoue();
+/* ════════════════════════════════════════════════
+   AUDIO
+════════════════════════════════════════════════ */
+let audioCtx=null;
+function getCtx(){ if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
+function playTone(freq,type,duration,vol=0.3,delay=0){
+  const ctx=getCtx(), o=ctx.createOscillator(), g=ctx.createGain();
+  o.connect(g); g.connect(ctx.destination);
+  o.type=type; o.frequency.setValueAtTime(freq,ctx.currentTime+delay);
+  g.gain.setValueAtTime(vol,ctx.currentTime+delay);
+  g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+delay+duration);
+  o.start(ctx.currentTime+delay); o.stop(ctx.currentTime+delay+duration+0.05);
+}
+const SFX = {
+  // Slot machine — tick rapide pendant le défilement
+  slotTick:   ()=>{ playTone(600+(Math.random()*400),'square',.04,.15); },
+  // Résultat tirage
+  slotResult: ()=>{ [440,550,660,880].forEach((f,i)=>playTone(f,'triangle',.3,.25,i*.07)); },
+  // Roue tourne — tick ralentissant
+  roueTick:   ()=>{ playTone(440,'square',.05,.2); },
+  // Roue s'arrête
+  roueDing:   ()=>{ playTone(880,'sine',.3,.4); playTone(1100,'sine',.25,.3,.1); },
+  // Go chrono
+  go:         ()=>{ playTone(880,'square',.15,.3); playTone(1100,'square',.15,.3,.15); },
+  // Bip urgence
+  bip:        ()=>{ playTone(880,'square',.08,.4); },
+  // Buzzer fin
+  buzzer:     ()=>{ [220,180].forEach((f,i)=>playTone(f,'sawtooth',.4,.4,i*.1)); },
+  // Vote ouvert
+  voteOpen:   ()=>{ [520,660,784].forEach((f,i)=>playTone(f,'sine',.2,.2,i*.06)); },
+};
 
-// ── JOUEURS REALTIME ──
-onValue(ref(db,'v13/joueurs'),(snap)=>{
-  const joueurs=[];snap.forEach(c=>joueurs.push({key:c.key,...c.val()}));
-  document.getElementById('nb-inscrits').textContent=joueurs.length;
+/* ════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════ */
+let joueurs = [];                  // liste complète des joueurs (Firebase)
+let performerActuel = null;        // joueur actuellement performer {key, prenom, equipe, role}
+let missionActuelle = null;        // mission sélectionnée par la roue
+let chronoActif = false;
+let chronoInt = null;
+let voteOuvert = false;
+let nbTours = 0;
+let scoreEquipes = { intuitif:0, stratege:0, chanceux:0, temeraire:0 };
+// Anti-répétition : file des 5 derniers performers (clés Firebase)
+let derniersPerformers = [];
 
-  // Auto rôles
-  const auto=joueurs.length<20?3:joueurs.length<32?4:5;
-  document.getElementById('rc-auto').textContent=`Auto : ${auto} rôles (${joueurs.length} inscrits)`;
+/* ════════════════════════════════════════════════
+   ROUE — canvas
+════════════════════════════════════════════════ */
+let roueAngle = 0;
+let roueSpin  = false;
 
-  // Compter par équipe + rôles
-  const counts={intuitif:{},stratege:{},chanceux:{},temeraire:{}};
-  ROLES_DEF.forEach(r=>Object.keys(counts).forEach(eq=>counts[eq][r.id]=0));
-  joueurs.forEach(j=>{
-    if(counts[j.equipe]&&counts[j.equipe][j.role]!==undefined)counts[j.equipe][j.role]++;
+function drawRoue(highlight=-1){
+  const canvas = document.getElementById('roue-canvas');
+  const ctx    = canvas.getContext('2d');
+  const cx=110, cy=110, r=105, n=ROUE_ITEMS.length;
+  ctx.clearRect(0,0,220,220);
+  ROUE_ITEMS.forEach((item,i)=>{
+    const a1=roueAngle+i*(2*Math.PI/n), a2=a1+(2*Math.PI/n);
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,a1,a2); ctx.closePath();
+    ctx.fillStyle = i===highlight?'#fff':COULEURS_ROUE[i%COULEURS_ROUE.length];
+    ctx.fill();
+    ctx.save(); ctx.translate(cx,cy);
+    ctx.rotate(a1+(a2-a1)/2);
+    ctx.fillStyle = i===highlight?'#111':'rgba(0,0,0,.75)';
+    ctx.font='bold 9px Nunito,sans-serif';
+    ctx.textAlign='right'; ctx.textBaseline='middle';
+    ctx.fillText(item.substring(0,16), r-6, 0);
+    ctx.restore();
   });
-  Object.keys(EQUIPES).forEach(eq=>{
-    const total=Object.values(counts[eq]).reduce((a,b)=>a+b,0);
-    const el=document.getElementById('eq-'+eq);
-    if(el){
-      el.querySelector('.eq-count').textContent=total+' joueur'+(total>1?'s':'');
-      const rolesEl=el.querySelector('.eq-roles');
-      rolesEl.innerHTML='';
-      ROLES_DEF.slice(0,nbRoles).forEach(r=>{
-        if(counts[eq][r.id]>0){
-          const p=document.createElement('span');p.className='role-pill';
-          p.textContent=r.emoji+' '+counts[eq][r.id];rolesEl.appendChild(p);
-        }
-      });
+  // Pointeur
+  ctx.beginPath(); ctx.moveTo(cx+r+8,cy); ctx.lineTo(cx+r-12,cy-10); ctx.lineTo(cx+r-12,cy+10);
+  ctx.closePath(); ctx.fillStyle='#ffd700'; ctx.fill();
+}
+
+window.spinRoue = () => {
+  if(roueSpin || !performerActuel) return;
+  roueSpin=true;
+  document.getElementById('btn-roue').disabled=true;
+  document.getElementById('mission-result').style.display='none';
+  missionActuelle=null;
+  document.getElementById('btn-lancer').style.display='none';
+  document.getElementById('chrono-display').style.display='none';
+
+  const n=ROUE_ITEMS.length;
+  const tours=5+Math.random()*5;
+  const targetIdx=Math.floor(Math.random()*n);
+  const targetAngle=roueAngle+(tours*2*Math.PI)+targetIdx*(2*Math.PI/n);
+  const startAngle=roueAngle;
+  const duration=3000+Math.random()*2000;
+  const startTime=performance.now();
+  let lastTick=0;
+
+  function animate(now){
+    const elapsed=now-startTime;
+    const t=Math.min(elapsed/duration,1);
+    const ease=1-Math.pow(1-t,4);
+    roueAngle=startAngle+(targetAngle-startAngle)*ease;
+    // tick sonore quand on passe une section
+    const currentSector=Math.floor(((roueAngle/(2*Math.PI/n))%n+n)%n);
+    if(currentSector!==lastTick){ SFX.roueTick(); lastTick=currentSector; }
+    drawRoue();
+    if(t<1){ requestAnimationFrame(animate); }
+    else{
+      roueAngle=targetAngle%(2*Math.PI);
+      const idx=Math.floor(((2*Math.PI-roueAngle%(2*Math.PI/n)*n)/(2*Math.PI/n)+0.5+n)%n);
+      const finalIdx=targetIdx;
+      drawRoue(finalIdx);
+      roueSpin=false;
+      SFX.roueDing();
+      missionActuelle=MISSIONS[finalIdx];
+      document.getElementById('mission-result-titre').textContent=missionActuelle.titre;
+      document.getElementById('mission-result-desc').textContent=missionActuelle.desc;
+      document.getElementById('mission-result').style.display='block';
+      document.getElementById('btn-lancer').style.display='block';
+      document.getElementById('btn-lancer').textContent=`▶ Lancer la mission (${missionActuelle.duree}s)`;
     }
-  });
-});
+  }
+  requestAnimationFrame(animate);
+};
 
-// ── VOTES REALTIME ──
-onValue(ref(db,'v13/votes'),(snap)=>{
-  if(!voteOuvert)return;
-  const votes=[];snap.forEach(c=>votes.push(c.val()));
-  if(!votes.length)return;
-  const moy=votes.reduce((a,b)=>a+b.pct,0)/votes.length;
-  const pct=Math.round(moy);
-  document.getElementById('vl-nb').textContent=votes.length;
-  document.getElementById('vl-pct').textContent=pct+'%';
-  document.getElementById('vl-bar').style.width=Math.min(100,pct)+'%';
-  const badge=document.getElementById('vote-result-badge');
-  if(pct>=seuilVote){badge.className='vote-result-badge gagne';badge.textContent='🎉 GAGNÉ ! Offre la récompense !';}
-  else{badge.className='vote-result-badge perdu';badge.textContent='😬 Pas encore…';}
-});
+/* ════════════════════════════════════════════════
+   SLOT MACHINE — tirage performer
+   Anti-répétition : évite les 5 derniers performers
+════════════════════════════════════════════════ */
+window.tirerPerformer = () => {
+  if(!joueurs.length){ alert('Aucun joueur inscrit !'); return; }
+  const btn=document.getElementById('btn-tirer');
+  btn.disabled=true;
 
-// ── BUILD UI ──
-function buildEquipesGrid(){
-  const grid=document.getElementById('equipes-grid');
-  grid.innerHTML='';
-  Object.entries(EQUIPES).forEach(([key,eq])=>{
-    const card=document.createElement('div');
-    card.className=`eq-card ${key}`;card.id='eq-'+key;
-    card.innerHTML=`<div class="eq-emoji">${eq.emoji}</div><div class="eq-nom ${key}">${eq.nom}</div><div class="eq-count">0 joueur</div><div class="eq-roles"></div>`;
-    grid.appendChild(card);
-  });
-}
+  // Pool de joueurs éligibles (pas dans les 5 derniers)
+  let pool=joueurs.filter(j=>!derniersPerformers.includes(j.key));
+  if(!pool.length){ derniersPerformers=[]; pool=joueurs; } // reset si tout le monde est passé
 
-function buildMissionsList(){
-  const list=document.getElementById('missions-list');
-  list.innerHTML='';
-  MISSIONS.forEach((m,i)=>{
-    const d=document.createElement('div');d.className='mission-item';
-    const rolesStr=m.roles.includes('all')?'Tous':m.roles.map(r=>ROLES_DEF.find(x=>x.id===r)?.emoji||r).join(' ');
-    d.innerHTML=`<span class="mi-role">${rolesStr}</span><span class="mi-titre">${esc(m.titre)}</span><span class="mi-arrow">→</span>`;
-    d.onclick=()=>selectMission(i);
-    list.appendChild(d);
-  });
-}
+  const winner=pool[Math.floor(Math.random()*pool.length)];
+  const slot=document.getElementById('slot-display');
+  slot.className='spinning';
 
-function selectMission(i){
-  missionSelectee=MISSIONS[i];
-  missionDuree=missionSelectee.duree;
-  document.getElementById('mp-titre').textContent=missionSelectee.titre;
-  document.getElementById('mp-desc').textContent=missionSelectee.desc;
-  document.getElementById('mp-duree').textContent=missionDuree;
-  document.getElementById('chrono-mission').textContent='';
-  document.getElementById('btn-lancer-mission').style.display='block';
-  document.getElementById('btn-stop-mission').style.display='none';
-  document.getElementById('mission-panel').classList.add('on');
-  document.getElementById('mission-panel').scrollIntoView({behavior:'smooth',block:'nearest'});
-}
+  // Animation défilement
+  let ticks=0;
+  const maxTicks=20+Math.floor(Math.random()*10);
+  const tickInterval=setInterval(()=>{
+    const random=joueurs[Math.floor(Math.random()*joueurs.length)];
+    slot.textContent=random.prenom;
+    SFX.slotTick();
+    ticks++;
+    if(ticks>=maxTicks){
+      clearInterval(tickInterval);
+      // Résultat final
+      slot.textContent=winner.prenom;
+      slot.className='revealed';
+      SFX.slotResult();
+      performerActuel=winner;
 
-window.stepDuree=(d)=>{missionDuree=Math.max(10,Math.min(180,missionDuree+d));document.getElementById('mp-duree').textContent=missionDuree;};
-window.stepRoles=(d)=>{nbRoles=Math.max(3,Math.min(5,nbRoles+d));document.getElementById('rc-val').textContent=nbRoles;};
-window.stepSeuil=(d)=>{seuilVote=Math.max(30,Math.min(100,seuilVote+d));document.getElementById('seuil-val').textContent=seuilVote;document.getElementById('vl-seuil').textContent=seuilVote+'%';};
+      // Mise à jour anti-répétition
+      derniersPerformers.push(winner.key);
+      if(derniersPerformers.length>5) derniersPerformers.shift();
 
-// ── LANCER MISSION ──
-window.lancerMission=async()=>{
-  if(!missionSelectee)return;
-  const roleActif=missionSelectee.roles.includes('all')?'all':missionSelectee.roles[0];
-  await set(ref(db,'v13/etat'),{
-    type:'mission',actif:true,
-    roleActif,
-    missionTitre:missionSelectee.titre,
-    missionDesc:missionSelectee.desc,
-    duree:missionDuree,
+      // Notifier les clients via Firebase
+      set(ref(db,'v13/etat'),{
+        type:'performer',
+        joueurKey:winner.key,
+        performerNom:winner.prenom,
+        equipe:winner.equipe,
+        role:winner.role,
+        actif:true,
+        ts:serverTimestamp()
+      });
+
+      // Mettre le joueur en surbrillance dans la liste
+      updateJoueursList();
+      // Activer la roue
+      document.getElementById('btn-roue').disabled=false;
+      document.getElementById('vote-result-wrap').style.display='block';
+      btn.disabled=false;
+    }
+  }, 80);
+};
+
+/* ════════════════════════════════════════════════
+   CHRONO — lancer la mission
+════════════════════════════════════════════════ */
+window.lancerChrono = () => {
+  if(!missionActuelle || !performerActuel) return;
+  if(chronoActif) return;
+  chronoActif=true;
+  nbTours++;
+  document.getElementById('nb-tours').textContent=nbTours;
+  document.getElementById('btn-lancer').disabled=true;
+
+  // Diffuser la mission sur les téléphones
+  set(ref(db,'v13/etat'),{
+    type:'mission',
+    joueurKey:performerActuel.key,
+    performerNom:performerActuel.prenom,
+    equipe:performerActuel.equipe,
+    role:performerActuel.role,
+    missionTitre:missionActuelle.titre,
+    missionDesc:missionActuelle.desc,
+    duree:missionActuelle.duree,
+    actif:true,
     ts:serverTimestamp()
   });
-  document.getElementById('btn-lancer-mission').style.display='none';
-  document.getElementById('btn-stop-mission').style.display='block';
-  let t=missionDuree;
-  const el=document.getElementById('chrono-mission');
-  el.textContent=t;el.className='chrono-mission';
-  clearInterval(missionChrono);
-  missionChrono=setInterval(()=>{
-    t--;el.textContent=t;
-    if(t<=10)el.className='chrono-mission urgent';
-    if(t<=0){clearInterval(missionChrono);stopMission();}
+
+  // Chrono grand écran
+  const el=document.getElementById('chrono-display');
+  el.style.display='block';
+  let t=missionActuelle.duree;
+  el.textContent=t; el.className='';
+  SFX.go();
+
+  clearInterval(chronoInt);
+  chronoInt=setInterval(()=>{
+    t--; el.textContent=t;
+    if(t<=5){ el.className='urgent'; SFX.bip(); }
+    if(t<=0){
+      clearInterval(chronoInt);
+      SFX.buzzer();
+      chronoActif=false;
+      set(ref(db,'v13/etat'),{ type:'mission', actif:false, ts:serverTimestamp() });
+      // Préparer le vote
+      document.getElementById('btn-vote-open').style.display='block';
+    }
   },1000);
 };
 
-window.stopMission=async()=>{
-  clearInterval(missionChrono);
-  await set(ref(db,'v13/etat'),{type:'mission',actif:false,ts:serverTimestamp()});
-  document.getElementById('btn-lancer-mission').style.display='block';
-  document.getElementById('btn-stop-mission').style.display='none';
-  document.getElementById('chrono-mission').textContent='';
-};
-
-// ── VOTE ──
-window.ouvrirVote=async()=>{
-  const nom=document.getElementById('performer-nom').value.trim()||'la prestation';
+/* ════════════════════════════════════════════════
+   VOTE — ouvrir / fermer
+════════════════════════════════════════════════ */
+window.ouvrirVote = () => {
+  if(!performerActuel) return;
   voteOuvert=true;
-  await remove(ref(db,'v13/votes'));
-  await set(ref(db,'v13/etat'),{type:'vote',actif:true,performerNom:nom,ts:serverTimestamp()});
-  document.getElementById('btn-ouvrir-vote').style.display='none';
-  document.getElementById('btn-fermer-vote').style.display='block';
-  document.getElementById('vote-live').style.display='flex';
-  document.getElementById('vl-nb').textContent='0';
-  document.getElementById('vl-pct').textContent='—%';
-  document.getElementById('vl-bar').style.width='0%';
-  document.getElementById('vote-result-badge').className='vote-result-badge';
-};
-
-window.fermerVote=async()=>{
-  voteOuvert=false;
-  await set(ref(db,'v13/etat'),{type:'vote',actif:false,ts:serverTimestamp()});
-  document.getElementById('btn-ouvrir-vote').style.display='block';
-  document.getElementById('btn-fermer-vote').style.display='none';
-};
-
-// ── ROUE ──
-function drawRoue(highlight=-1){
-  const canvas=document.getElementById('roue');
-  const ctx=canvas.getContext('2d');
-  const cx=110,cy=110,r=105,n=ROUE_ITEMS.length;
-  ctx.clearRect(0,0,220,220);
-  ROUE_ITEMS.forEach((item,i)=>{
-    const a1=roueAngle+i*(2*Math.PI/n),a2=a1+(2*Math.PI/n);
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,a1,a2);ctx.closePath();
-    ctx.fillStyle=i===highlight?'#fff':COULEURS_ROUE[i%COULEURS_ROUE.length];
-    ctx.globalAlpha=i===highlight?1:.85;
-    ctx.fill();ctx.globalAlpha=1;
-    ctx.strokeStyle=var_color('--noir');ctx.lineWidth=2;ctx.stroke();
-    ctx.save();ctx.translate(cx,cy);ctx.rotate(a1+(a2-a1)/2);
-    ctx.textAlign='right';ctx.fillStyle='#fff';ctx.font='bold 11px Nunito';
-    ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=4;
-    ctx.fillText(item.split(' ')[0],r-8,4);ctx.restore();
+  SFX.voteOpen();
+  // Effacer les anciens votes
+  remove(ref(db,'v13/votes'));
+  set(ref(db,'v13/etat'),{
+    type:'vote',
+    joueurKey:performerActuel.key,
+    performerNom:performerActuel.prenom,
+    actif:true,
+    ts:serverTimestamp()
   });
-  // Flèche
-  ctx.beginPath();ctx.moveTo(cx+r+6,cy);ctx.lineTo(cx+r-12,cy-8);ctx.lineTo(cx+r-12,cy+8);ctx.closePath();
-  ctx.fillStyle='#fff';ctx.fill();
-}
-function var_color(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim()||'#09080f';}
-
-window.lancerRoue=()=>{
-  if(roueSpin)return;
-  roueSpin=true;
-  document.getElementById('roue-result').textContent='…';
-  const total=4+Math.random()*6;
-  const duree=3000;
-  const start=performance.now();
-  const startAngle=roueAngle;
-  const targetAngle=startAngle+total*2*Math.PI;
-  (function anim(ts){
-    const elapsed=ts-start;
-    const progress=Math.min(1,elapsed/duree);
-    const ease=1-Math.pow(1-progress,3);
-    roueAngle=startAngle+(targetAngle-startAngle)*ease;
-    drawRoue();
-    if(progress<1){requestAnimationFrame(anim);}
-    else{
-      roueAngle=targetAngle%(2*Math.PI);
-      const n=ROUE_ITEMS.length;
-      const idx=Math.floor(((2*Math.PI-roueAngle)%(2*Math.PI))/(2*Math.PI/n))%n;
-      drawRoue(idx);
-      document.getElementById('roue-result').textContent='→ '+ROUE_ITEMS[idx];
-      roueSpin=false;
-    }
-  })(performance.now());
+  document.getElementById('btn-vote-open').style.display='none';
+  document.getElementById('btn-vote-close').style.display='block';
 };
 
-// ── RESET ──
-window.resetTout=async()=>{
-  if(!confirm('Effacer tous les joueurs et votes ?'))return;
-  await Promise.all([remove(ref(db,'v13/joueurs')),remove(ref(db,'v13/votes')),remove(ref(db,'v13/etat'))]);
-  document.getElementById('vote-live').style.display='none';
-  document.getElementById('btn-ouvrir-vote').style.display='block';
-  document.getElementById('btn-fermer-vote').style.display='none';
+window.fermerVote = () => {
   voteOuvert=false;
+  set(ref(db,'v13/etat'),{ type:'vote', actif:false, ts:serverTimestamp() });
+  document.getElementById('btn-vote-close').style.display='none';
+  document.getElementById('btn-vote-open').style.display='block';
 };
 
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+/* ════════════════════════════════════════════════
+   RESET SOIRÉE
+════════════════════════════════════════════════ */
+window.resetSoiree = async () => {
+  if(!confirm('Effacer tous les joueurs et votes ? Cette action est irréversible.')) return;
+  await Promise.all([
+    remove(ref(db,'v13/joueurs')),
+    remove(ref(db,'v13/votes')),
+    remove(ref(db,'v13/etat')),
+  ]);
+  scoreEquipes={ intuitif:0, stratege:0, chanceux:0, temeraire:0 };
+  derniersPerformers=[];
+  performerActuel=null;
+  nbTours=0;
+  document.getElementById('nb-tours').textContent='0';
+  document.getElementById('slot-display').textContent='— Appuie pour tirer —';
+  document.getElementById('slot-display').className='';
+  document.getElementById('mission-result').style.display='none';
+  document.getElementById('chrono-display').style.display='none';
+  document.getElementById('btn-lancer').style.display='none';
+  document.getElementById('vote-result-wrap').style.display='none';
+  buildScoresEquipes();
+};
+
+/* ════════════════════════════════════════════════
+   UI — construire la liste des joueurs
+════════════════════════════════════════════════ */
+function updateJoueursList(){
+  const container=document.getElementById('joueurs-list');
+  if(!joueurs.length){
+    container.innerHTML='<div style="padding:20px;text-align:center;color:var(--texte-dim);font-size:.8rem;">En attente de joueurs…</div>';
+    return;
+  }
+  container.innerHTML='';
+  joueurs.forEach(j=>{
+    const eq=EQUIPES[j.equipe];
+    const isPerformer=performerActuel && performerActuel.key===j.key;
+    const deja=derniersPerformers.includes(j.key) && !isPerformer;
+    const card=document.createElement('div');
+    card.className='joueur-card'+(isPerformer?' performer':'')+(deja?' joueur-deja':'');
+    card.innerHTML=`
+      <div class="joueur-eq-dot" style="background:${eq?eq.col:'#fff'}"></div>
+      <div class="joueur-nom">${esc(j.prenom)}</div>
+      <div class="joueur-role">${ROLES_DEF.find(r=>r.id===j.role)?.emoji||'?'}</div>
+      <div class="joueur-pts">${j.pointsPerso||0}pts</div>
+      ${isPerformer?'<div class="joueur-crown">👑</div>':''}
+    `;
+    container.appendChild(card);
+  });
+}
+
+/* ════════════════════════════════════════════════
+   UI — scores équipes topbar
+════════════════════════════════════════════════ */
+function buildScoresEquipes(){
+  const container=document.getElementById('scores-equipes');
+  container.innerHTML='';
+  Object.entries(EQUIPES).forEach(([key,eq])=>{
+    const div=document.createElement('div');
+    div.className='score-eq'; div.id=`score-eq-${key}`;
+    div.innerHTML=`
+      <span class="score-eq-emoji">${eq.emoji}</span>
+      <span class="score-eq-nom" style="color:${eq.col}">${eq.nom}</span>
+      <span class="score-eq-pts" id="pts-${key}">${scoreEquipes[key]||0}</span>
+    `;
+    container.appendChild(div);
+  });
+}
+
+/* ════════════════════════════════════════════════
+   UI — liste des missions
+════════════════════════════════════════════════ */
+function buildMissionsList(){
+  const container=document.getElementById('missions-list');
+  container.innerHTML='';
+  MISSIONS.forEach((m,i)=>{
+    const div=document.createElement('div');
+    div.className='mission-item';
+    div.id=`mission-item-${i}`;
+    const rolesStr=m.roles.includes('all')?'Tous':m.roles.map(r=>ROLES_DEF.find(x=>x.id===r)?.emoji||r).join(' ');
+    div.innerHTML=`
+      <div class="mi-titre">${esc(m.titre)}</div>
+      <div class="mi-desc">${esc(m.desc)}</div>
+      <div class="mi-meta">
+        <span class="mi-duree">⏱ ${m.duree}s</span>
+        <span class="mi-roles">${rolesStr}</span>
+      </div>
+    `;
+    // Clic = sélectionner manuellement
+    div.onclick=()=>{
+      document.querySelectorAll('.mission-item').forEach(el=>el.classList.remove('active'));
+      div.classList.add('active');
+      missionActuelle=m;
+      document.getElementById('mission-result-titre').textContent=m.titre;
+      document.getElementById('mission-result-desc').textContent=m.desc;
+      document.getElementById('mission-result').style.display='block';
+      document.getElementById('btn-lancer').style.display='block';
+      document.getElementById('btn-lancer').textContent=`▶ Lancer la mission (${m.duree}s)`;
+    };
+    container.appendChild(div);
+  });
+}
+
+/* ════════════════════════════════════════════════
+   FIREBASE — écoute joueurs en temps réel
+════════════════════════════════════════════════ */
+onValue(ref(db,'v13/joueurs'), snap=>{
+  joueurs=[];
+  snap.forEach(c=>joueurs.push({key:c.key,...c.val()}));
+  document.getElementById('nb-inscrits').textContent=joueurs.length;
+  updateJoueursList();
+});
+
+/* ════════════════════════════════════════════════
+   FIREBASE — écoute votes en temps réel
+════════════════════════════════════════════════ */
+onValue(ref(db,'v13/votes'), snap=>{
+  const votes=[];
+  snap.forEach(c=>votes.push(c.val()));
+  if(!votes.length){ document.getElementById('vr-nb').textContent='0 vote(s)'; return; }
+
+  const nbVotes=votes.length;
+  const totalEtoiles=votes.reduce((a,v)=>a+(v.noteEtoiles||0),0);
+  const totalPerso=votes.reduce((a,v)=>a+(v.pointsPerso||0),0);
+  const moyEtoiles=(totalEtoiles/nbVotes).toFixed(1);
+  const pct=Math.round((totalEtoiles/(nbVotes*5))*100);
+
+  document.getElementById('vr-nb').textContent=`${nbVotes} vote(s)`;
+  document.getElementById('vr-barre').style.width=pct+'%';
+  document.getElementById('vr-score').textContent=`${moyEtoiles}/5 ⭐`;
+  document.getElementById('vr-detail').textContent=`Points équipe : +${Math.round(totalEtoiles)} pts · Points perso : +${totalPerso} pts`;
+
+  // Mise à jour scores équipes quand vote fermé
+  if(!voteOuvert && performerActuel && votes.length>0){
+    scoreEquipes[performerActuel.equipe]=(scoreEquipes[performerActuel.equipe]||0)+Math.round(totalEtoiles);
+    buildScoresEquipes();
+  }
+});
+
+/* ════════════════════════════════════════════════
+   UTILS
+════════════════════════════════════════════════ */
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+/* ════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════ */
+buildScoresEquipes();
+buildMissionsList();
+drawRoue();
+document.getElementById('btn-roue').disabled=true;
+document.getElementById('vote-result-wrap').style.display='none';
 </script>
 </body>
 </html>

@@ -3,27 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>LUMIIA · Vendredi 13 · Client v1.0</title>
+<title>LUMIIA · Vendredi 13</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+/* ════════════════════════════════════════════════
+   RESET & VARIABLES
+════════════════════════════════════════════════ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
-  --noir:#09080f;
-  --surface:rgba(255,255,255,0.06);
-  --border:rgba(255,255,255,0.1);
-  --texte:#f0e8f8;
-  --texte-dim:rgba(240,232,248,0.5);
-  --or:#ffd700;
-  /* équipes */
-  --intuitif:#a78bfa;   /* violet */
-  --stratege:#38bdf8;   /* bleu */
-  --chanceux:#4ade80;   /* vert */
-  --temeraire:#fb923c;  /* orange */
+  --noir:       #09080f;
+  --surface:    rgba(255,255,255,0.06);
+  --border:     rgba(255,255,255,0.1);
+  --texte:      #f0e8f8;
+  --texte-dim:  rgba(240,232,248,0.5);
+  --or:         #ffd700;
+  /* couleurs équipes */
+  --intuitif:   #a78bfa;
+  --stratege:   #38bdf8;
+  --chanceux:   #4ade80;
+  --temeraire:  #fb923c;
+  /* couleur active de l'équipe du joueur (override au runtime) */
+  --eq-col:     var(--or);
+  --eq-glow:    rgba(255,215,0,.3);
 }
-html,body{height:100%;background:var(--noir);color:var(--texte);font-family:'Nunito',sans-serif;overflow-x:hidden;touch-action:manipulation;}
+html,body{
+  height:100%;
+  background:var(--noir);
+  color:var(--texte);
+  font-family:'Nunito',sans-serif;
+  overflow-x:hidden;
+  touch-action:manipulation;
+}
 
-/* FOND */
-#bg{position:fixed;inset:0;z-index:0;
+/* ════════════════════════════════════════════════
+   FOND ANIMÉ
+════════════════════════════════════════════════ */
+#bg{
+  position:fixed;inset:0;z-index:0;
   background:
     radial-gradient(ellipse 90% 50% at 50% 0%,rgba(100,50,200,0.2) 0%,transparent 60%),
     radial-gradient(ellipse 60% 40% at 10% 80%,rgba(200,50,100,0.1) 0%,transparent 60%),
@@ -32,14 +48,32 @@ html,body{height:100%;background:var(--noir);color:var(--texte);font-family:'Nun
 .star{position:fixed;border-radius:50%;background:#fff;animation:twinkle var(--t,3s) ease-in-out infinite var(--d,0s);opacity:0;}
 @keyframes twinkle{0%,100%{opacity:0}50%{opacity:var(--b,.5)}}
 
-/* PAGES */
+/* ════════════════════════════════════════════════
+   SYSTÈME DE PAGES
+════════════════════════════════════════════════ */
 .page{display:none;flex-direction:column;align-items:center;min-height:100dvh;padding:28px 20px 40px;position:relative;z-index:10;}
 .page.on{display:flex;animation:fadein .4s ease;}
 @keyframes fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
-/* ── ACCUEIL ── */
-#pg-accueil{justify-content:center;text-align:center;gap:12px;}
-.logo-lumiia{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.3em;color:var(--texte-dim);margin-bottom:4px;}
+/* ════════════════════════════════════════════════
+   LOGO LUMIIA (header commun)
+════════════════════════════════════════════════ */
+.lumiia-header{
+  width:100%;display:flex;justify-content:center;align-items:center;
+  padding-bottom:16px;margin-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+.lumiia-logo-txt{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem;letter-spacing:.4em;
+  color:rgba(255,255,255,.35);
+}
+.lumiia-logo-txt span{color:var(--or);letter-spacing:.1em;}
+
+/* ════════════════════════════════════════════════
+   PAGE ACCUEIL
+════════════════════════════════════════════════ */
+#pg-accueil{justify-content:center;text-align:center;gap:10px;}
 .acc-emoji{font-size:clamp(4rem,20vw,7rem);animation:float 3s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(255,215,0,.5));}
 @keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
 .acc-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,12vw,5rem);line-height:1;background:linear-gradient(135deg,#ffd700,#ff6b9d,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px rgba(255,215,0,.3));}
@@ -48,49 +82,36 @@ html,body{height:100%;background:var(--noir);color:var(--texte);font-family:'Nun
 .prenom-inp{width:100%;max-width:300px;padding:16px 20px;background:var(--surface);border:2px solid var(--border);border-radius:50px;color:var(--texte);font-family:'Nunito',sans-serif;font-size:1.3rem;font-weight:700;text-align:center;outline:none;transition:all .2s;margin-top:8px;}
 .prenom-inp::placeholder{color:rgba(240,232,248,.2);}
 .prenom-inp:focus{border-color:rgba(255,215,0,.6);background:rgba(255,215,0,.05);}
-.btn-start{margin-top:12px;width:100%;max-width:300px;padding:18px;background:linear-gradient(135deg,var(--or),#ff9f2e);border:none;border-radius:50px;color:#1a0a00;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.1em;cursor:pointer;transition:all .2s;box-shadow:0 6px 24px rgba(255,160,0,.35);}
-.btn-start:active{transform:scale(.96);}
-.btn-start:disabled{opacity:.4;}
+.btn-primary{margin-top:12px;width:100%;max-width:300px;padding:18px;background:linear-gradient(135deg,var(--or),#ff9f2e);border:none;border-radius:50px;color:#1a0a00;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.1em;cursor:pointer;transition:all .2s;box-shadow:0 6px 24px rgba(255,160,0,.35);}
+.btn-primary:active{transform:scale(.96);}
+.btn-primary:disabled{opacity:.4;}
 
-/* ── QUIZ ── */
+/* ════════════════════════════════════════════════
+   PAGE QUIZ
+════════════════════════════════════════════════ */
 #pg-quiz{gap:0;padding-top:20px;}
 .quiz-header{width:100%;display:flex;align-items:center;gap:10px;margin-bottom:20px;}
 .quiz-back{background:transparent;border:1px solid var(--border);border-radius:50%;width:36px;height:36px;color:var(--texte-dim);font-size:1rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .quiz-progress-wrap{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
 .quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--or),#ff9f2e);border-radius:3px;transition:width .4s ease;}
 .quiz-num{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);flex-shrink:0;}
-
 .quiz-question{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,7vw,2.8rem);line-height:1.15;text-align:center;color:var(--texte);margin-bottom:28px;max-width:340px;letter-spacing:.02em;}
-
 .quiz-options{width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px;}
-.quiz-opt{
-  width:100%;padding:16px 20px;
-  background:var(--surface);border:2px solid var(--border);border-radius:16px;
-  color:var(--texte);font-family:'Nunito',sans-serif;font-size:clamp(.95rem,4vw,1.1rem);font-weight:700;
-  text-align:left;cursor:pointer;transition:all .2s;
-  display:flex;align-items:center;gap:12px;
-}
+.quiz-opt{width:100%;padding:16px 20px;background:var(--surface);border:2px solid var(--border);border-radius:16px;color:var(--texte);font-family:'Nunito',sans-serif;font-size:clamp(.95rem,4vw,1.1rem);font-weight:700;text-align:left;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px;}
 .quiz-opt:active{transform:scale(.97);}
-.quiz-opt:hover{border-color:rgba(255,215,0,.4);background:rgba(255,215,0,.05);}
 .quiz-opt.sel{border-color:var(--or);background:rgba(255,215,0,.12);color:var(--or);}
-.opt-letter{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.8rem;letter-spacing:.05em;flex-shrink:0;font-weight:800;}
+.opt-letter{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;font-weight:800;}
 .quiz-opt.sel .opt-letter{background:var(--or);color:#1a0a00;border-color:var(--or);}
 
-/* ── CARTE IDENTITÉ ── */
+/* ════════════════════════════════════════════════
+   PAGE CARTE IDENTITÉ
+════════════════════════════════════════════════ */
 #pg-carte{justify-content:center;text-align:center;gap:0;}
-.carte-wrap{
-  width:100%;max-width:340px;
-  border:2px solid var(--eq-col,var(--or));
-  border-radius:24px;
-  background:rgba(255,255,255,.04);
-  box-shadow:0 0 50px var(--eq-glow,rgba(255,215,0,.15));
-  padding:28px 24px;
-  position:relative;overflow:hidden;
-}
-.carte-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--eq-col,var(--or));}
+.carte-wrap{width:100%;max-width:340px;border:2px solid var(--eq-col);border-radius:24px;background:rgba(255,255,255,.04);box-shadow:0 0 50px var(--eq-glow);padding:28px 24px;position:relative;overflow:hidden;}
+.carte-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--eq-col);}
 .carte-top{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--texte-dim);margin-bottom:12px;}
-.carte-emoji{font-size:clamp(3.5rem,15vw,5.5rem);line-height:1;margin-bottom:8px;filter:drop-shadow(0 0 20px var(--eq-glow,rgba(255,215,0,.4)));}
-.carte-equipe{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,9vw,3.5rem);letter-spacing:.06em;color:var(--eq-col,var(--or));line-height:1;margin-bottom:4px;}
+.carte-emoji{font-size:clamp(3.5rem,15vw,5.5rem);line-height:1;margin-bottom:8px;filter:drop-shadow(0 0 20px var(--eq-glow));}
+.carte-equipe{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,9vw,3.5rem);letter-spacing:.06em;color:var(--eq-col);line-height:1;margin-bottom:4px;}
 .carte-equipe-desc{font-size:.8rem;color:var(--texte-dim);font-weight:600;margin-bottom:20px;line-height:1.5;}
 .carte-sep{width:60%;height:1px;background:var(--border);margin:0 auto 16px;}
 .carte-role-lbl{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--texte-dim);margin-bottom:6px;}
@@ -98,75 +119,106 @@ html,body{height:100%;background:var(--noir);color:var(--texte);font-family:'Nun
 .carte-role-desc{font-size:.75rem;color:var(--texte-dim);font-weight:600;margin-top:4px;line-height:1.5;max-width:220px;}
 .carte-prenom{margin-top:16px;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);}
 .carte-prenom b{color:var(--texte);font-weight:800;}
-
 .carte-hint{margin-top:20px;font-size:.72rem;color:var(--texte-dim);text-align:center;line-height:1.6;max-width:280px;font-style:italic;}
 .carte-hint b{color:var(--or);}
 
-/* ── ATTENTE MISSION ── */
+/* ════════════════════════════════════════════════
+   PAGE ATTENTE
+════════════════════════════════════════════════ */
 #pg-attente{justify-content:center;text-align:center;gap:16px;}
 .att-icon{font-size:clamp(3rem,14vw,5rem);animation:float 3s ease-in-out infinite;}
-.att-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,8vw,3rem);letter-spacing:.06em;color:var(--texte);}
-.att-role-badge{display:inline-block;padding:6px 18px;border:2px solid var(--eq-col,var(--or));border-radius:50px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.08em;color:var(--eq-col,var(--or));}
+.att-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,8vw,3rem);letter-spacing:.06em;}
+.att-role-badge{display:inline-block;padding:6px 18px;border:2px solid var(--eq-col);border-radius:50px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.08em;color:var(--eq-col);}
 .att-sub{font-size:.82rem;color:var(--texte-dim);line-height:1.6;max-width:280px;font-weight:600;}
 .att-pulse{display:flex;align-items:center;gap:8px;justify-content:center;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);}
 .dot-pulse{width:8px;height:8px;border-radius:50%;background:var(--or);animation:pdot 1.5s ease-in-out infinite;}
 @keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
 
-/* ── MISSION ACTIVE ── */
+/* ════════════════════════════════════════════════
+   PAGE PERFORMER SÉLECTIONNÉ
+════════════════════════════════════════════════ */
+#pg-performer{justify-content:center;text-align:center;gap:14px;}
+.perf-couronne{font-size:clamp(3rem,14vw,5rem);animation:bounce .6s ease infinite alternate;}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-10px)}}
+.perf-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,10vw,4rem);letter-spacing:.05em;background:linear-gradient(135deg,var(--or),#ff9f2e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.perf-sub{font-size:.9rem;color:var(--texte-dim);line-height:1.6;font-weight:600;max-width:280px;}
+.perf-attente{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--texte-dim);margin-top:8px;}
+
+/* ════════════════════════════════════════════════
+   PAGE MISSION ACTIVE
+════════════════════════════════════════════════ */
 #pg-mission{justify-content:center;text-align:center;gap:14px;padding:20px;}
 .mission-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border:1px solid rgba(255,215,0,.4);border-radius:50px;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--or);}
 .mission-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,9vw,3.5rem);line-height:1.05;letter-spacing:.04em;color:var(--texte);max-width:320px;}
 .mission-desc{font-size:clamp(.9rem,3.8vw,1.05rem);color:var(--texte-dim);line-height:1.6;max-width:300px;font-weight:600;}
-.mission-chrono{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,18vw,7rem);color:var(--or);line-height:1;text-shadow:0 0 30px rgba(255,215,0,.4);}
-.mission-chrono.urgent{color:#ff4444;animation:blink .5s step-end infinite;}
+.mission-chrono{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,22vw,8rem);color:var(--or);line-height:1;text-shadow:0 0 40px rgba(255,215,0,.5);}
+.mission-chrono.urgent{color:#ff4444;animation:blink .5s step-end infinite;text-shadow:0 0 40px rgba(255,68,68,.5);}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 
-/* ── VOTE ── */
-#pg-vote{gap:14px;padding:20px;}
+/* ════════════════════════════════════════════════
+   PAGE VOTE
+════════════════════════════════════════════════ */
+#pg-vote{gap:14px;padding:20px;justify-content:center;}
+.vote-performer{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,6vw,2rem);letter-spacing:.06em;color:var(--or);text-align:center;}
 .vote-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,8vw,3rem);letter-spacing:.05em;text-align:center;}
-.vote-sub{font-size:.8rem;color:var(--texte-dim);text-align:center;font-weight:600;}
-.vote-criteres{width:100%;max-width:360px;display:flex;flex-direction:column;gap:14px;}
-.critere-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;}
+.vote-criteres{width:100%;max-width:360px;display:flex;flex-direction:column;gap:12px;}
+.critere-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;}
 .critere-nom{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);margin-bottom:10px;}
+.critere-note{font-size:.72rem;color:var(--texte-dim);margin-bottom:10px;font-weight:600;}
+/* ── Étoiles pour la note /5 ── */
+.etoiles{display:flex;justify-content:center;gap:8px;}
+.etoile-btn{background:transparent;border:none;font-size:clamp(1.8rem,7vw,2.4rem);cursor:pointer;transition:transform .15s;filter:grayscale(1) opacity(.4);}
+.etoile-btn.sel{filter:none;transform:scale(1.2);}
+.etoile-btn:active{transform:scale(.9);}
+/* ── Smileys pour perso/originalité ── */
 .smileys{display:flex;justify-content:space-between;gap:4px;}
-.smiley-btn{flex:1;padding:10px 4px;background:transparent;border:2px solid var(--border);border-radius:12px;font-size:clamp(1.3rem,5vw,1.8rem);cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.smiley-btn{flex:1;padding:8px 4px;background:transparent;border:2px solid var(--border);border-radius:12px;font-size:clamp(1.3rem,5vw,1.8rem);cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px;}
 .smiley-btn span.smiley-lbl{font-size:.5rem;letter-spacing:.05em;text-transform:uppercase;color:var(--texte-dim);font-family:'Nunito',sans-serif;}
-.smiley-btn:active{transform:scale(.93);}
 .smiley-btn.sel{border-color:var(--or);background:rgba(255,215,0,.1);}
-
-.vote-total{margin-top:4px;text-align:center;}
-.vote-pct{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,11vw,4rem);color:var(--or);text-shadow:0 0 20px rgba(255,215,0,.4);}
-.vote-pct-lbl{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);}
-
 .btn-voter{width:100%;max-width:360px;padding:17px;background:linear-gradient(135deg,var(--or),#ff9f2e);border:none;border-radius:50px;color:#1a0a00;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.1em;cursor:pointer;transition:all .2s;box-shadow:0 6px 24px rgba(255,160,0,.3);}
 .btn-voter:active{transform:scale(.97);}
 .btn-voter:disabled{opacity:.4;}
 
-/* ── VOTE ENVOYÉ ── */
+/* ════════════════════════════════════════════════
+   PAGE VOTE ENVOYÉ
+════════════════════════════════════════════════ */
 #pg-vote-done{justify-content:center;text-align:center;gap:14px;}
 .vd-icon{font-size:clamp(4rem,18vw,6rem);animation:pop .5s cubic-bezier(.34,1.56,.64,1);}
 @keyframes pop{from{transform:scale(0);opacity:0}to{transform:none;opacity:1}}
 .vd-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,9vw,3.5rem);letter-spacing:.05em;}
 .vd-score{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,15vw,5.5rem);color:var(--or);text-shadow:0 0 30px rgba(255,215,0,.4);}
 .vd-sub{font-size:.85rem;color:var(--texte-dim);line-height:1.6;font-weight:600;}
+
+/* ════════════════════════════════════════════════
+   VERSION BADGE
+════════════════════════════════════════════════ */
+#version-badge{position:fixed;bottom:8px;right:10px;z-index:999;font-size:.55rem;letter-spacing:.15em;opacity:.3;color:#fff;font-family:monospace;}
 </style>
 </head>
 <body>
 <div id="bg"></div>
-<div style="position:fixed;bottom:8px;right:10px;z-index:999;font-size:.55rem;letter-spacing:.15em;opacity:.3;color:#fff;font-family:monospace;">CLIENT v1.0</div>
+<div id="version-badge">CLIENT v2.0</div>
 
-<!-- ── ACCUEIL ── -->
+<!-- ════════════════════════════════════════════
+     PAGE ACCUEIL
+════════════════════════════════════════════ -->
 <div class="page on" id="pg-accueil">
-  <div class="logo-lumiia">LUMIIA</div>
+  <div class="lumiia-header">
+    <div class="lumiia-logo-txt">LUMIIA <span>·</span> BAR &amp; EXPÉRIENCES IMMERSIVES</div>
+  </div>
   <div class="acc-emoji">🔮</div>
   <div class="acc-titre">Vendredi 13</div>
   <div class="acc-sub">Découvre ton destin ce soir</div>
   <div class="prenom-lbl">Ton prénom</div>
-  <input class="prenom-inp" id="prenom-inp" type="text" placeholder="Ex: Sophie" maxlength="18" autocomplete="off" autocorrect="off" spellcheck="false">
-  <button class="btn-start" id="btn-start" onclick="startQuiz()">Révèle mon destin →</button>
+  <input class="prenom-inp" id="prenom-inp" type="text" placeholder="Ex: Sophie" maxlength="18"
+    autocomplete="off" autocorrect="off" spellcheck="false"
+    onkeydown="if(event.key==='Enter')startQuiz()">
+  <button class="btn-primary" id="btn-start" onclick="startQuiz()">Révèle mon destin →</button>
 </div>
 
-<!-- ── QUIZ ── -->
+<!-- ════════════════════════════════════════════
+     PAGE QUIZ
+════════════════════════════════════════════ -->
 <div class="page" id="pg-quiz">
   <div class="quiz-header">
     <button class="quiz-back" onclick="quizBack()">←</button>
@@ -177,8 +229,13 @@ html,body{height:100%;background:var(--noir);color:var(--texte);font-family:'Nun
   <div class="quiz-options" id="q-opts"></div>
 </div>
 
-<!-- ── CARTE ── -->
+<!-- ════════════════════════════════════════════
+     PAGE CARTE IDENTITÉ
+════════════════════════════════════════════ -->
 <div class="page" id="pg-carte">
+  <div class="lumiia-header">
+    <div class="lumiia-logo-txt">LUMIIA <span>·</span> VENDREDI 13</div>
+  </div>
   <div class="carte-wrap" id="carte-wrap">
     <div class="carte-top">✦ Ton profil ce soir ✦</div>
     <div class="carte-emoji" id="c-emoji">🔮</div>
@@ -192,58 +249,80 @@ html,body{height:100%;background:var(--noir);color:var(--texte);font-family:'Nun
   </div>
   <div class="carte-hint">
     Garde cet écran accessible 📱<br>
-    Quand <b>Emmanuel</b> appelle ton rôle,<br>c'est à toi de jouer !
+    Quand <b>l'animateur</b> tire ton nom,<br>c'est à toi de jouer !
   </div>
 </div>
 
-<!-- ── ATTENTE MISSION ── -->
+<!-- ════════════════════════════════════════════
+     PAGE ATTENTE
+════════════════════════════════════════════ -->
 <div class="page" id="pg-attente">
+  <div class="lumiia-header">
+    <div class="lumiia-logo-txt">LUMIIA <span>·</span> VENDREDI 13</div>
+  </div>
   <div class="att-icon" id="att-icon">⏳</div>
   <div class="att-titre">Prêt à jouer !</div>
   <div class="att-role-badge" id="att-role-badge">—</div>
-  <div class="att-sub">L'animateur va bientôt appeler un rôle.<br>Si c'est le tien, prépare-toi !</div>
-  <div class="att-pulse"><div class="dot-pulse"></div>En attente d'une mission…</div>
+  <div class="att-sub">L'animateur va tirer un nom au sort.<br>Si c'est toi, tu verras ta mission ici !</div>
+  <div class="att-pulse"><div class="dot-pulse"></div>En attente…</div>
 </div>
 
-<!-- ── MISSION ACTIVE ── -->
+<!-- ════════════════════════════════════════════
+     PAGE PERFORMER SÉLECTIONNÉ (c'est toi !)
+════════════════════════════════════════════ -->
+<div class="page" id="pg-performer">
+  <div class="perf-couronne">👑</div>
+  <div class="perf-titre">C'EST TOI !</div>
+  <div class="perf-sub">Tu as été tiré au sort !<br>La roue va désigner ta mission…</div>
+  <div class="perf-attente">Attends la roue 🎡</div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE MISSION ACTIVE
+════════════════════════════════════════════ -->
 <div class="page" id="pg-mission">
-  <div class="mission-badge">⚡ Mission pour toi !</div>
+  <div class="mission-badge">⚡ Ta mission !</div>
   <div class="mission-titre" id="m-titre">—</div>
   <div class="mission-desc" id="m-desc">—</div>
-  <div class="mission-chrono" id="m-chrono">60</div>
+  <div class="mission-chrono" id="m-chrono">20</div>
 </div>
 
-<!-- ── VOTE ── -->
+<!-- ════════════════════════════════════════════
+     PAGE VOTE
+════════════════════════════════════════════ -->
 <div class="page" id="pg-vote">
   <div class="vote-titre">🗳️ Vote !</div>
-  <div class="vote-sub" id="vote-sub">Note la prestation</div>
+  <div class="vote-performer" id="vote-performer-nom">—</div>
   <div class="vote-criteres">
+    <!-- Note /5 étoiles → points équipe -->
     <div class="critere-card">
-      <div class="critere-nom">🎭 Présence scénique</div>
-      <div class="smileys" id="smileys-0"></div>
+      <div class="critere-nom">⭐ Note globale</div>
+      <div class="critere-note">Points pour l'équipe</div>
+      <div class="etoiles" id="etoiles-wrap"></div>
     </div>
+    <!-- Smiley Personnalité → points perso -->
     <div class="critere-card">
-      <div class="critere-nom">💡 Originalité</div>
-      <div class="smileys" id="smileys-1"></div>
+      <div class="critere-nom">😄 Personnalité</div>
+      <div class="critere-note">Points personnels au performer</div>
+      <div class="smileys" id="smileys-perso"></div>
     </div>
+    <!-- Smiley Originalité → points perso -->
     <div class="critere-card">
-      <div class="critere-nom">🔥 Culot</div>
-      <div class="smileys" id="smileys-2"></div>
+      <div class="critere-nom">🤩 Originalité</div>
+      <div class="critere-note">Points personnels au performer</div>
+      <div class="smileys" id="smileys-origi"></div>
     </div>
-  </div>
-  <div class="vote-total">
-    <div class="vote-pct" id="vote-pct">—</div>
-    <div class="vote-pct-lbl">Score actuel</div>
   </div>
   <button class="btn-voter" id="btn-voter" onclick="envoyerVote()" disabled>Envoyer mon vote</button>
 </div>
 
-<!-- ── VOTE ENVOYÉ ── -->
+<!-- ════════════════════════════════════════════
+     PAGE VOTE ENVOYÉ
+════════════════════════════════════════════ -->
 <div class="page" id="pg-vote-done">
   <div class="vd-icon">✅</div>
   <div class="vd-titre">Vote envoyé !</div>
-  <div class="vd-score" id="vd-score">—%</div>
-  <div class="vd-sub">Ton score a été pris en compte.<br>Attends le résultat sur le grand écran !</div>
+  <div class="vd-sub">Regarde le résultat sur le grand écran !</div>
 </div>
 
 <script type="module">
@@ -251,39 +330,36 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getDatabase, ref, push, set, onValue, serverTimestamp, get }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
+/* ════════════════════════════════════════════════
+   CONFIG FIREBASE
+════════════════════════════════════════════════ */
 const firebaseConfig = {
-  apiKey: "AIzaSyBPgjVFkzP88qX_hlFUFqL168XONfNIBA4",
-  authDomain: "lumiia-live.firebaseapp.com",
-  databaseURL: "https://lumiia-live-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "lumiia-live",
-  storageBucket: "lumiia-live.appspot.com",
+  apiKey:            "AIzaSyBPgjVFkzP88qX_hlFUFqL168XONfNIBA4",
+  authDomain:        "lumiia-live.firebaseapp.com",
+  databaseURL:       "https://lumiia-live-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:         "lumiia-live",
+  storageBucket:     "lumiia-live.appspot.com",
   messagingSenderId: "823919513931",
-  appId: "1:823919513931:web:6f6f3c7c6d1699457b18ce"
+  appId:             "1:823919513931:web:6f6f3c7c6d1699457b18ce"
 };
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
 
-// ── ÉQUIPES ──
+/* ════════════════════════════════════════════════
+   CONFIG ÉQUIPES
+   → Pour modifier : changer nom, emoji, col, desc
+════════════════════════════════════════════════ */
 const EQUIPES = {
-  intuitif: {
-    nom:"L'Intuitif", emoji:"🔮", col:"var(--intuitif)", glow:"rgba(167,139,250,.3)",
-    desc:"Tu fais confiance à ton instinct.\nLa chance te trouve, tu ne la cherches pas.",
-  },
-  stratege: {
-    nom:"Le Stratège", emoji:"♟️", col:"var(--stratege)", glow:"rgba(56,189,248,.3)",
-    desc:"Tu construis ta chance. Chaque move est calculé.\nRien n'arrive par hasard chez toi.",
-  },
-  chanceux: {
-    nom:"Le Chanceux", emoji:"🍀", col:"var(--chanceux)", glow:"rgba(74,222,128,.3)",
-    desc:"Tu as un don. Les étoiles s'alignent pour toi.\nEt tu le sais très bien.",
-  },
-  temeraire: {
-    nom:"Le Téméraire", emoji:"⚡", col:"var(--temeraire)", glow:"rgba(251,146,60,.3)",
-    desc:"Tu provoques le destin. Audacieux, imprévisible.\nLa chance aime les gens courageux.",
-  },
+  intuitif:  { nom:"L'Intuitif",   emoji:"🔮", col:"var(--intuitif)",  glow:"rgba(167,139,250,.3)", desc:"Tu fais confiance à ton instinct.\nLa chance te trouve, tu ne la cherches pas." },
+  stratege:  { nom:"Le Stratège",  emoji:"♟️", col:"var(--stratege)",  glow:"rgba(56,189,248,.3)",  desc:"Tu construis ta chance. Chaque move est calculé.\nRien n'arrive par hasard chez toi." },
+  chanceux:  { nom:"Le Chanceux",  emoji:"🍀", col:"var(--chanceux)",  glow:"rgba(74,222,128,.3)",  desc:"Tu as un don. Les étoiles s'alignent pour toi.\nEt tu le sais très bien." },
+  temeraire: { nom:"Le Téméraire", emoji:"⚡", col:"var(--temeraire)", glow:"rgba(251,146,60,.3)",  desc:"Tu provoques le destin. Audacieux, imprévisible.\nLa chance aime les gens courageux." },
 };
 
-// ── RÔLES ──
+/* ════════════════════════════════════════════════
+   CONFIG RÔLES
+   → Pour modifier : changer id, nom, emoji, desc
+════════════════════════════════════════════════ */
 const ROLES = [
   { id:"eclaireur",  nom:"L'Éclaireur",  emoji:"🔦", desc:"Celui qui ouvre la voie. Premier à agir." },
   { id:"funambule",  nom:"Le Funambule",  emoji:"🎪", desc:"L'équilibriste. Toujours à la limite." },
@@ -292,273 +368,403 @@ const ROLES = [
   { id:"trickster",  nom:"Le Trickster",  emoji:"🃏", desc:"Le joker. Imprévisible, incontrôlable, génial." },
 ];
 
-// ── QUESTIONS ──
+/* ════════════════════════════════════════════════
+   CONFIG QUIZ
+   → Pour modifier : changer q (question) et opts (options)
+   → scores : points attribués à chaque équipe par réponse
+════════════════════════════════════════════════ */
 const QUESTIONS = [
   {
     q: "Une décision importante à prendre. Tu fais quoi ?",
     opts: [
-      {txt:"Je ferme les yeux et je ressens", scores:{intuitif:3,stratege:0,chanceux:1,temeraire:0}},
-      {txt:"Je fais une liste pro/contra", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
-      {txt:"Je m'en remets au sort", scores:{intuitif:1,stratege:0,chanceux:3,temeraire:0}},
-      {txt:"Je fonce et on verra bien", scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3}},
+      { txt:"Je ferme les yeux et je ressens",   scores:{intuitif:3,stratege:0,chanceux:1,temeraire:0} },
+      { txt:"Je fais une liste pro/contra",        scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0} },
+      { txt:"Je m'en remets au sort",              scores:{intuitif:1,stratege:0,chanceux:3,temeraire:0} },
+      { txt:"Je fonce et on verra bien",           scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3} },
     ]
   },
   {
     q: "Tu trouves 20€ par terre. Tu fais quoi ?",
     opts: [
-      {txt:"Je les garde, c'est le destin", scores:{intuitif:1,stratege:0,chanceux:3,temeraire:0}},
-      {txt:"Je les investis dans quelque chose", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
-      {txt:"Je les offre à quelqu'un", scores:{intuitif:3,stratege:0,chanceux:0,temeraire:1}},
-      {txt:"Je mise tout sur une chose folle", scores:{intuitif:0,stratege:0,chanceux:1,temeraire:3}},
+      { txt:"Je les garde, c'est le destin",       scores:{intuitif:1,stratege:0,chanceux:3,temeraire:0} },
+      { txt:"Je les investis dans quelque chose",  scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0} },
+      { txt:"Je les offre à quelqu'un",            scores:{intuitif:3,stratege:0,chanceux:0,temeraire:1} },
+      { txt:"Je mise tout sur une chose folle",    scores:{intuitif:0,stratege:0,chanceux:1,temeraire:3} },
     ]
   },
   {
     q: "Vendredi 13 pour toi c'est…",
     opts: [
-      {txt:"Un signe, je le sens", scores:{intuitif:3,stratege:0,chanceux:1,temeraire:0}},
-      {txt:"Une date comme une autre", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
-      {txt:"Mon jour de chance forcément", scores:{intuitif:0,stratege:0,chanceux:3,temeraire:1}},
-      {txt:"L'occasion de faire un truc dingue", scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3}},
+      { txt:"Un signe, je le sens",                scores:{intuitif:3,stratege:0,chanceux:1,temeraire:0} },
+      { txt:"Une date comme une autre",            scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0} },
+      { txt:"Mon jour de chance forcément",        scores:{intuitif:0,stratege:0,chanceux:3,temeraire:1} },
+      { txt:"L'occasion de faire un truc dingue",  scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3} },
     ]
   },
   {
     q: "Tu joues à pile ou face. Tu choisis…",
     opts: [
-      {txt:"Ce que mon cœur me dit", scores:{intuitif:3,stratege:0,chanceux:1,temeraire:0}},
-      {txt:"La face, statistiquement plus sûr", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
-      {txt:"Peu importe, je gagne toujours", scores:{intuitif:0,stratege:0,chanceux:3,temeraire:1}},
-      {txt:"Je relance 3 fois pour corser", scores:{intuitif:0,stratege:1,chanceux:0,temeraire:3}},
+      { txt:"Ce que mon cœur me dit",              scores:{intuitif:3,stratege:0,chanceux:1,temeraire:0} },
+      { txt:"La face, statistiquement plus sûr",   scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0} },
+      { txt:"Peu importe, je gagne toujours",      scores:{intuitif:0,stratege:0,chanceux:3,temeraire:1} },
+      { txt:"Je relance 3 fois pour corser",        scores:{intuitif:0,stratege:1,chanceux:0,temeraire:3} },
     ]
   },
   {
     q: "Ton superpouvoir idéal ?",
     opts: [
-      {txt:"Lire dans les pensées", scores:{intuitif:3,stratege:1,chanceux:0,temeraire:0}},
-      {txt:"Voir le futur avec précision", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
-      {txt:"Avoir une chance illimitée", scores:{intuitif:0,stratege:0,chanceux:3,temeraire:0}},
-      {txt:"Être invincible", scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3}},
+      { txt:"Lire dans les pensées",               scores:{intuitif:3,stratege:1,chanceux:0,temeraire:0} },
+      { txt:"Voir le futur avec précision",         scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0} },
+      { txt:"Avoir une chance illimitée",           scores:{intuitif:0,stratege:0,chanceux:3,temeraire:0} },
+      { txt:"Être invincible",                      scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3} },
     ]
   },
   {
     q: "La soirée idéale pour toi c'est…",
     opts: [
-      {txt:"Improviser selon l'ambiance", scores:{intuitif:3,stratege:0,chanceux:1,temeraire:1}},
-      {txt:"Un plan bien organisé", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
-      {txt:"Laisser la chance décider", scores:{intuitif:1,stratege:0,chanceux:3,temeraire:0}},
-      {txt:"Un truc inattendu et intense", scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3}},
+      { txt:"Improviser selon l'ambiance",          scores:{intuitif:3,stratege:0,chanceux:1,temeraire:1} },
+      { txt:"Un plan bien organisé",               scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0} },
+      { txt:"Laisser la chance décider",           scores:{intuitif:1,stratege:0,chanceux:3,temeraire:0} },
+      { txt:"Un truc inattendu et intense",        scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3} },
     ]
   },
   {
     q: "Face à un défi impossible, tu…",
     opts: [
-      {txt:"Je médite et l'intuition vient", scores:{intuitif:3,stratege:0,chanceux:0,temeraire:0}},
-      {txt:"Je décompose en étapes", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
-      {txt:"Je croise les doigts et j'y vais", scores:{intuitif:0,stratege:0,chanceux:3,temeraire:1}},
-      {txt:"Je fonce tête baissée", scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3}},
+      { txt:"Médite, l'intuition vient",            scores:{intuitif:3,stratege:0,chanceux:0,temeraire:0} },
+      { txt:"Décompose en étapes",                  scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0} },
+      { txt:"Croise les doigts et y vas",           scores:{intuitif:0,stratege:0,chanceux:3,temeraire:1} },
+      { txt:"Fonce tête baissée",                   scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3} },
     ]
   },
 ];
 
-// ── STATE ──
+/* ════════════════════════════════════════════════
+   CONFIG VOTE — smileys personnalité / originalité
+════════════════════════════════════════════════ */
+const SMILEYS = [
+  { e:'😐', l:'Bof'      },
+  { e:'🙂', l:'Pas mal'  },
+  { e:'😄', l:'Bien'     },
+  { e:'🤩', l:'Top'      },
+  { e:'🔥', l:'Incroyable'},
+];
+
+/* ════════════════════════════════════════════════
+   AUDIO — tous les sons générés en Web Audio
+════════════════════════════════════════════════ */
+let audioCtx = null;
+function getCtx(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
+
+function playTone(freq, type, duration, vol=0.3, delay=0){
+  const ctx=getCtx();
+  const o=ctx.createOscillator(), g=ctx.createGain();
+  o.connect(g); g.connect(ctx.destination);
+  o.type=type; o.frequency.setValueAtTime(freq, ctx.currentTime+delay);
+  g.gain.setValueAtTime(vol, ctx.currentTime+delay);
+  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+delay+duration);
+  o.start(ctx.currentTime+delay); o.stop(ctx.currentTime+delay+duration+0.05);
+}
+
+const SFX = {
+  // Tap sur une option quiz
+  tap:        ()=>{ playTone(440,'sine',.08,.15); },
+  // Transition de page
+  page:       ()=>{ playTone(520,'sine',.12,.12); playTone(660,'sine',.12,.12,.08); },
+  // Carte révélée
+  carte:      ()=>{ [523,659,784,1047].forEach((f,i)=>playTone(f,'sine',.25,.2,i*.08)); },
+  // C'est toi ! performer sélectionné
+  selected:   ()=>{ [330,440,550,660,880].forEach((f,i)=>playTone(f,'triangle',.3,.25,i*.06)); },
+  // Mission lancée — countdown start
+  go:         ()=>{ playTone(880,'square',.15,.2); playTone(1100,'square',.15,.2,.15); },
+  // Bip countdown urgence
+  bip:        ()=>{ playTone(880,'square',.08,.3); },
+  // Fin du temps
+  buzzer:     ()=>{ playTone(220,'sawtooth',.4,.4); playTone(180,'sawtooth',.4,.3,.1); },
+  // Vote envoyé
+  voteOk:     ()=>{ playTone(660,'sine',.15,.2); playTone(880,'sine',.2,.2,.12); },
+};
+
+/* ════════════════════════════════════════════════
+   STATE — variables d'état de la session
+════════════════════════════════════════════════ */
 let prenom='', qIdx=0, reponses=[], scores={intuitif:0,stratege:0,chanceux:0,temeraire:0};
 let equipeKey=null, roleKey=null, joueurKey=null;
-let votesLocaux=[null,null,null];
+let noteEtoiles=null, smileys={perso:null, origi:null};
 let missionActive=false, chronoInt=null;
 
-// ── UTILS ──
-function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.getElementById(id).classList.add('on');}
+/* ════════════════════════════════════════════════
+   UTILS
+════════════════════════════════════════════════ */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
 
-// ── START QUIZ ──
+/* ════════════════════════════════════════════════
+   QUIZ — démarrage
+════════════════════════════════════════════════ */
 window.startQuiz = () => {
-  const v=document.getElementById('prenom-inp').value.trim();
-  if(!v)return;
+  const v = document.getElementById('prenom-inp').value.trim();
+  if(!v) return;
+  SFX.page();
   prenom=v; qIdx=0; reponses=[]; scores={intuitif:0,stratege:0,chanceux:0,temeraire:0};
   document.getElementById('btn-start').disabled=true;
   showQ(0); showPage('pg-quiz');
 };
 
 function showQ(i){
-  const q=QUESTIONS[i];
-  document.getElementById('q-num').textContent=`${i+1} / ${QUESTIONS.length}`;
-  document.getElementById('q-progress').style.width=`${((i)/QUESTIONS.length)*100}%`;
-  document.getElementById('q-texte').textContent=q.q;
-  const optsEl=document.getElementById('q-opts');
+  const q = QUESTIONS[i];
+  document.getElementById('q-num').textContent = `${i+1} / ${QUESTIONS.length}`;
+  document.getElementById('q-progress').style.width = `${(i/QUESTIONS.length)*100}%`;
+  document.getElementById('q-texte').textContent = q.q;
+  const optsEl = document.getElementById('q-opts');
   optsEl.innerHTML='';
-  const letters=['A','B','C','D'];
-  q.opts.forEach((opt,j)=>{
+  ['A','B','C','D'].forEach((letter,j)=>{
     const btn=document.createElement('button');
     btn.className='quiz-opt';
-    btn.innerHTML=`<span class="opt-letter">${letters[j]}</span>${esc(opt.txt)}`;
+    btn.innerHTML=`<span class="opt-letter">${letter}</span>${esc(q.opts[j].txt)}`;
     btn.onclick=()=>choisir(j);
     optsEl.appendChild(btn);
   });
 }
 
 function choisir(j){
-  const q=QUESTIONS[qIdx];
-  const opts=document.querySelectorAll('.quiz-opt');
-  opts.forEach((b,i)=>b.className='quiz-opt'+(i===j?' sel':''));
-  // Score
+  SFX.tap();
+  const q = QUESTIONS[qIdx];
+  document.querySelectorAll('.quiz-opt').forEach((b,i)=>b.className='quiz-opt'+(i===j?' sel':''));
   Object.entries(q.opts[j].scores).forEach(([k,v])=>scores[k]+=v);
   reponses.push(j);
   setTimeout(()=>{
     qIdx++;
-    if(qIdx<QUESTIONS.length){ showQ(qIdx); }
+    if(qIdx < QUESTIONS.length){ showQ(qIdx); }
     else { affecterEquipe(); }
-  },400);
+  }, 400);
 }
 
 window.quizBack = () => {
-  if(qIdx===0){showPage('pg-accueil');document.getElementById('btn-start').disabled=false;return;}
+  if(qIdx===0){ showPage('pg-accueil'); document.getElementById('btn-start').disabled=false; return; }
   qIdx--;
-  const lastScore=QUESTIONS[qIdx].opts[reponses.pop()].scores;
+  const lastScore = QUESTIONS[qIdx].opts[reponses.pop()].scores;
   Object.entries(lastScore).forEach(([k,v])=>scores[k]-=v);
   showQ(qIdx);
 };
 
-// ── AFFECTER ÉQUIPE + RÔLE ──
+/* ════════════════════════════════════════════════
+   AFFECTER ÉQUIPE + RÔLE
+   Rééquilibrage automatique des équipes
+════════════════════════════════════════════════ */
 async function affecterEquipe(){
-  // Équipe = max score (avec rééquilibrage)
-  const snap=await get(ref(db,'v13/joueurs'));
-  const counts={intuitif:0,stratege:0,chanceux:0,temeraire:0};
-  snap.forEach(c=>{if(c.val().equipe)counts[c.val().equipe]++;});
+  const snap = await get(ref(db,'v13/joueurs'));
+  const counts = {intuitif:0,stratege:0,chanceux:0,temeraire:0};
+  snap.forEach(c=>{ if(c.val().equipe) counts[c.val().equipe]++; });
 
-  // Bonus inversé pour rééquilibrage (-0.5 par personne en trop)
-  const adjusted={};
+  // Score ajusté = score quiz - 0.4 * nb membres (rééquilibrage)
+  const adjusted = {};
   Object.keys(scores).forEach(k=>adjusted[k]=scores[k]-counts[k]*0.4);
-  equipeKey=Object.entries(adjusted).sort((a,b)=>b[1]-a[1])[0][0];
+  equipeKey = Object.entries(adjusted).sort((a,b)=>b[1]-a[1])[0][0];
 
-  // Rôle : basé sur nombre d'inscrits → nb rôles actifs
-  const total=snap.size||0;
-  const nbRoles=total<20?3:total<32?4:5;
-  const rolesActifs=ROLES.slice(0,nbRoles);
+  // Nombre de rôles actifs selon affluence
+  const total = snap.size||0;
+  const nbRoles = total<20?3:total<32?4:5;
+  const rolesActifs = ROLES.slice(0,nbRoles);
 
-  // Rôle = moins représenté dans cette équipe
-  const roleCount={};
+  // Rôle = le moins représenté dans cette équipe
+  const roleCount = {};
   rolesActifs.forEach(r=>roleCount[r.id]=0);
-  snap.forEach(c=>{const d=c.val();if(d.equipe===equipeKey&&roleCount[d.role]!==undefined)roleCount[d.role]++;});
-  roleKey=Object.entries(roleCount).sort((a,b)=>a[1]-b[1])[0][0];
+  snap.forEach(c=>{ const d=c.val(); if(d.equipe===equipeKey && roleCount[d.role]!==undefined) roleCount[d.role]++; });
+  roleKey = Object.entries(roleCount).sort((a,b)=>a[1]-b[1])[0][0];
 
-  // Enregistrer joueur
-  const jRef=push(ref(db,'v13/joueurs'));
-  joueurKey=jRef.key;
-  await set(jRef,{prenom,equipe:equipeKey,role:roleKey,scores,joinedAt:serverTimestamp(),voteEnvoye:false});
+  // Enregistrement Firebase
+  const jRef = push(ref(db,'v13/joueurs'));
+  joueurKey = jRef.key;
+  await set(jRef,{prenom, equipe:equipeKey, role:roleKey, scores, pointsPerso:0, joinedAt:serverTimestamp(), voteEnvoye:false});
 
+  // Sauvegarde session locale
+  localStorage.setItem('v13_session', JSON.stringify({prenom, equipeKey, roleKey, joueurKey}));
+
+  SFX.carte();
   afficherCarte();
 }
 
+/* ════════════════════════════════════════════════
+   AFFICHER LA CARTE IDENTITÉ
+════════════════════════════════════════════════ */
 function afficherCarte(){
-  const eq=EQUIPES[equipeKey];
-  const role=ROLES.find(r=>r.id===roleKey);
-  document.documentElement.style.setProperty('--eq-col',eq.col);
-  document.documentElement.style.setProperty('--eq-glow',eq.glow);
-  document.getElementById('c-emoji').textContent=eq.emoji;
-  document.getElementById('c-equipe').textContent=eq.nom;
-  document.getElementById('c-eq-desc').textContent=eq.desc;
-  document.getElementById('c-role').textContent=role.emoji+' '+role.nom;
-  document.getElementById('c-role-desc').textContent=role.desc;
-  document.getElementById('c-prenom').textContent=prenom;
-  document.getElementById('att-role-badge').textContent=role.emoji+' '+role.nom;
-  document.getElementById('att-icon').textContent=eq.emoji;
-  document.getElementById('c-prenom').textContent=prenom;
+  const eq   = EQUIPES[equipeKey];
+  const role = ROLES.find(r=>r.id===roleKey);
+  document.documentElement.style.setProperty('--eq-col',  eq.col);
+  document.documentElement.style.setProperty('--eq-glow', eq.glow);
+  document.getElementById('c-emoji').textContent      = eq.emoji;
+  document.getElementById('c-equipe').textContent     = eq.nom;
+  document.getElementById('c-eq-desc').textContent    = eq.desc;
+  document.getElementById('c-role').textContent       = role.emoji+' '+role.nom;
+  document.getElementById('c-role-desc').textContent  = role.desc;
+  document.getElementById('c-prenom').textContent     = prenom;
+  document.getElementById('att-role-badge').textContent = role.emoji+' '+role.nom;
+  document.getElementById('att-icon').textContent     = eq.emoji;
   showPage('pg-carte');
-  // Après 5s, passer à la page d'attente
-  setTimeout(()=>showPage('pg-attente'),5000);
-
-  // Écouter les événements admin
+  setTimeout(()=>{ showPage('pg-attente'); }, 5000);
   listenAdmin();
 }
 
-// ── ÉCOUTER ADMIN ──
+/* ════════════════════════════════════════════════
+   ÉCOUTER LES ÉVÉNEMENTS ADMIN (Firebase)
+════════════════════════════════════════════════ */
 function listenAdmin(){
-  onValue(ref(db,'v13/etat'),(snap)=>{
-    const etat=snap.val();
-    if(!etat)return;
-    if(etat.type==='mission' && etat.roleActif===roleKey && etat.actif){
-      lancerMission(etat);
+  onValue(ref(db,'v13/etat'), snap=>{
+    const etat = snap.val();
+    if(!etat) return;
+
+    if(etat.type==='performer'){
+      // Un performer a été tiré au sort
+      if(etat.joueurKey === joueurKey){
+        // C'est MOI !
+        SFX.selected();
+        showPage('pg-performer');
+      } else {
+        showPage('pg-attente');
+      }
+
+    } else if(etat.type==='mission' && etat.actif){
+      if(etat.joueurKey === joueurKey){
+        // Ma mission
+        lancerMission(etat);
+      } else {
+        showPage('pg-attente');
+      }
+
     } else if(etat.type==='vote' && etat.actif){
       ouvrirVote(etat);
+
     } else if(!etat.actif){
       showPage('pg-attente');
-      missionActive=false;clearInterval(chronoInt);
+      missionActive=false;
+      clearInterval(chronoInt);
     }
   });
 }
 
-// ── MISSION ──
+/* ════════════════════════════════════════════════
+   MISSION — chrono 20s
+════════════════════════════════════════════════ */
 function lancerMission(etat){
-  if(missionActive)return;
+  if(missionActive) return;
   missionActive=true;
-  document.getElementById('m-titre').textContent=etat.missionTitre||'À toi de jouer !';
-  document.getElementById('m-desc').textContent=etat.missionDesc||'';
+  document.getElementById('m-titre').textContent = etat.missionTitre || 'À toi de jouer !';
+  document.getElementById('m-desc').textContent  = etat.missionDesc  || '';
   showPage('pg-mission');
-  let t=etat.duree||60;
-  const el=document.getElementById('m-chrono');
-  el.textContent=t;el.className='mission-chrono';
+  SFX.go();
+  let t = etat.duree || 20;
+  const el = document.getElementById('m-chrono');
+  el.textContent=t; el.className='mission-chrono';
   clearInterval(chronoInt);
-  chronoInt=setInterval(()=>{
-    t--;el.textContent=t;
-    if(t<=10)el.className='mission-chrono urgent';
-    if(t<=0){clearInterval(chronoInt);showPage('pg-attente');missionActive=false;}
+  chronoInt = setInterval(()=>{
+    t--; el.textContent=t;
+    if(t<=5){ el.className='mission-chrono urgent'; SFX.bip(); }
+    if(t<=0){ clearInterval(chronoInt); SFX.buzzer(); showPage('pg-attente'); missionActive=false; }
   },1000);
 }
 
-// ── VOTE ──
-const SMILEYS=[
-  {e:'😐',l:'Bof'},
-  {e:'🙂',l:'Pas mal'},
-  {e:'😄',l:'Bien'},
-  {e:'🤩',l:'Top'},
-  {e:'🔥',l:'Incroyable'},
-];
-
+/* ════════════════════════════════════════════════
+   VOTE — ouverture
+════════════════════════════════════════════════ */
 function ouvrirVote(etat){
-  votesLocaux=[null,null,null];
-  document.getElementById('vote-sub').textContent='Note la prestation de '+etat.performerNom+'';
-  [0,1,2].forEach(i=>{
-    const wrap=document.getElementById('smileys-'+i);
-    wrap.innerHTML='';
-    SMILEYS.forEach((s,j)=>{
-      const btn=document.createElement('button');
-      btn.className='smiley-btn';
-      btn.innerHTML=`${s.e}<span class="smiley-lbl">${s.l}</span>`;
-      btn.onclick=()=>choixSmiley(i,j,wrap);
-      wrap.appendChild(btn);
-    });
-  });
-  document.getElementById('vote-pct').textContent='—';
+  noteEtoiles=null; smileys={perso:null, origi:null};
+  document.getElementById('vote-performer-nom').textContent = etat.performerNom || '';
+
+  // ── Étoiles /5 ──
+  const etoilesWrap = document.getElementById('etoiles-wrap');
+  etoilesWrap.innerHTML='';
+  for(let i=1;i<=5;i++){
+    const btn=document.createElement('button');
+    btn.className='etoile-btn'; btn.textContent='⭐';
+    btn.onclick=()=>choixEtoile(i);
+    etoilesWrap.appendChild(btn);
+  }
+
+  // ── Smiley Personnalité ──
+  buildSmileys('smileys-perso','perso');
+  // ── Smiley Originalité ──
+  buildSmileys('smileys-origi','origi');
+
   document.getElementById('btn-voter').disabled=true;
   showPage('pg-vote');
 }
 
-function choixSmiley(critere,val,wrap){
-  votesLocaux[critere]=val;
+function buildSmileys(containerId, key){
+  const wrap = document.getElementById(containerId);
+  wrap.innerHTML='';
+  SMILEYS.forEach((s,j)=>{
+    const btn=document.createElement('button');
+    btn.className='smiley-btn';
+    btn.innerHTML=`${s.e}<span class="smiley-lbl">${s.l}</span>`;
+    btn.onclick=()=>choixSmiley(key,j,wrap);
+    wrap.appendChild(btn);
+  });
+}
+
+function choixEtoile(val){
+  SFX.tap();
+  noteEtoiles=val;
+  document.querySelectorAll('.etoile-btn').forEach((b,i)=>b.className='etoile-btn'+(i<val?' sel':''));
+  checkVoteReady();
+}
+
+function choixSmiley(key,val,wrap){
+  SFX.tap();
+  smileys[key]=val;
   wrap.querySelectorAll('.smiley-btn').forEach((b,i)=>b.className='smiley-btn'+(i===val?' sel':''));
-  updateVotePct();
+  checkVoteReady();
 }
 
-function updateVotePct(){
-  if(votesLocaux.some(v=>v===null)){document.getElementById('btn-voter').disabled=true;return;}
-  const total=votesLocaux.reduce((a,b)=>a+b,0);
-  const pct=Math.round((total/((SMILEYS.length-1)*3))*100);
-  document.getElementById('vote-pct').textContent=pct+'%';
-  document.getElementById('btn-voter').disabled=false;
+function checkVoteReady(){
+  const ok = noteEtoiles!==null && smileys.perso!==null && smileys.origi!==null;
+  document.getElementById('btn-voter').disabled=!ok;
 }
 
-window.envoyerVote=async()=>{
-  const total=votesLocaux.reduce((a,b)=>a+b,0);
-  const pct=Math.round((total/((SMILEYS.length-1)*3))*100);
-  await push(ref(db,'v13/votes'),{joueurKey,prenom,equipe:equipeKey,pct,votesLocaux,ts:serverTimestamp()});
-  if(joueurKey)await set(ref(db,`v13/joueurs/${joueurKey}/voteEnvoye`),true);
-  document.getElementById('vd-score').textContent=pct+'%';
+/* ════════════════════════════════════════════════
+   VOTE — envoi Firebase
+   - noteEtoiles (1-5) → points équipe
+   - smileys.perso + smileys.origi (0-4 chacun) → points perso performer
+════════════════════════════════════════════════ */
+window.envoyerVote = async () => {
+  SFX.voteOk();
+  const pointsEquipe = noteEtoiles; // 1-5
+  const pointsPerso  = smileys.perso + smileys.origi; // 0-8
+  await push(ref(db,'v13/votes'),{
+    joueurKey, prenom, equipe:equipeKey,
+    noteEtoiles, smileys,
+    pointsEquipe, pointsPerso,
+    ts:serverTimestamp()
+  });
+  if(joueurKey) await set(ref(db,`v13/joueurs/${joueurKey}/voteEnvoye`),true);
   showPage('pg-vote-done');
   setTimeout(()=>showPage('pg-attente'),4000);
 };
 
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+/* ════════════════════════════════════════════════
+   SESSION — restaurer si le joueur revient
+════════════════════════════════════════════════ */
+const _session = localStorage.getItem('v13_session');
+if(_session){
+  try{
+    const s = JSON.parse(_session);
+    prenom=s.prenom; equipeKey=s.equipeKey; roleKey=s.roleKey; joueurKey=s.joueurKey;
+    afficherCarte();
+  } catch(e){ localStorage.removeItem('v13_session'); }
+}
 
-// Stars
-for(let i=0;i<40;i++){const s=document.createElement('div');s.className='star';const sz=.5+Math.random()*2;s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--t:${2+Math.random()*4}s;--d:${-Math.random()*4}s;--b:${.2+Math.random()*.5}`;document.getElementById('bg').appendChild(s);}
+/* ════════════════════════════════════════════════
+   DÉCOR — étoiles de fond
+════════════════════════════════════════════════ */
+for(let i=0;i<40;i++){
+  const s=document.createElement('div'); s.className='star';
+  const sz=.5+Math.random()*2;
+  s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--t:${2+Math.random()*4}s;--d:${-Math.random()*4}s;--b:${.2+Math.random()*.5}`;
+  document.getElementById('bg').appendChild(s);
+}
 </script>
 </body>
 </html>
