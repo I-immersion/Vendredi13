@@ -82,7 +82,7 @@ body{ display:flex; flex-direction:column; }
 .btn-reset:hover{ background:rgba(255,68,68,.1); color:var(--danger); }
 
 /* ── MAIN 3 COLONNES ── */
-#main{ flex:1; display:grid; grid-template-columns:280px 1fr; overflow:hidden; }
+#main{ flex:1; display:grid; grid-template-columns:280px 1fr 300px; overflow:hidden; }
 
 /* ════════════════════════════════════════════════
    COLONNE GAUCHE — LISTE JOUEURS
@@ -132,6 +132,12 @@ body{ display:flex; flex-direction:column; }
   display:flex; flex-direction:column; align-items:center;
   justify-content:flex-start; padding:20px;
   gap:16px; overflow-y:auto;
+}
+#col-droite{
+  border-left:1px solid var(--border);
+  display:flex; flex-direction:column;
+  padding:20px 16px; gap:16px;
+  overflow-y:auto;
 }
 
 /* ── Slot machine tirage performer ── */
@@ -356,10 +362,15 @@ body{ display:flex; flex-direction:column; }
       <button class="btn-roue" id="btn-roue" onclick="spinRoue()">🎡 Faire tourner la roue</button>
     </div>
 
+  </div>
+
+  <!-- ── Colonne droite : chrono + vote ── -->
+  <div id="col-droite">
+
     <!-- Chrono + Lancer -->
     <div id="chrono-wrap">
-      <div id="chrono-display">20</div>
-      <button class="btn-lancer" id="btn-lancer" onclick="lancerChrono()">▶ Lancer la mission (20s)</button>
+      <div id="chrono-display" style="display:none">20</div>
+      <button class="btn-lancer" id="btn-lancer" onclick="lancerChrono()" style="display:none">▶ Lancer la mission (20s)</button>
     </div>
 
     <!-- Résultats vote -->
@@ -374,10 +385,8 @@ body{ display:flex; flex-direction:column; }
 
   </div>
 
-
-
 </div>
-<div id="version-badge">ADMIN v2.15</div>
+<div id="version-badge">ADMIN v2.16</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -481,6 +490,11 @@ const COULEURS_ROUE = ['#a78bfa','#38bdf8','#4ade80','#fb923c','#ffd700','#ff6b9
 ════════════════════════════════════════════════ */
 let audioCtx=null;
 function getCtx(){ if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
+let _adminAudioCtx = null;
+function getAudioCtx(){
+  if(!_adminAudioCtx) _adminAudioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  return _adminAudioCtx;
+}
 function playTone(freq,type,duration,vol=0.3,delay=0){
   const ctx=getCtx(), o=ctx.createOscillator(), g=ctx.createGain();
   o.connect(g); g.connect(ctx.destination);
@@ -500,6 +514,51 @@ const SFX = {
   roueDing:   ()=>{ playTone(880,'sine',.3,.4); playTone(1100,'sine',.25,.3,.1); },
   // Go chrono
   go:         ()=>{ playTone(880,'square',.15,.3); playTone(1100,'square',.15,.3,.15); },
+  
+  // Musique jeu TV — démarre avec lancerChrono, s'arrête au buzzer
+  startGameMusic: ()=>{
+    if(window._gameMusicTimer) return;
+    const ctx = getAudioCtx();
+    if(ctx.state === 'suspended') ctx.resume();
+    // Séquence festive style jeu TV : do-mi-sol-do-si-sol-mi
+    const melody = [
+      [523,0.12],[659,0.12],[784,0.12],[1047,0.18],
+      [988,0.12],[784,0.12],[659,0.12],[523,0.18],
+      [784,0.12],[880,0.12],[988,0.12],[1047,0.18],
+      [880,0.12],[784,0.12],[659,0.12],[523,0.25],
+    ];
+    let step = 0;
+    let startTime = ctx.currentTime + 0.05;
+    function scheduleNote(){
+      if(!window._gameMusicTimer) return;
+      const [freq, dur] = melody[step % melody.length];
+      // Mélodie
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'triangle';
+      o.frequency.value = freq;
+      g.gain.setValueAtTime(0.18, startTime);
+      g.gain.exponentialRampToValueAtTime(0.001, startTime + dur * 0.85);
+      o.start(startTime); o.stop(startTime + dur);
+      // Basse (quinte)
+      const ob = ctx.createOscillator();
+      const gb = ctx.createGain();
+      ob.connect(gb); gb.connect(ctx.destination);
+      ob.type = 'sine';
+      ob.frequency.value = freq / 2;
+      gb.gain.setValueAtTime(0.08, startTime);
+      gb.gain.exponentialRampToValueAtTime(0.001, startTime + dur);
+      ob.start(startTime); ob.stop(startTime + dur);
+      step++;
+      startTime += dur;
+      window._gameMusicTimer = setTimeout(scheduleNote, (dur - 0.02) * 1000);
+    }
+    window._gameMusicTimer = setTimeout(scheduleNote, 0);
+  },
+  stopGameMusic: ()=>{
+    if(window._gameMusicTimer){ clearTimeout(window._gameMusicTimer); window._gameMusicTimer=null; }
+  },
   // Bip urgence
   bip:        ()=>{ playTone(880,'square',.08,.4); },
   // Buzzer fin
@@ -710,13 +769,22 @@ window.lancerChrono = () => {
   let t=missionActuelle.duree;
   el.textContent=t; el.className='';
   SFX.go();
+  SFX.startGameMusic();
 
   clearInterval(chronoInt);
   chronoInt=setInterval(()=>{
     t--; el.textContent=t;
-    if(t<=5){ el.className='urgent'; SFX.bip(); }
+    // Bip à chaque seconde, plus intense à partir de 5
+    if(t > 5){
+      playTone(660,'square',.06,.15); // bip discret
+    } else if(t > 0){
+      el.className='urgent';
+      playTone(880,'square',.10,.5);  // bip fort
+      playTone(1100,'square',.06,.3,.08); // + aigu
+    }
     if(t<=0){
       clearInterval(chronoInt);
+      SFX.stopGameMusic();
       SFX.buzzer();
       chronoActif=false;
       set(ref(db,'v13/etat'),{ type:'mission', actif:false, ts:serverTimestamp() });
@@ -881,6 +949,7 @@ window.sortirJoueur = async (key, nom) => {
 };
 
 window.resetSoiree = async () => {
+  SFX.stopGameMusic();
   if(!confirm('Effacer tous les joueurs et votes ? Cette action est irréversible.')) return;
   // Signal reset pour effacer les sessions sur les téléphones
   await set(ref(db,'v13/reset'),{ ts: Date.now() });
