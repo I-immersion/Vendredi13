@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<!-- saved from url=(0056)file:///Users/emmanuelexbrayat/Downloads/v13-client.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LUMIIA · Vendredi 13</title>
+<link href="./LUMIIA · Vendredi 13 V1_files/css2" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --noir:#09080f;
+  --surface:rgba(255,255,255,0.06);
+  --border:rgba(255,255,255,0.1);
+  --texte:#f0e8f8;
+  --texte-dim:rgba(240,232,248,0.5);
+  --or:#ffd700;
+  /* équipes */
+  --intuitif:#a78bfa;   /* violet */
+  --stratege:#38bdf8;   /* bleu */
+  --chanceux:#4ade80;   /* vert */
+  --temeraire:#fb923c;  /* orange */
+}
+html,body{height:100%;background:var(--noir);color:var(--texte);font-family:'Nunito',sans-serif;overflow-x:hidden;touch-action:manipulation;}
+
+/* FOND */
+#bg{position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 90% 50% at 50% 0%,rgba(100,50,200,0.2) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 10% 80%,rgba(200,50,100,0.1) 0%,transparent 60%),
+    var(--noir);
+}
+.star{position:fixed;border-radius:50%;background:#fff;animation:twinkle var(--t,3s) ease-in-out infinite var(--d,0s);opacity:0;}
+@keyframes twinkle{0%,100%{opacity:0}50%{opacity:var(--b,.5)}}
+
+/* PAGES */
+.page{display:none;flex-direction:column;align-items:center;min-height:100dvh;padding:28px 20px 40px;position:relative;z-index:10;}
+.page.on{display:flex;animation:fadein .4s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* ── ACCUEIL ── */
+#pg-accueil{justify-content:center;text-align:center;gap:12px;}
+.logo-lumiia{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.3em;color:var(--texte-dim);margin-bottom:4px;}
+.acc-emoji{font-size:clamp(4rem,20vw,7rem);animation:float 3s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(255,215,0,.5));}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
+.acc-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,12vw,5rem);line-height:1;background:linear-gradient(135deg,#ffd700,#ff6b9d,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px rgba(255,215,0,.3));}
+.acc-sub{font-size:clamp(.85rem,3.5vw,1rem);color:var(--texte-dim);font-weight:600;letter-spacing:.05em;}
+.prenom-lbl{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);margin-top:16px;}
+.prenom-inp{width:100%;max-width:300px;padding:16px 20px;background:var(--surface);border:2px solid var(--border);border-radius:50px;color:var(--texte);font-family:'Nunito',sans-serif;font-size:1.3rem;font-weight:700;text-align:center;outline:none;transition:all .2s;margin-top:8px;}
+.prenom-inp::placeholder{color:rgba(240,232,248,.2);}
+.prenom-inp:focus{border-color:rgba(255,215,0,.6);background:rgba(255,215,0,.05);}
+.btn-start{margin-top:12px;width:100%;max-width:300px;padding:18px;background:linear-gradient(135deg,var(--or),#ff9f2e);border:none;border-radius:50px;color:#1a0a00;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.1em;cursor:pointer;transition:all .2s;box-shadow:0 6px 24px rgba(255,160,0,.35);}
+.btn-start:active{transform:scale(.96);}
+.btn-start:disabled{opacity:.4;}
+
+/* ── QUIZ ── */
+#pg-quiz{gap:0;padding-top:20px;}
+.quiz-header{width:100%;display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+.quiz-back{background:transparent;border:1px solid var(--border);border-radius:50%;width:36px;height:36px;color:var(--texte-dim);font-size:1rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.quiz-progress-wrap{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
+.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--or),#ff9f2e);border-radius:3px;transition:width .4s ease;}
+.quiz-num{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);flex-shrink:0;}
+
+.quiz-question{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,7vw,2.8rem);line-height:1.15;text-align:center;color:var(--texte);margin-bottom:28px;max-width:340px;letter-spacing:.02em;}
+
+.quiz-options{width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px;}
+.quiz-opt{
+  width:100%;padding:16px 20px;
+  background:var(--surface);border:2px solid var(--border);border-radius:16px;
+  color:var(--texte);font-family:'Nunito',sans-serif;font-size:clamp(.95rem,4vw,1.1rem);font-weight:700;
+  text-align:left;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:12px;
+}
+.quiz-opt:active{transform:scale(.97);}
+.quiz-opt:hover{border-color:rgba(255,215,0,.4);background:rgba(255,215,0,.05);}
+.quiz-opt.sel{border-color:var(--or);background:rgba(255,215,0,.12);color:var(--or);}
+.opt-letter{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.8rem;letter-spacing:.05em;flex-shrink:0;font-weight:800;}
+.quiz-opt.sel .opt-letter{background:var(--or);color:#1a0a00;border-color:var(--or);}
+
+/* ── CARTE IDENTITÉ ── */
+#pg-carte{justify-content:center;text-align:center;gap:0;}
+.carte-wrap{
+  width:100%;max-width:340px;
+  border:2px solid var(--eq-col,var(--or));
+  border-radius:24px;
+  background:rgba(255,255,255,.04);
+  box-shadow:0 0 50px var(--eq-glow,rgba(255,215,0,.15));
+  padding:28px 24px;
+  position:relative;overflow:hidden;
+}
+.carte-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--eq-col,var(--or));}
+.carte-top{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--texte-dim);margin-bottom:12px;}
+.carte-emoji{font-size:clamp(3.5rem,15vw,5.5rem);line-height:1;margin-bottom:8px;filter:drop-shadow(0 0 20px var(--eq-glow,rgba(255,215,0,.4)));}
+.carte-equipe{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,9vw,3.5rem);letter-spacing:.06em;color:var(--eq-col,var(--or));line-height:1;margin-bottom:4px;}
+.carte-equipe-desc{font-size:.8rem;color:var(--texte-dim);font-weight:600;margin-bottom:20px;line-height:1.5;}
+.carte-sep{width:60%;height:1px;background:var(--border);margin:0 auto 16px;}
+.carte-role-lbl{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--texte-dim);margin-bottom:6px;}
+.carte-role{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,7vw,2.5rem);letter-spacing:.06em;color:var(--texte);line-height:1;}
+.carte-role-desc{font-size:.75rem;color:var(--texte-dim);font-weight:600;margin-top:4px;line-height:1.5;max-width:220px;}
+.carte-prenom{margin-top:16px;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);}
+.carte-prenom b{color:var(--texte);font-weight:800;}
+
+.carte-hint{margin-top:20px;font-size:.72rem;color:var(--texte-dim);text-align:center;line-height:1.6;max-width:280px;font-style:italic;}
+.carte-hint b{color:var(--or);}
+
+/* ── ATTENTE MISSION ── */
+#pg-attente{justify-content:center;text-align:center;gap:16px;}
+.att-icon{font-size:clamp(3rem,14vw,5rem);animation:float 3s ease-in-out infinite;}
+.att-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,8vw,3rem);letter-spacing:.06em;color:var(--texte);}
+.att-role-badge{display:inline-block;padding:6px 18px;border:2px solid var(--eq-col,var(--or));border-radius:50px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.08em;color:var(--eq-col,var(--or));}
+.att-sub{font-size:.82rem;color:var(--texte-dim);line-height:1.6;max-width:280px;font-weight:600;}
+.att-pulse{display:flex;align-items:center;gap:8px;justify-content:center;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);}
+.dot-pulse{width:8px;height:8px;border-radius:50%;background:var(--or);animation:pdot 1.5s ease-in-out infinite;}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
+
+/* ── MISSION ACTIVE ── */
+#pg-mission{justify-content:center;text-align:center;gap:14px;padding:20px;}
+.mission-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border:1px solid rgba(255,215,0,.4);border-radius:50px;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--or);}
+.mission-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,9vw,3.5rem);line-height:1.05;letter-spacing:.04em;color:var(--texte);max-width:320px;}
+.mission-desc{font-size:clamp(.9rem,3.8vw,1.05rem);color:var(--texte-dim);line-height:1.6;max-width:300px;font-weight:600;}
+.mission-chrono{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,18vw,7rem);color:var(--or);line-height:1;text-shadow:0 0 30px rgba(255,215,0,.4);}
+.mission-chrono.urgent{color:#ff4444;animation:blink .5s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ── VOTE ── */
+#pg-vote{gap:14px;padding:20px;}
+.vote-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,8vw,3rem);letter-spacing:.05em;text-align:center;}
+.vote-sub{font-size:.8rem;color:var(--texte-dim);text-align:center;font-weight:600;}
+.vote-criteres{width:100%;max-width:360px;display:flex;flex-direction:column;gap:14px;}
+.critere-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;}
+.critere-nom{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);margin-bottom:10px;}
+.smileys{display:flex;justify-content:space-between;gap:4px;}
+.smiley-btn{flex:1;padding:10px 4px;background:transparent;border:2px solid var(--border);border-radius:12px;font-size:clamp(1.3rem,5vw,1.8rem);cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.smiley-btn span.smiley-lbl{font-size:.5rem;letter-spacing:.05em;text-transform:uppercase;color:var(--texte-dim);font-family:'Nunito',sans-serif;}
+.smiley-btn:active{transform:scale(.93);}
+.smiley-btn.sel{border-color:var(--or);background:rgba(255,215,0,.1);}
+
+.vote-total{margin-top:4px;text-align:center;}
+.vote-pct{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,11vw,4rem);color:var(--or);text-shadow:0 0 20px rgba(255,215,0,.4);}
+.vote-pct-lbl{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);}
+
+.btn-voter{width:100%;max-width:360px;padding:17px;background:linear-gradient(135deg,var(--or),#ff9f2e);border:none;border-radius:50px;color:#1a0a00;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.1em;cursor:pointer;transition:all .2s;box-shadow:0 6px 24px rgba(255,160,0,.3);}
+.btn-voter:active{transform:scale(.97);}
+.btn-voter:disabled{opacity:.4;}
+
+/* ── VOTE ENVOYÉ ── */
+#pg-vote-done{justify-content:center;text-align:center;gap:14px;}
+.vd-icon{font-size:clamp(4rem,18vw,6rem);animation:pop .5s cubic-bezier(.34,1.56,.64,1);}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:none;opacity:1}}
+.vd-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,9vw,3.5rem);letter-spacing:.05em;}
+.vd-score{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,15vw,5.5rem);color:var(--or);text-shadow:0 0 30px rgba(255,215,0,.4);}
+.vd-sub{font-size:.85rem;color:var(--texte-dim);line-height:1.6;font-weight:600;}
+</style>
+</head>
+<body>
+<div id="bg"><div class="star" style="width: 2.14785px; height: 2.14785px; left: 79.0717%; top: 18.1919%; --t: 4.289640066650162s; --d: -2.5516361032945265s; --b: 0.6037974611947357;"></div><div class="star" style="width: 2.02406px; height: 2.02406px; left: 37.9216%; top: 53.9477%; --t: 5.359967078933062s; --d: -3.540882628762974s; --b: 0.20834483083794447;"></div><div class="star" style="width: 0.694526px; height: 0.694526px; left: 36.3923%; top: 78.3273%; --t: 5.533573376445777s; --d: -2.097460650672479s; --b: 0.29193655126340623;"></div><div class="star" style="width: 1.58984px; height: 1.58984px; left: 11.732%; top: 50.0467%; --t: 5.871204574270827s; --d: -3.983850705106641s; --b: 0.47784964604025804;"></div><div class="star" style="width: 2.29265px; height: 2.29265px; left: 29.1379%; top: 84.9009%; --t: 2.4573290022944123s; --d: -2.982345333480232s; --b: 0.458410491233928;"></div><div class="star" style="width: 1.89663px; height: 1.89663px; left: 36.2886%; top: 20.9987%; --t: 5.815774875066605s; --d: -2.2689590701005677s; --b: 0.4156387453355083;"></div><div class="star" style="width: 2.17262px; height: 2.17262px; left: 57.9359%; top: 55.0401%; --t: 5.185807174901521s; --d: -3.379112316713383s; --b: 0.5294733847008974;"></div><div class="star" style="width: 2.49244px; height: 2.49244px; left: 19.9432%; top: 4.86714%; --t: 2.6455685205380366s; --d: -2.549340148084037s; --b: 0.6785357999308077;"></div><div class="star" style="width: 1.4214px; height: 1.4214px; left: 92.3755%; top: 5.47011%; --t: 4.395274892867475s; --d: -2.1614522916326604s; --b: 0.4308471955552355;"></div><div class="star" style="width: 1.64224px; height: 1.64224px; left: 66.8011%; top: 2.3828%; --t: 5.68691846896819s; --d: -2.979287726934886s; --b: 0.5238637343435415;"></div><div class="star" style="width: 2.15839px; height: 2.15839px; left: 50.4851%; top: 15.5044%; --t: 3.385060872777276s; --d: -0.641354203691455s; --b: 0.6934788695630012;"></div><div class="star" style="width: 0.808227px; height: 0.808227px; left: 13.2893%; top: 5.9676%; --t: 3.11428814280641s; --d: -2.433549220974287s; --b: 0.632299403264662;"></div><div class="star" style="width: 2.30948px; height: 2.30948px; left: 57.9222%; top: 67.8122%; --t: 3.7951491357663656s; --d: -1.8676577541155805s; --b: 0.5423199156244966;"></div><div class="star" style="width: 1.59291px; height: 1.59291px; left: 23.4068%; top: 55.9419%; --t: 2.7137499333177257s; --d: -0.7473690763231322s; --b: 0.4292562380227968;"></div><div class="star" style="width: 1.2841px; height: 1.2841px; left: 78.1267%; top: 71.5787%; --t: 4.043765567127956s; --d: -0.32728038148324323s; --b: 0.36394184578230143;"></div><div class="star" style="width: 2.04416px; height: 2.04416px; left: 63.187%; top: 76.0338%; --t: 5.621581448484388s; --d: -2.6410876734541535s; --b: 0.46349768174234823;"></div><div class="star" style="width: 0.602708px; height: 0.602708px; left: 81.6048%; top: 14.0001%; --t: 5.547993511184744s; --d: -0.8096306426881212s; --b: 0.6957168947583217;"></div><div class="star" style="width: 1.0516px; height: 1.0516px; left: 23.5273%; top: 87.8758%; --t: 4.392364881225939s; --d: -0.6440140915762909s; --b: 0.21046224596255153;"></div><div class="star" style="width: 2.06155px; height: 2.06155px; left: 38.3168%; top: 42.1806%; --t: 2.9736674941005647s; --d: -3.789055049793068s; --b: 0.48256512258952855;"></div><div class="star" style="width: 0.70914px; height: 0.70914px; left: 54.3398%; top: 85.8197%; --t: 3.900210885345151s; --d: -2.4359331091080265s; --b: 0.5584606411758974;"></div><div class="star" style="width: 0.624283px; height: 0.624283px; left: 77.3185%; top: 9.93515%; --t: 3.007894461978462s; --d: -1.6218939968906767s; --b: 0.4960681802867448;"></div><div class="star" style="width: 2.48668px; height: 2.48668px; left: 61.1272%; top: 52.1527%; --t: 5.624748777435251s; --d: -2.5043177347517838s; --b: 0.516142803493198;"></div><div class="star" style="width: 2.30001px; height: 2.30001px; left: 32.3505%; top: 54.9974%; --t: 5.661476223880436s; --d: -0.20718267495924758s; --b: 0.6265890919023422;"></div><div class="star" style="width: 1.04221px; height: 1.04221px; left: 67.5545%; top: 10.5225%; --t: 5.7806021942134524s; --d: -0.3492027545299363s; --b: 0.6303994458104458;"></div><div class="star" style="width: 0.73015px; height: 0.73015px; left: 38.736%; top: 45.4315%; --t: 2.0290842964859506s; --d: -3.3397043795477406s; --b: 0.4823510982121387;"></div><div class="star" style="width: 1.46831px; height: 1.46831px; left: 10.3272%; top: 32.0734%; --t: 5.474673074810985s; --d: -2.229452122631363s; --b: 0.5721645954700216;"></div><div class="star" style="width: 0.910169px; height: 0.910169px; left: 94.8273%; top: 25.6976%; --t: 4.091098444627049s; --d: -3.4748713259937305s; --b: 0.26566218823816795;"></div><div class="star" style="width: 0.619576px; height: 0.619576px; left: 38.7754%; top: 43.8288%; --t: 4.609329890346961s; --d: -3.2263136400162593s; --b: 0.5576200789853283;"></div><div class="star" style="width: 1.37694px; height: 1.37694px; left: 55.5912%; top: 78.5533%; --t: 4.50907592909147s; --d: -0.2912488079872495s; --b: 0.3919686756686115;"></div><div class="star" style="width: 2.44012px; height: 2.44012px; left: 65.1295%; top: 56.516%; --t: 5.331764793666548s; --d: -1.0709633827317613s; --b: 0.5886284948488931;"></div><div class="star" style="width: 1.70289px; height: 1.70289px; left: 78.8371%; top: 44.8259%; --t: 2.373539296981339s; --d: -0.13874264753146015s; --b: 0.24272525870248335;"></div><div class="star" style="width: 2.32724px; height: 2.32724px; left: 26.9915%; top: 57.6351%; --t: 3.595725938106287s; --d: -3.5011567743607186s; --b: 0.5874529123823977;"></div><div class="star" style="width: 0.95902px; height: 0.95902px; left: 22.6576%; top: 80.4373%; --t: 4.760231076341116s; --d: -3.0083995425480445s; --b: 0.52619535321333;"></div><div class="star" style="width: 2.20632px; height: 2.20632px; left: 59.1149%; top: 19.1822%; --t: 5.067388217045351s; --d: -2.9329191567355424s; --b: 0.4053134156976705;"></div><div class="star" style="width: 1.47109px; height: 1.47109px; left: 64.9865%; top: 58.2539%; --t: 3.6385548004950214s; --d: -0.8103631094558077s; --b: 0.6954611168523734;"></div><div class="star" style="width: 0.812069px; height: 0.812069px; left: 22.0455%; top: 43.2265%; --t: 2.8499693873134815s; --d: -1.7072275681263949s; --b: 0.20608982407812537;"></div><div class="star" style="width: 1.11258px; height: 1.11258px; left: 25.9445%; top: 84.2415%; --t: 4.271927841400677s; --d: -3.1699905706207065s; --b: 0.4112572363547073;"></div><div class="star" style="width: 1.34774px; height: 1.34774px; left: 28.315%; top: 59.154%; --t: 2.2366420029146337s; --d: -0.20580507906327794s; --b: 0.4997982805676511;"></div><div class="star" style="width: 1.52128px; height: 1.52128px; left: 61.4488%; top: 19.6694%; --t: 3.203410044410836s; --d: -1.3055335451805594s; --b: 0.2792210171842451;"></div><div class="star" style="width: 1.65442px; height: 1.65442px; left: 13.7612%; top: 50.3472%; --t: 3.3585991873290375s; --d: -1.5875042977161713s; --b: 0.5308408645953517;"></div></div>
+
+<!-- ── ACCUEIL ── -->
+<div class="page on" id="pg-accueil">
+  <div class="logo-lumiia">LUMIIA</div>
+  <div class="acc-emoji">🔮</div>
+  <div class="acc-titre">Vendredi 13</div>
+  <div class="acc-sub">Découvre ton destin ce soir</div>
+  <div class="prenom-lbl">Ton prénom</div>
+  <input class="prenom-inp" id="prenom-inp" type="text" placeholder="Ex: Sophie" maxlength="18" autocomplete="off" autocorrect="off" spellcheck="false">
+  <button class="btn-start" id="btn-start" onclick="startQuiz()">Révèle mon destin →</button>
+</div>
+
+<!-- ── QUIZ ── -->
+<div class="page" id="pg-quiz">
+  <div class="quiz-header">
+    <button class="quiz-back" onclick="quizBack()">←</button>
+    <div class="quiz-progress-wrap"><div class="quiz-progress-fill" id="q-progress" style="width:0%"></div></div>
+    <div class="quiz-num" id="q-num">1 / 7</div>
+  </div>
+  <div class="quiz-question" id="q-texte"></div>
+  <div class="quiz-options" id="q-opts"></div>
+</div>
+
+<!-- ── CARTE ── -->
+<div class="page" id="pg-carte">
+  <div class="carte-wrap" id="carte-wrap">
+    <div class="carte-top">✦ Ton profil ce soir ✦</div>
+    <div class="carte-emoji" id="c-emoji">🔮</div>
+    <div class="carte-equipe" id="c-equipe">—</div>
+    <div class="carte-equipe-desc" id="c-eq-desc">—</div>
+    <div class="carte-sep"></div>
+    <div class="carte-role-lbl">Ton rôle</div>
+    <div class="carte-role" id="c-role">—</div>
+    <div class="carte-role-desc" id="c-role-desc">—</div>
+    <div class="carte-prenom">Bienvenue, <b id="c-prenom">—</b></div>
+  </div>
+  <div class="carte-hint">
+    Garde cet écran accessible 📱<br>
+    Quand <b>Emmanuel</b> appelle ton rôle,<br>c'est à toi de jouer !
+  </div>
+</div>
+
+<!-- ── ATTENTE MISSION ── -->
+<div class="page" id="pg-attente">
+  <div class="att-icon" id="att-icon">⏳</div>
+  <div class="att-titre">Prêt à jouer !</div>
+  <div class="att-role-badge" id="att-role-badge">—</div>
+  <div class="att-sub">L'animateur va bientôt appeler un rôle.<br>Si c'est le tien, prépare-toi !</div>
+  <div class="att-pulse"><div class="dot-pulse"></div>En attente d'une mission…</div>
+</div>
+
+<!-- ── MISSION ACTIVE ── -->
+<div class="page" id="pg-mission">
+  <div class="mission-badge">⚡ Mission pour toi !</div>
+  <div class="mission-titre" id="m-titre">—</div>
+  <div class="mission-desc" id="m-desc">—</div>
+  <div class="mission-chrono" id="m-chrono">60</div>
+</div>
+
+<!-- ── VOTE ── -->
+<div class="page" id="pg-vote">
+  <div class="vote-titre">🗳️ Vote !</div>
+  <div class="vote-sub" id="vote-sub">Note la prestation</div>
+  <div class="vote-criteres">
+    <div class="critere-card">
+      <div class="critere-nom">🎭 Présence scénique</div>
+      <div class="smileys" id="smileys-0"></div>
+    </div>
+    <div class="critere-card">
+      <div class="critere-nom">💡 Originalité</div>
+      <div class="smileys" id="smileys-1"></div>
+    </div>
+    <div class="critere-card">
+      <div class="critere-nom">🔥 Culot</div>
+      <div class="smileys" id="smileys-2"></div>
+    </div>
+  </div>
+  <div class="vote-total">
+    <div class="vote-pct" id="vote-pct">—</div>
+    <div class="vote-pct-lbl">Score actuel</div>
+  </div>
+  <button class="btn-voter" id="btn-voter" onclick="envoyerVote()" disabled="">Envoyer mon vote</button>
+</div>
+
+<!-- ── VOTE ENVOYÉ ── -->
+<div class="page" id="pg-vote-done">
+  <div class="vd-icon">✅</div>
+  <div class="vd-titre">Vote envoyé !</div>
+  <div class="vd-score" id="vd-score">—%</div>
+  <div class="vd-sub">Ton score a été pris en compte.<br>Attends le résultat sur le grand écran !</div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, push, set, onValue, serverTimestamp, get }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBPgjVFkzP88qX_hlFUFqL168XONfNIBA4",
+  authDomain: "lumiia-live.firebaseapp.com",
+  databaseURL: "https://lumiia-live-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "lumiia-live",
+  storageBucket: "lumiia-live.appspot.com",
+  messagingSenderId: "823919513931",
+  appId: "1:823919513931:web:6f6f3c7c6d1699457b18ce"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+// ── ÉQUIPES ──
+const EQUIPES = {
+  intuitif: {
+    nom:"L'Intuitif", emoji:"🔮", col:"var(--intuitif)", glow:"rgba(167,139,250,.3)",
+    desc:"Tu fais confiance à ton instinct.\nLa chance te trouve, tu ne la cherches pas.",
+  },
+  stratege: {
+    nom:"Le Stratège", emoji:"♟️", col:"var(--stratege)", glow:"rgba(56,189,248,.3)",
+    desc:"Tu construis ta chance. Chaque move est calculé.\nRien n'arrive par hasard chez toi.",
+  },
+  chanceux: {
+    nom:"Le Chanceux", emoji:"🍀", col:"var(--chanceux)", glow:"rgba(74,222,128,.3)",
+    desc:"Tu as un don. Les étoiles s'alignent pour toi.\nEt tu le sais très bien.",
+  },
+  temeraire: {
+    nom:"Le Téméraire", emoji:"⚡", col:"var(--temeraire)", glow:"rgba(251,146,60,.3)",
+    desc:"Tu provoques le destin. Audacieux, imprévisible.\nLa chance aime les gens courageux.",
+  },
+};
+
+// ── RÔLES ──
+const ROLES = [
+  { id:"eclaireur",  nom:"L'Éclaireur",  emoji:"🔦", desc:"Celui qui ouvre la voie. Premier à agir." },
+  { id:"funambule",  nom:"Le Funambule",  emoji:"🎪", desc:"L'équilibriste. Toujours à la limite." },
+  { id:"oracle",     nom:"L'Oracle",      emoji:"🔮", desc:"Celui qui voit ce que les autres ne voient pas." },
+  { id:"fantome",    nom:"Le Fantôme",    emoji:"👻", desc:"Discret mais décisif. On ne le voit pas venir." },
+  { id:"trickster",  nom:"Le Trickster",  emoji:"🃏", desc:"Le joker. Imprévisible, incontrôlable, génial." },
+];
+
+// ── QUESTIONS ──
+const QUESTIONS = [
+  {
+    q: "Une décision importante à prendre. Tu fais quoi ?",
+    opts: [
+      {txt:"Je ferme les yeux et je ressens", scores:{intuitif:3,stratege:0,chanceux:1,temeraire:0}},
+      {txt:"Je fais une liste pro/contra", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
+      {txt:"Je m'en remets au sort", scores:{intuitif:1,stratege:0,chanceux:3,temeraire:0}},
+      {txt:"Je fonce et on verra bien", scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3}},
+    ]
+  },
+  {
+    q: "Tu trouves 20€ par terre. Tu fais quoi ?",
+    opts: [
+      {txt:"Je les garde, c'est le destin", scores:{intuitif:1,stratege:0,chanceux:3,temeraire:0}},
+      {txt:"Je les investis dans quelque chose", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
+      {txt:"Je les offre à quelqu'un", scores:{intuitif:3,stratege:0,chanceux:0,temeraire:1}},
+      {txt:"Je mise tout sur une chose folle", scores:{intuitif:0,stratege:0,chanceux:1,temeraire:3}},
+    ]
+  },
+  {
+    q: "Vendredi 13 pour toi c'est…",
+    opts: [
+      {txt:"Un signe, je le sens", scores:{intuitif:3,stratege:0,chanceux:1,temeraire:0}},
+      {txt:"Une date comme une autre", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
+      {txt:"Mon jour de chance forcément", scores:{intuitif:0,stratege:0,chanceux:3,temeraire:1}},
+      {txt:"L'occasion de faire un truc dingue", scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3}},
+    ]
+  },
+  {
+    q: "Tu joues à pile ou face. Tu choisis…",
+    opts: [
+      {txt:"Ce que mon cœur me dit", scores:{intuitif:3,stratege:0,chanceux:1,temeraire:0}},
+      {txt:"La face, statistiquement plus sûr", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
+      {txt:"Peu importe, je gagne toujours", scores:{intuitif:0,stratege:0,chanceux:3,temeraire:1}},
+      {txt:"Je relance 3 fois pour corser", scores:{intuitif:0,stratege:1,chanceux:0,temeraire:3}},
+    ]
+  },
+  {
+    q: "Ton superpouvoir idéal ?",
+    opts: [
+      {txt:"Lire dans les pensées", scores:{intuitif:3,stratege:1,chanceux:0,temeraire:0}},
+      {txt:"Voir le futur avec précision", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
+      {txt:"Avoir une chance illimitée", scores:{intuitif:0,stratege:0,chanceux:3,temeraire:0}},
+      {txt:"Être invincible", scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3}},
+    ]
+  },
+  {
+    q: "La soirée idéale pour toi c'est…",
+    opts: [
+      {txt:"Improviser selon l'ambiance", scores:{intuitif:3,stratege:0,chanceux:1,temeraire:1}},
+      {txt:"Un plan bien organisé", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
+      {txt:"Laisser la chance décider", scores:{intuitif:1,stratege:0,chanceux:3,temeraire:0}},
+      {txt:"Un truc inattendu et intense", scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3}},
+    ]
+  },
+  {
+    q: "Face à un défi impossible, tu…",
+    opts: [
+      {txt:"Je médite et l'intuition vient", scores:{intuitif:3,stratege:0,chanceux:0,temeraire:0}},
+      {txt:"Je décompose en étapes", scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0}},
+      {txt:"Je croise les doigts et j'y vais", scores:{intuitif:0,stratege:0,chanceux:3,temeraire:1}},
+      {txt:"Je fonce tête baissée", scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3}},
+    ]
+  },
+];
+
+// ── STATE ──
+let prenom='', qIdx=0, reponses=[], scores={intuitif:0,stratege:0,chanceux:0,temeraire:0};
+let equipeKey=null, roleKey=null, joueurKey=null;
+let votesLocaux=[null,null,null];
+let missionActive=false, chronoInt=null;
+
+// ── UTILS ──
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.getElementById(id).classList.add('on');}
+
+// ── START QUIZ ──
+window.startQuiz = () => {
+  const v=document.getElementById('prenom-inp').value.trim();
+  if(!v)return;
+  prenom=v; qIdx=0; reponses=[]; scores={intuitif:0,stratege:0,chanceux:0,temeraire:0};
+  document.getElementById('btn-start').disabled=true;
+  showQ(0); showPage('pg-quiz');
+};
+
+function showQ(i){
+  const q=QUESTIONS[i];
+  document.getElementById('q-num').textContent=`${i+1} / ${QUESTIONS.length}`;
+  document.getElementById('q-progress').style.width=`${((i)/QUESTIONS.length)*100}%`;
+  document.getElementById('q-texte').textContent=q.q;
+  const optsEl=document.getElementById('q-opts');
+  optsEl.innerHTML='';
+  const letters=['A','B','C','D'];
+  q.opts.forEach((opt,j)=>{
+    const btn=document.createElement('button');
+    btn.className='quiz-opt';
+    btn.innerHTML=`<span class="opt-letter">${letters[j]}</span>${esc(opt.txt)}`;
+    btn.onclick=()=>choisir(j);
+    optsEl.appendChild(btn);
+  });
+}
+
+function choisir(j){
+  const q=QUESTIONS[qIdx];
+  const opts=document.querySelectorAll('.quiz-opt');
+  opts.forEach((b,i)=>b.className='quiz-opt'+(i===j?' sel':''));
+  // Score
+  Object.entries(q.opts[j].scores).forEach(([k,v])=>scores[k]+=v);
+  reponses.push(j);
+  setTimeout(()=>{
+    qIdx++;
+    if(qIdx<QUESTIONS.length){ showQ(qIdx); }
+    else { affecterEquipe(); }
+  },400);
+}
+
+window.quizBack = () => {
+  if(qIdx===0){showPage('pg-accueil');document.getElementById('btn-start').disabled=false;return;}
+  qIdx--;
+  const lastScore=QUESTIONS[qIdx].opts[reponses.pop()].scores;
+  Object.entries(lastScore).forEach(([k,v])=>scores[k]-=v);
+  showQ(qIdx);
+};
+
+// ── AFFECTER ÉQUIPE + RÔLE ──
+async function affecterEquipe(){
+  // Équipe = max score (avec rééquilibrage)
+  const snap=await get(ref(db,'v13/joueurs'));
+  const counts={intuitif:0,stratege:0,chanceux:0,temeraire:0};
+  snap.forEach(c=>{if(c.val().equipe)counts[c.val().equipe]++;});
+
+  // Bonus inversé pour rééquilibrage (-0.5 par personne en trop)
+  const adjusted={};
+  Object.keys(scores).forEach(k=>adjusted[k]=scores[k]-counts[k]*0.4);
+  equipeKey=Object.entries(adjusted).sort((a,b)=>b[1]-a[1])[0][0];
+
+  // Rôle : basé sur nombre d'inscrits → nb rôles actifs
+  const total=snap.size||0;
+  const nbRoles=total<20?3:total<32?4:5;
+  const rolesActifs=ROLES.slice(0,nbRoles);
+
+  // Rôle = moins représenté dans cette équipe
+  const roleCount={};
+  rolesActifs.forEach(r=>roleCount[r.id]=0);
+  snap.forEach(c=>{const d=c.val();if(d.equipe===equipeKey&&roleCount[d.role]!==undefined)roleCount[d.role]++;});
+  roleKey=Object.entries(roleCount).sort((a,b)=>a[1]-b[1])[0][0];
+
+  // Enregistrer joueur
+  const jRef=push(ref(db,'v13/joueurs'));
+  joueurKey=jRef.key;
+  await set(jRef,{prenom,equipe:equipeKey,role:roleKey,scores,joinedAt:serverTimestamp(),voteEnvoye:false});
+
+  afficherCarte();
+}
+
+function afficherCarte(){
+  const eq=EQUIPES[equipeKey];
+  const role=ROLES.find(r=>r.id===roleKey);
+  document.documentElement.style.setProperty('--eq-col',eq.col);
+  document.documentElement.style.setProperty('--eq-glow',eq.glow);
+  document.getElementById('c-emoji').textContent=eq.emoji;
+  document.getElementById('c-equipe').textContent=eq.nom;
+  document.getElementById('c-eq-desc').textContent=eq.desc;
+  document.getElementById('c-role').textContent=role.emoji+' '+role.nom;
+  document.getElementById('c-role-desc').textContent=role.desc;
+  document.getElementById('c-prenom').textContent=prenom;
+  document.getElementById('att-role-badge').textContent=role.emoji+' '+role.nom;
+  document.getElementById('att-icon').textContent=eq.emoji;
+  document.getElementById('c-prenom').textContent=prenom;
+  showPage('pg-carte');
+  // Après 5s, passer à la page d'attente
+  setTimeout(()=>showPage('pg-attente'),5000);
+
+  // Écouter les événements admin
+  listenAdmin();
+}
+
+// ── ÉCOUTER ADMIN ──
+function listenAdmin(){
+  onValue(ref(db,'v13/etat'),(snap)=>{
+    const etat=snap.val();
+    if(!etat)return;
+    if(etat.type==='mission' && etat.roleActif===roleKey && etat.actif){
+      lancerMission(etat);
+    } else if(etat.type==='vote' && etat.actif){
+      ouvrirVote(etat);
+    } else if(!etat.actif){
+      showPage('pg-attente');
+      missionActive=false;clearInterval(chronoInt);
+    }
+  });
+}
+
+// ── MISSION ──
+function lancerMission(etat){
+  if(missionActive)return;
+  missionActive=true;
+  document.getElementById('m-titre').textContent=etat.missionTitre||'À toi de jouer !';
+  document.getElementById('m-desc').textContent=etat.missionDesc||'';
+  showPage('pg-mission');
+  let t=etat.duree||60;
+  const el=document.getElementById('m-chrono');
+  el.textContent=t;el.className='mission-chrono';
+  clearInterval(chronoInt);
+  chronoInt=setInterval(()=>{
+    t--;el.textContent=t;
+    if(t<=10)el.className='mission-chrono urgent';
+    if(t<=0){clearInterval(chronoInt);showPage('pg-attente');missionActive=false;}
+  },1000);
+}
+
+// ── VOTE ──
+const SMILEYS=[
+  {e:'😐',l:'Bof'},
+  {e:'🙂',l:'Pas mal'},
+  {e:'😄',l:'Bien'},
+  {e:'🤩',l:'Top'},
+  {e:'🔥',l:'Incroyable'},
+];
+
+function ouvrirVote(etat){
+  votesLocaux=[null,null,null];
+  document.getElementById('vote-sub').textContent='Note la prestation de '+etat.performerNom+'';
+  [0,1,2].forEach(i=>{
+    const wrap=document.getElementById('smileys-'+i);
+    wrap.innerHTML='';
+    SMILEYS.forEach((s,j)=>{
+      const btn=document.createElement('button');
+      btn.className='smiley-btn';
+      btn.innerHTML=`${s.e}<span class="smiley-lbl">${s.l}</span>`;
+      btn.onclick=()=>choixSmiley(i,j,wrap);
+      wrap.appendChild(btn);
+    });
+  });
+  document.getElementById('vote-pct').textContent='—';
+  document.getElementById('btn-voter').disabled=true;
+  showPage('pg-vote');
+}
+
+function choixSmiley(critere,val,wrap){
+  votesLocaux[critere]=val;
+  wrap.querySelectorAll('.smiley-btn').forEach((b,i)=>b.className='smiley-btn'+(i===val?' sel':''));
+  updateVotePct();
+}
+
+function updateVotePct(){
+  if(votesLocaux.some(v=>v===null)){document.getElementById('btn-voter').disabled=true;return;}
+  const total=votesLocaux.reduce((a,b)=>a+b,0);
+  const pct=Math.round((total/((SMILEYS.length-1)*3))*100);
+  document.getElementById('vote-pct').textContent=pct+'%';
+  document.getElementById('btn-voter').disabled=false;
+}
+
+window.envoyerVote=async()=>{
+  const total=votesLocaux.reduce((a,b)=>a+b,0);
+  const pct=Math.round((total/((SMILEYS.length-1)*3))*100);
+  await push(ref(db,'v13/votes'),{joueurKey,prenom,equipe:equipeKey,pct,votesLocaux,ts:serverTimestamp()});
+  if(joueurKey)await set(ref(db,`v13/joueurs/${joueurKey}/voteEnvoye`),true);
+  document.getElementById('vd-score').textContent=pct+'%';
+  showPage('pg-vote-done');
+  setTimeout(()=>showPage('pg-attente'),4000);
+};
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+// Stars
+for(let i=0;i<40;i++){const s=document.createElement('div');s.className='star';const sz=.5+Math.random()*2;s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--t:${2+Math.random()*4}s;--d:${-Math.random()*4}s;--b:${.2+Math.random()*.5}`;document.getElementById('bg').appendChild(s);}
+</script>
+
+
+</body></html>
