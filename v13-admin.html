@@ -280,7 +280,7 @@ body{ display:flex; flex-direction:column; }
      TOPBAR
 ════════════════════════════════════════════ -->
 <div id="topbar">
-  <img src="Visage_Lumiia_horizontal_V2.png" alt="LUMIIA" style="height:36px;width:auto;opacity:.75;"> <span style="font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.2em;color:rgba(255,255,255,.4);">VENDREDI 13 · ADMIN</span>
+  <img src="lumiia_Logo1.png" alt="LUMIIA" style="height:36px;width:auto;opacity:.75;"> <span style="font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.2em;color:rgba(255,255,255,.4);">VENDREDI 13 · ADMIN</span>
   <div class="topbar-sep"></div>
   <div class="scores-equipes" id="scores-equipes">
     <!-- généré dynamiquement -->
@@ -357,7 +357,7 @@ body{ display:flex; flex-direction:column; }
   </div>
 
 </div>
-<div id="version-badge">ADMIN v2.5</div>
+<div id="version-badge">ADMIN v2.6</div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -408,16 +408,19 @@ const ROLES_DEF = [
    → duree: en secondes (default 20)
 ════════════════════════════════════════════════ */
 const MISSIONS = [
-  { titre:"Imitation éclair",        desc:"Imite quelqu'un dans la salle sans le nommer. Le public doit deviner qui.",               roles:["eclaireur","funambule"], duree:20 },
-  { titre:"La pose légendaire",       desc:"Invente et tiens une pose héroïque pendant le chrono sans bouger ni rire.",              roles:["oracle","fantome"],     duree:20 },
-  { titre:"Le vendeur fou",           desc:"Vends-nous un objet aléatoire de la salle comme si c'était le trésor du siècle.",       roles:["trickster","eclaireur"],duree:20 },
-  { titre:"La prophétie",             desc:"Annonce la grande prophétie de la soirée. Elle doit commencer par 'Ce soir…'",          roles:["oracle"],               duree:20 },
-  { titre:"Le mime express",          desc:"Mime un film connu. Ton équipe peut deviner, les autres doivent se taire.",              roles:["funambule","fantome"],   duree:20 },
-  { titre:"Le discours passionné",    desc:"Donne un discours enflammé sur un sujet complètement ridicule.",                        roles:["eclaireur","trickster"], duree:20 },
-  { titre:"La danse du Vendredi 13",  desc:"Invente et exécute ta propre 'Danse du Vendredi 13'. Originalité maximale.",            roles:["funambule"],             duree:20 },
-  { titre:"Le sosie vocal",           desc:"Imite la voix d'une célébrité et prononce une phrase de la soirée.",                   roles:["trickster","oracle"],    duree:20 },
-  { titre:"Convaincre en 20s",        desc:"Convaincs 3 personnes de lever la main pour te soutenir. À toi de jouer.",              roles:["fantome","eclaireur"],   duree:20 },
-  { titre:"DÉFI D'ÉQUIPE",            desc:"Toute l'équipe doit se lever et former une figure reconnaissable le plus vite possible.",roles:["all"],                  duree:20 },
+  // ── Pour modifier : changer titre, desc, roles, duree ──
+  // roles: ["all"] = toute l'équipe, sinon liste d'ids de rôles
+  // type: "equipe" = défi d'équipe (tous les téléphones de l'équipe s'illuminent)
+  { titre:"L'accent du Sud",         desc:"Lis ce texte avec un accent de cagole : 'Ce soir je suis trop contente, j'ai mis ma plus belle robe pour venir ici, et franchement c'est trop stylé !'", roles:["all"], duree:20 },
+  { titre:"Le défilé",               desc:"Fais un défilé en mode mannequin dans le bar avec pose finale. Originalité et attitude maximales.", roles:["all"], duree:20 },
+  { titre:"Le vendeur fou",          desc:"Vends-nous un objet aléatoire de la salle comme si c'était le trésor du siècle.", roles:["trickster","eclaireur"], duree:20 },
+  { titre:"L'avocat du diable",      desc:"L'animateur te donne un sujet. Défends-le farouchement, même si tu n'y crois pas du tout.", roles:["all"], duree:20 },
+  { titre:"La chenille",             desc:"Quand la musique se lance, fais la chenille dans tout le bar — seul. Sans t'arrêter.", roles:["all"], duree:20, musique:true },
+  { titre:"Le discours passionné",   desc:"Donne un discours enflammé sur un sujet complètement ridicule.", roles:["eclaireur","trickster"], duree:20 },
+  { titre:"La danse du Vendredi 13", desc:"Invente et exécute ta propre 'Danse du Vendredi 13'. Originalité maximale.", roles:["funambule"], duree:20 },
+  { titre:"Imite le cri",            desc:"L'animateur te donne un animal. Imite son cri le plus fidèlement possible.", roles:["all"], duree:20 },
+  { titre:"Convaincre en 20s",       desc:"Convaincs 3 personnes de lever la main pour te soutenir. À toi de jouer.", roles:["fantome","eclaireur"], duree:20 },
+  { titre:"Le combat des champions", desc:"DÉFI D'ÉQUIPE — Toute l'équipe effectue un combat épique contre des adversaires imaginaires. Synchronisation et drama maximum !", roles:["all"], duree:20, type:"equipe" },
 ];
 
 /* ════════════════════════════════════════════════
@@ -618,6 +621,8 @@ window.lancerChrono = () => {
   document.getElementById('btn-lancer').disabled=true;
 
   // Diffuser la mission sur les téléphones
+  const isEquipe = missionActuelle.type === 'equipe';
+  const hasMusique = missionActuelle.musique === true;
   set(ref(db,'v13/etat'),{
     type:'mission',
     joueurKey:performerActuel.key,
@@ -627,6 +632,8 @@ window.lancerChrono = () => {
     missionTitre:missionActuelle.titre,
     missionDesc:missionActuelle.desc,
     duree:missionActuelle.duree,
+    defEquipe: isEquipe,
+    musique: hasMusique,
     actif:true,
     ts:serverTimestamp()
   });

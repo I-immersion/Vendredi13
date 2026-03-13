@@ -166,6 +166,11 @@ html,body{
 ════════════════════════════════════════════════ */
 #pg-mission{justify-content:center;text-align:center;gap:14px;padding:20px;}
 .mission-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border:1px solid rgba(255,215,0,.4);border-radius:50px;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--or);}
+.m-badge-equipe{
+  background:var(--or);color:#000;font-family:'Bebas Neue',sans-serif;
+  font-size:.9rem;letter-spacing:.1em;padding:6px 16px;border-radius:50px;
+  margin-bottom:12px;text-align:center;
+}
 .mission-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,9vw,3.5rem);line-height:1.05;letter-spacing:.04em;color:var(--texte);max-width:320px;}
 .mission-desc{font-size:clamp(.9rem,3.8vw,1.05rem);color:var(--texte-dim);line-height:1.6;max-width:300px;font-weight:600;}
 .mission-chrono{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,22vw,8rem);color:var(--or);line-height:1;text-shadow:0 0 40px rgba(255,215,0,.5);}
@@ -214,13 +219,13 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.5</div>
+<div id="version-badge">CLIENT v2.6</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
 ════════════════════════════════════════════ -->
 <div class="page on" id="pg-accueil">
-  <div class="lumiia-header"><img class="lumiia-logo-img" src="Visage_Lumiia_horizontal_V2.png" alt="LUMIIA"></div>
+  <div class="lumiia-header"><img class="lumiia-logo-img" src="lumiia_Logo1.png" alt="LUMIIA"></div>
   <div class="acc-emoji">🔮</div>
   <div class="acc-titre">Vendredi 13</div>
   <div class="acc-sub">Découvre ton destin ce soir</div>
@@ -248,7 +253,7 @@ html,body{
      PAGE CARTE IDENTITÉ
 ════════════════════════════════════════════ -->
 <div class="page" id="pg-carte">
-  <div class="lumiia-header"><img class="lumiia-logo-img" src="Visage_Lumiia_horizontal_V2.png" alt="LUMIIA"></div>
+  <div class="lumiia-header"><img class="lumiia-logo-img" src="lumiia_Logo1.png" alt="LUMIIA"></div>
   <div class="carte-wrap" id="carte-wrap">
     <div class="carte-top">✦ Ton profil ce soir ✦</div>
     <div class="carte-emoji" id="c-emoji">🔮</div>
@@ -271,7 +276,7 @@ html,body{
      PAGE ATTENTE
 ════════════════════════════════════════════ -->
 <div class="page" id="pg-attente">
-  <div class="lumiia-header"><img class="lumiia-logo-img" src="Visage_Lumiia_horizontal_V2.png" alt="LUMIIA"></div>
+  <div class="lumiia-header"><img class="lumiia-logo-img" src="lumiia_Logo1.png" alt="LUMIIA"></div>
   <div class="att-icon" id="att-icon">⏳</div>
   <div class="att-titre">Prêt à jouer !</div>
   <div class="att-role-badge" id="att-role-badge">—</div>
@@ -654,8 +659,10 @@ function listenAdmin(){
       }
 
     } else if(etat.type==='mission' && etat.actif){
-      if(etat.joueurKey === joueurKey){
-        // Ma mission
+      const monTour = etat.joueurKey === joueurKey;
+      const monEquipe = etat.equipe === equipeKey;
+      const defEquipe = etat.defEquipe === true;
+      if(monTour || (defEquipe && monEquipe)){
         lancerMission(etat);
       } else {
         showPage('pg-attente');
@@ -675,13 +682,52 @@ function listenAdmin(){
 /* ════════════════════════════════════════════════
    MISSION — chrono 20s
 ════════════════════════════════════════════════ */
+// ── Musique chenille (Web Audio) ──
+let chenilleInterval = null;
+function jouerChenille(){
+  stopChenille();
+  const ctx = new (window.AudioContext||window.webkitAudioContext)();
+  let beat = 0;
+  const pattern = [200,0,200,0,150,0,150,0,180,0,0,0];
+  chenilleInterval = setInterval(()=>{
+    const freq = pattern[beat % pattern.length];
+    if(freq > 0){
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = freq;
+      o.type = 'square';
+      g.gain.setValueAtTime(0.15, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.12);
+      o.start(); o.stop(ctx.currentTime+0.12);
+    }
+    beat++;
+  }, 200);
+}
+function stopChenille(){
+  if(chenilleInterval){ clearInterval(chenilleInterval); chenilleInterval=null; }
+}
+
 function lancerMission(etat){
   if(missionActive) return;
   missionActive=true;
   document.getElementById('m-titre').textContent = etat.missionTitre || 'À toi de jouer !';
   document.getElementById('m-desc').textContent  = etat.missionDesc  || '';
+
+  // Badge défi équipe
+  const badgeEquipe = document.getElementById('m-badge-equipe');
+  if(etat.defEquipe){
+    badgeEquipe.style.display='block';
+    badgeEquipe.textContent = '⚡ DÉFI D'ÉQUIPE — Tout le monde joue !';
+  } else {
+    badgeEquipe.style.display='none';
+  }
+
   showPage('pg-mission');
   SFX.go();
+
+  // Musique chenille
+  if(etat.musique){ jouerChenille(); }
   let t = etat.duree || 20;
   const el = document.getElementById('m-chrono');
   el.textContent=t; el.className='mission-chrono';
