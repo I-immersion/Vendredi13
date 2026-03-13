@@ -219,7 +219,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.9.6</div>
+<div id="version-badge">CLIENT v2.9.8</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -605,7 +605,7 @@ async function affecterEquipe(){
   try {
     const jRef = push(ref(db,'v13/joueurs'));
     joueurKey = jRef.key;
-    await set(jRef,{prenom, equipe:equipeKey, role:roleKey, scores, pointsPerso:0, joinedAt:serverTimestamp(), voteEnvoye:false});
+    await set(jRef,{prenom, equipe:equipeKey, role:roleKey, scores, pointsPerso:0, joinedAt:Date.now(), voteEnvoye:false});
     console.log('[LUMIIA] Joueur inscrit Firebase OK:', joueurKey);
   } catch(err) {
     console.error('[LUMIIA] ERREUR inscription Firebase:', err.message || err);
@@ -859,35 +859,39 @@ onValue(ref(db,'v13/reset'), snap=>{
   const data = snap.val();
   if(!data) return;
   localStorage.setItem('v13_last_reset', data.ts);
-  // Si on est déjà sur une page active, retour accueil
-  if(joueurKey){
-    localStorage.removeItem('v13_session');
-    prenom=''; equipeKey=null; roleKey=null; joueurKey=null;
-    if(voteClientTimer){ clearInterval(voteClientTimer); voteClientTimer=null; }
-    showPage('pg-accueil');
-    document.getElementById('btn-start').disabled=false;
-    document.getElementById('prenom-inp').value='';
-  }
+  // Reset reçu → retour accueil peu importe l'état
+  if(voteClientTimer){ clearInterval(voteClientTimer); voteClientTimer=null; }
+  clearSession();
+  showPage('pg-accueil');
+  const btnStart = document.getElementById('btn-start');
+  if(btnStart) btnStart.disabled=false;
 });
 
 const _session = localStorage.getItem('v13_session');
+function clearSession(){
+  localStorage.removeItem('v13_session');
+  localStorage.removeItem('v13_last_reset');
+  prenom=''; equipeKey=null; roleKey=null; joueurKey=null;
+  const inp = document.getElementById('prenom-inp');
+  if(inp) inp.value='';
+}
 if(_session){
   try{
     const s = JSON.parse(_session);
     prenom=s.prenom; equipeKey=s.equipeKey; roleKey=s.roleKey; joueurKey=s.joueurKey;
-    // Vérifier que le joueur existe encore dans Firebase
-    get(ref(db,`v13/joueurs/${joueurKey}`)).then(snap=>{
-      if(snap.exists()){
-        afficherCarte(); // OK, on reprend la session
+    // Double vérification : joueur dans Firebase + v13/joueurs non vide
+    Promise.all([
+      get(ref(db,`v13/joueurs/${joueurKey}`)),
+      get(ref(db,'v13/joueurs'))
+    ]).then(([joueurSnap, tousSnap])=>{
+      if(joueurSnap.exists() && tousSnap.exists()){
+        afficherCarte(); // OK, session valide
       } else {
-        // Le joueur n'est plus dans Firebase (reset soirée) → retour accueil propre
-        localStorage.removeItem('v13_session');
-        localStorage.removeItem('v13_last_reset');
-        prenom=''; equipeKey=null; roleKey=null; joueurKey=null;
-        document.getElementById('prenom-inp').value='';
+        // Joueur absent ou Firebase vide (reset) → accueil
+        clearSession();
       }
-    }).catch(()=>{ localStorage.removeItem('v13_session'); });
-  } catch(e){ localStorage.removeItem('v13_session'); }
+    }).catch(()=>{ clearSession(); });
+  } catch(e){ clearSession(); }
 }
 
 /* ════════════════════════════════════════════════

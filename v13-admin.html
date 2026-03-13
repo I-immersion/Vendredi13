@@ -377,7 +377,7 @@ body{ display:flex; flex-direction:column; }
 
 
 </div>
-<div id="version-badge">ADMIN v2.9.6</div>
+<div id="version-badge">ADMIN v2.9.8</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -933,7 +933,12 @@ function buildMissionsList(){
 ════════════════════════════════════════════════ */
 onValue(ref(db,'v13/joueurs'), snap=>{
   joueurs=[];
-  snap.forEach(c=>joueurs.push({key:c.key,...c.val()}));
+  snap.forEach(c=>{
+    try {
+      const val = c.val();
+      if(val && val.prenom && val.equipe) joueurs.push({key:c.key,...val});
+    } catch(e){ console.error('[LUMIIA] Erreur lecture joueur', c.key, e); }
+  });
   document.getElementById('nb-inscrits').textContent=joueurs.length;
   updateJoueursList();
   buildScoresEquipes();
