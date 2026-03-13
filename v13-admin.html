@@ -279,7 +279,7 @@ body{ display:flex; flex-direction:column; }
      TOPBAR
 ════════════════════════════════════════════ -->
 <div id="topbar">
-  <div class="logo-admin">LUMIIA <span>·</span> VENDREDI 13 <span>·</span> ADMIN</div>
+  <img src="Visage_Lumiia_horizontal_V2.png" alt="LUMIIA" style="height:36px;width:auto;opacity:.75;"> <span style="font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.2em;color:rgba(255,255,255,.4);">VENDREDI 13 · ADMIN</span>
   <div class="topbar-sep"></div>
   <div class="scores-equipes" id="scores-equipes">
     <!-- généré dynamiquement -->
@@ -356,7 +356,7 @@ body{ display:flex; flex-direction:column; }
   </div>
 
 </div>
-<div id="version-badge">ADMIN v2.0</div>
+<div id="version-badge">ADMIN v2.2</div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -684,6 +684,8 @@ window.fermerVote = () => {
 ════════════════════════════════════════════════ */
 window.resetSoiree = async () => {
   if(!confirm('Effacer tous les joueurs et votes ? Cette action est irréversible.')) return;
+  // Signal reset pour effacer les sessions sur les téléphones
+  await set(ref(db,'v13/reset'),{ ts: Date.now() });
   await Promise.all([
     remove(ref(db,'v13/joueurs')),
     remove(ref(db,'v13/votes')),

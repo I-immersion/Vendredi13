@@ -233,6 +233,7 @@ INIT                → initialisation
 
 | Version | Date | Changements |
 |---------|------|-------------|
+| **v2.2 / v2.2** | 13/03/2026 | Reset des clients |
 | **v2.0 / v2.0** | 13/03/2026 | première version |
 | v1.0 | Mars 2026 | Version initiale |
 | v1.1 admin | Mars 2026 | Fix bug roueAngle |

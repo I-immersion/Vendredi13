@@ -63,12 +63,9 @@ html,body{
   padding-bottom:16px;margin-bottom:8px;
   border-bottom:1px solid var(--border);
 }
-.lumiia-logo-txt{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:1.1rem;letter-spacing:.4em;
-  color:rgba(255,255,255,.35);
+.lumiia-logo-img{
+  height:36px;width:auto;opacity:.75;
 }
-.lumiia-logo-txt span{color:var(--or);letter-spacing:.1em;}
 
 /* ════════════════════════════════════════════════
    PAGE ACCUEIL
@@ -197,15 +194,13 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.0</div>
+<div id="version-badge">CLIENT v2.2</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
 ════════════════════════════════════════════ -->
 <div class="page on" id="pg-accueil">
-  <div class="lumiia-header">
-    <div class="lumiia-logo-txt">LUMIIA <span>·</span> BAR &amp; EXPÉRIENCES IMMERSIVES</div>
-  </div>
+  <div class="lumiia-header"><img class="lumiia-logo-img" src="Visage_Lumiia_horizontal_V2.png" alt="LUMIIA"></div>
   <div class="acc-emoji">🔮</div>
   <div class="acc-titre">Vendredi 13</div>
   <div class="acc-sub">Découvre ton destin ce soir</div>
@@ -233,9 +228,7 @@ html,body{
      PAGE CARTE IDENTITÉ
 ════════════════════════════════════════════ -->
 <div class="page" id="pg-carte">
-  <div class="lumiia-header">
-    <div class="lumiia-logo-txt">LUMIIA <span>·</span> VENDREDI 13</div>
-  </div>
+  <div class="lumiia-header"><img class="lumiia-logo-img" src="Visage_Lumiia_horizontal_V2.png" alt="LUMIIA"></div>
   <div class="carte-wrap" id="carte-wrap">
     <div class="carte-top">✦ Ton profil ce soir ✦</div>
     <div class="carte-emoji" id="c-emoji">🔮</div>
@@ -257,9 +250,7 @@ html,body{
      PAGE ATTENTE
 ════════════════════════════════════════════ -->
 <div class="page" id="pg-attente">
-  <div class="lumiia-header">
-    <div class="lumiia-logo-txt">LUMIIA <span>·</span> VENDREDI 13</div>
-  </div>
+  <div class="lumiia-header"><img class="lumiia-logo-img" src="Visage_Lumiia_horizontal_V2.png" alt="LUMIIA"></div>
   <div class="att-icon" id="att-icon">⏳</div>
   <div class="att-titre">Prêt à jouer !</div>
   <div class="att-role-badge" id="att-role-badge">—</div>
@@ -613,6 +604,20 @@ function afficherCarte(){
    ÉCOUTER LES ÉVÉNEMENTS ADMIN (Firebase)
 ════════════════════════════════════════════════ */
 function listenAdmin(){
+  // Écouter le signal reset — efface la session et retourne à l'accueil
+  onValue(ref(db,'v13/reset'), snap=>{
+    const data = snap.val();
+    if(!data) return;
+    // Si le reset est récent (moins de 10s) → effacer session
+    if(Date.now() - data.ts < 10000){
+      localStorage.removeItem('v13_session');
+      prenom=''; equipeKey=null; roleKey=null; joueurKey=null;
+      showPage('pg-accueil');
+      document.getElementById('btn-start').disabled=false;
+      document.getElementById('prenom-inp').value='';
+    }
+  });
+
   onValue(ref(db,'v13/etat'), snap=>{
     const etat = snap.val();
     if(!etat) return;
