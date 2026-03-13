@@ -306,6 +306,7 @@ body{ display:flex; flex-direction:column; }
 .sp-joueur-pts{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--or);min-width:30px;text-align:right;}
 .sp-joueur-perso{font-size:.75rem;color:var(--texte-dim);}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -323,8 +324,8 @@ body{ display:flex; flex-direction:column; }
     <div class="stat-pill">Joueurs : <b id="nb-inscrits">0</b></div>
     <div class="stat-pill">Tours : <b id="nb-tours">0</b></div>
     <button class="btn-reset" onclick="resetSoiree()">↺ Reset</button>
+    <button class="btn-settings" id="btn-qr" onclick="toggleQR()">📱 QR Code</button>
     <button class="btn-settings" id="btn-settings" onclick="toggleSettings()">⚙️ Settings</button>
-    <button class="btn-settings" id="btn-fs" onclick="toggleFullscreen()" title="Plein écran">⛶</button>
   </div>
 </div>
 
@@ -351,6 +352,13 @@ body{ display:flex; flex-direction:column; }
       <div class="slot-label">🎰 Tirage du performer</div>
       <div id="slot-display">— Appuie pour tirer —</div>
       <button class="btn-tirer" id="btn-tirer" onclick="tirerPerformer()">🎲 Tirer au sort</button>
+    </div>
+
+    <!-- QR Code client -->
+    <div id="qr-wrap" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px 20px;text-align:center;display:none;">
+      <div style="font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);margin-bottom:12px;">📱 QR Code — Rejoindre la partie</div>
+      <div id="qr-canvas" style="display:inline-block;background:#fff;padding:12px;border-radius:12px;"></div>
+      <div style="font-size:.65rem;color:var(--texte-dim);margin-top:10px;letter-spacing:.05em;">i-immersion.github.io/Vendredi13/v13-client.html</div>
     </div>
 
     <!-- Roue des missions -->
@@ -388,7 +396,7 @@ body{ display:flex; flex-direction:column; }
   </div>
 
 </div>
-<div id="version-badge">ADMIN v2.25</div>
+<div id="version-badge"><button onclick="toggleFullscreen()" id="btn-fs" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:.7rem;padding:2px 6px;letter-spacing:.05em;" title="Plein écran">⛶ FS</button> ADMIN v2.26</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -888,6 +896,25 @@ window.fermerVote = () => {
    RESET SOIRÉE
 ════════════════════════════════════════════════ */
 // ── Settings panel ──
+// QR Code client
+let qrGenerated = false;
+window.toggleQR = () => {
+  const wrap = document.getElementById('qr-wrap');
+  const btn  = document.getElementById('btn-qr');
+  const visible = wrap.style.display !== 'none';
+  wrap.style.display = visible ? 'none' : 'block';
+  btn.classList.toggle('active', !visible);
+  if(!qrGenerated && !visible){
+    new QRCode(document.getElementById('qr-canvas'), {
+      text: 'https://i-immersion.github.io/Vendredi13/v13-client.html',
+      width: 220, height: 220,
+      colorDark: '#000', colorLight: '#fff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+    qrGenerated = true;
+  }
+};
+
 window.toggleFullscreen = () => {
   const btn = document.getElementById('btn-fs');
   if(!document.fullscreenElement){
