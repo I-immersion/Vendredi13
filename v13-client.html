@@ -75,7 +75,7 @@ html,body{
 @keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
 .acc-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,12vw,5rem);line-height:1;background:linear-gradient(135deg,#ffd700,#ff6b9d,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px rgba(255,215,0,.3));}
 .acc-sub{font-size:clamp(.85rem,3.5vw,1rem);color:var(--texte-dim);font-weight:600;letter-spacing:.05em;}
-.prenom-lbl{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);margin-top:16px;}
+.prenom-lbl{font-size:.95rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);margin-top:16px;font-weight:800;}
 .prenom-inp{width:100%;max-width:300px;padding:16px 20px;background:var(--surface);border:2px solid var(--border);border-radius:50px;color:var(--texte);font-family:'Nunito',sans-serif;font-size:1.3rem;font-weight:700;text-align:center;outline:none;transition:all .2s;margin-top:8px;}
 .prenom-inp::placeholder{color:rgba(240,232,248,.2);}
 .prenom-inp:focus{border-color:rgba(255,215,0,.6);background:rgba(255,215,0,.05);}
@@ -121,26 +121,35 @@ html,body{
 .carte-hint b{color:var(--or);}
 
 /* ════════════════════════════════════════════════
-   PAGE ATTENTE
+   PAGE ATTENTE — tout en un seul écran
 ════════════════════════════════════════════════ */
-#pg-attente{justify-content:center;text-align:center;gap:16px;}
-.att-profil{
-  width:100%;max-width:320px;
-  background:var(--surface);border:2px solid var(--eq-col);border-radius:20px;
-  padding:20px;display:flex;flex-direction:column;align-items:center;gap:10px;
-  box-shadow:0 0 30px var(--eq-glow);
-}
-.att-prenom{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,9vw,3rem);letter-spacing:.06em;color:var(--texte);}
-.att-groupe-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;}
-.att-groupe{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,6vw,2rem);letter-spacing:.06em;color:var(--eq-col);}
-.att-groupe-sousnom{font-size:.75rem;color:var(--eq-col);opacity:.7;letter-spacing:.1em;font-style:italic;}
+#pg-attente{justify-content:space-between;text-align:center;gap:0;padding-bottom:24px;}
+
+/* Zone haute */
+.att-top{display:flex;flex-direction:column;align-items:center;gap:12px;flex:1;justify-content:center;}
+.att-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,9vw,3.5rem);letter-spacing:.06em;color:var(--texte);}
+.att-sub{font-size:.82rem;color:var(--texte-dim);line-height:1.6;max-width:280px;font-weight:600;}
 .att-role-badge{display:inline-block;padding:6px 18px;border:2px solid var(--eq-col);border-radius:50px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.08em;color:var(--eq-col);}
-.att-score-wrap{margin-top:4px;text-align:center;}
-.att-score-lbl{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);}
-.att-score{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--or);}
 .att-pulse{display:flex;align-items:center;gap:8px;justify-content:center;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);}
 .dot-pulse{width:8px;height:8px;border-radius:50%;background:var(--or);animation:pdot 1.5s ease-in-out infinite;}
 @keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
+
+/* Zone basse — infos permanentes */
+.att-profil{
+  width:100%;max-width:340px;
+  background:var(--surface);border:2px solid var(--eq-col);border-radius:20px;
+  padding:16px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;
+  box-shadow:0 0 30px var(--eq-glow);flex-shrink:0;
+}
+.att-profil-row{display:flex;align-items:center;justify-content:center;gap:16px;width:100%;}
+.att-prenom{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,7vw,2.4rem);letter-spacing:.06em;color:var(--texte);}
+.att-groupe-wrap{display:flex;flex-direction:column;align-items:flex-start;gap:1px;}
+.att-groupe{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.2rem,5vw,1.8rem);letter-spacing:.06em;color:var(--eq-col);}
+.att-groupe-sousnom{font-size:.72rem;color:var(--eq-col);opacity:.7;letter-spacing:.08em;font-style:italic;}
+.att-profil-sep{width:80%;height:1px;background:var(--border);}
+.att-score-wrap{text-align:center;}
+.att-score-lbl{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);}
+.att-score{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--or);}
 
 /* ════════════════════════════════════════════════
    PAGE PERFORMER SÉLECTIONNÉ
@@ -205,7 +214,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.4</div>
+<div id="version-badge">CLIENT v2.5</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -215,8 +224,8 @@ html,body{
   <div class="acc-emoji">🔮</div>
   <div class="acc-titre">Vendredi 13</div>
   <div class="acc-sub">Découvre ton destin ce soir</div>
-  <div class="prenom-lbl">Ton prénom</div>
-  <input class="prenom-inp" id="prenom-inp" type="text" placeholder="Ex: Sophie" maxlength="18"
+  <div class="prenom-lbl">TON PRÉNOM</div>
+  <input class="prenom-inp" id="prenom-inp" type="text" placeholder="" maxlength="18"
     autocomplete="off" autocorrect="off" spellcheck="false"
     onkeydown="if(event.key==='Enter')startQuiz()">
   <button class="btn-primary" id="btn-start" onclick="startQuiz()">Révèle mon destin →</button>
@@ -608,8 +617,7 @@ function afficherCarte(){
   document.getElementById('c-prenom').textContent     = prenom;
   document.getElementById('att-role-badge').textContent = role.emoji+' '+role.nom;
   document.getElementById('att-icon').textContent     = eq.emoji;
-  showPage('pg-carte');
-  setTimeout(()=>{ showPage('pg-attente'); }, 5000);
+  showPage('pg-attente');
   listenAdmin();
 }
 
