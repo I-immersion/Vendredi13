@@ -150,12 +150,6 @@ html,body{
 @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-10px)}}
 .perf-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,10vw,4rem);letter-spacing:.05em;background:linear-gradient(135deg,var(--or),#ff9f2e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .perf-sub{font-size:.9rem;color:var(--texte-dim);line-height:1.6;font-weight:600;max-width:280px;}
-.perf-cta{
-  font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,12vw,4.5rem);
-  letter-spacing:.06em;color:var(--or);
-  animation:blink .8s step-end infinite;
-  text-shadow:0 0 30px rgba(255,215,0,.6);
-}
 .perf-attente{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--texte-dim);margin-top:8px;}
 
 /* ════════════════════════════════════════════════
@@ -282,9 +276,8 @@ html,body{
 <div class="page" id="pg-performer">
   <div class="perf-couronne">👑</div>
   <div class="perf-titre">C'EST TOI !</div>
-  <div class="perf-cta">LÈVE LA MAIN !</div>
-  <div class="perf-sub">Tu as été tiré au sort !<br>Signale-toi à l'animateur.</div>
-  <div class="perf-attente">La roue va choisir ta mission 🎡</div>
+  <div class="perf-sub">Tu as été tiré au sort !<br>La roue va désigner ta mission…</div>
+  <div class="perf-attente">Attends la roue 🎡</div>
 </div>
 
 <!-- ════════════════════════════════════════════
@@ -441,7 +434,7 @@ const QUESTIONS = [
   {
     q: "Tu arrives à une soirée où tu ne connais presque personne.",
     opts: [
-      { txt:"Je trouve le chat et je reste avec lui 🐈", scores:{intuitif:3,stratege:0,chanceux:0,temeraire:0} },
+      { txt:"Je trouve le chat et je reste avec lui", scores:{intuitif:3,stratege:0,chanceux:0,temeraire:0} },
       { txt:"Je colle la première personne sympa",       scores:{intuitif:0,stratege:0,chanceux:3,temeraire:1} },
       { txt:"Je prends un verre et j'observe",           scores:{intuitif:1,stratege:3,chanceux:0,temeraire:0} },
       { txt:"Dans 10 minutes j'organise un jeu",         scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3} },
@@ -614,10 +607,7 @@ function afficherCarte(){
   document.getElementById('c-role-desc').textContent  = role.desc;
   document.getElementById('c-prenom').textContent     = prenom;
   document.getElementById('att-role-badge').textContent = role.emoji+' '+role.nom;
-  // Page attente — infos permanentes
-  document.getElementById('att-prenom').textContent       = prenom;
-  document.getElementById('att-groupe').textContent       = eq.nom;
-  document.getElementById('att-groupe-sousnom').textContent = eq.sousnom;
+  document.getElementById('att-icon').textContent     = eq.emoji;
   showPage('pg-carte');
   setTimeout(()=>{ showPage('pg-attente'); }, 5000);
   listenAdmin();
@@ -627,14 +617,6 @@ function afficherCarte(){
    ÉCOUTER LES ÉVÉNEMENTS ADMIN (Firebase)
 ════════════════════════════════════════════════ */
 function listenAdmin(){
-  // Écouter le score de l'équipe en temps réel
-  onValue(ref(db,'v13/scores'), snap=>{
-    const scores = snap.val() || {};
-    const pts = scores[equipeKey] || 0;
-    const el = document.getElementById('att-score');
-    if(el) el.textContent = pts + ' pts';
-  });
-
   // Écouter le signal reset — efface la session et retourne à l'accueil
   onValue(ref(db,'v13/reset'), snap=>{
     const data = snap.val();
