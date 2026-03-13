@@ -377,7 +377,7 @@ body{ display:flex; flex-direction:column; }
 
 
 </div>
-<div id="version-badge">ADMIN v2.13</div>
+<div id="version-badge">ADMIN v2.14</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -386,9 +386,15 @@ body{ display:flex; flex-direction:column; }
     <button onclick="toggleSettings()" style="background:none;border:none;color:var(--texte-dim);font-size:1.2rem;cursor:pointer;">✕</button>
   </div>
 
+  <!-- Scores des groupes -->
+  <div class="sp-section">
+    <div class="sp-section-titre">Scores des groupes</div>
+    <div id="sp-scores-groupes" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;"></div>
+  </div>
+
   <!-- Notes personnelles joueurs -->
   <div class="sp-section">
-    <div class="sp-section-titre">Notes personnelles — joueurs</div>
+    <div class="sp-section-titre">Points par joueur</div>
     <div id="sp-joueurs-list"><div style="color:var(--texte-dim);font-size:.8rem;">En attente de joueurs…</div></div>
   </div>
 
@@ -603,8 +609,8 @@ window.spinRoue = () => {
       document.getElementById('mission-result-titre').textContent=missionActuelle.titre;
       document.getElementById('mission-result-desc').textContent=missionActuelle.desc;
       document.getElementById('mission-result').style.display='block';
-      // Mission démarre automatiquement
-      setTimeout(()=>{ lancerChrono(); }, 1000);
+      // Mission démarre après 5s (temps de lire)
+      setTimeout(()=>{ lancerChrono(); }, 5000);
     }
   }
   requestAnimationFrame(animate);
@@ -795,6 +801,7 @@ window.toggleSettings = () => {
   panel.classList.toggle('open');
   btn.classList.toggle('active');
   if(panel.classList.contains('open')){
+    buildSettingsScores();
     buildSettingsMissions();
     buildSettingsJoueurs();
   }
@@ -825,6 +832,24 @@ function buildSettingsMissions(){
   });
 }
 
+function buildSettingsScores(){
+  const el = document.getElementById('sp-scores-groupes');
+  if(!el) return;
+  el.innerHTML = '';
+  Object.entries(EQUIPES).forEach(([key,eq])=>{
+    const pts = scoreEquipes[key] || 0;
+    const nb  = joueurs.filter(j=>j.equipe===key).length;
+    const card = document.createElement('div');
+    card.style.cssText = `background:rgba(255,255,255,.04);border:1px solid ${eq.col};border-radius:12px;padding:10px 12px;`;
+    card.innerHTML = `
+      <div style="font-size:.65rem;color:${eq.col};letter-spacing:.1em;text-transform:uppercase;opacity:.8;">${eq.emoji} ${eq.nom}</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--or);line-height:1.1;">${pts} <span style="font-size:.9rem;color:var(--texte-dim);">pts</span></div>
+      <div style="font-size:.65rem;color:var(--texte-dim);">${nb} joueur${nb>1?'s':''}</div>
+    `;
+    el.appendChild(card);
+  });
+}
+
 function buildSettingsJoueurs(){
   const el = document.getElementById('sp-joueurs-list');
   if(!joueurs.length){ el.innerHTML='<div style="color:var(--texte-dim);font-size:.8rem;">Aucun joueur</div>'; return; }
@@ -838,8 +863,7 @@ function buildSettingsJoueurs(){
     row.innerHTML = `
       <div style="width:10px;height:10px;border-radius:50%;background:${eq?eq.col:'#fff'};flex-shrink:0;"></div>
       <div class="sp-joueur-nom">${j.prenom} <span style="color:var(--texte-dim);font-size:.7rem;">${eq?eq.nom:''}</span></div>
-      <div class="sp-joueur-perso">😄 ${perso.perso||0} · 🤩 ${perso.origi||0}</div>
-      <div class="sp-joueur-pts">${persoTotal} pts</div>
+      <div class="sp-joueur-pts" style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--or);">${j.pointsPerso||0} pts</div>
       <button onclick="sortirJoueur('${j.key}','${j.prenom}')" style="
         flex-shrink:0;padding:3px 8px;border:1px solid var(--danger,#f87171);
         background:transparent;border-radius:6px;color:var(--danger,#f87171);
@@ -902,7 +926,11 @@ function updateJoueursList(){
         <div class="joueur-eq-dot" style="background:${eqCol}"></div>
         <div class="joueur-nom">${esc(j.prenom)}</div>
         <div class="joueur-role">${roleEmoji}</div>
-        <div class="joueur-pts">${j.pointsPerso||0}pts</div>
+        <div class="joueur-pts">${
+        j.pointsPerso > 0
+          ? (j.pointsPerso >= 7 ? "🔥" : j.pointsPerso >= 4 ? "⭐" : "·") + " " + j.pointsPerso
+          : "—"
+      }</div>
         ${isPerformer?'<div class="joueur-crown">👑</div>':''}
       `;
       container.appendChild(card);
