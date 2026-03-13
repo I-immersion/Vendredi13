@@ -219,7 +219,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.9</div>
+<div id="version-badge">CLIENT v2.9.1</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -595,7 +595,11 @@ async function affecterEquipe(){
   const roleCount = {};
   rolesActifs.forEach(r=>roleCount[r.id]=0);
   snap.forEach(c=>{ const d=c.val(); if(d.equipe===equipeKey && roleCount[d.role]!==undefined) roleCount[d.role]++; });
-  roleKey = Object.entries(roleCount).sort((a,b)=>a[1]-b[1])[0][0];
+  // Parmi les rôles les moins représentés, tirer au sort (évite le biais sur éclaireur)
+  const sorted = Object.entries(roleCount).sort((a,b)=>a[1]-b[1]);
+  const minVal = sorted[0][1];
+  const eligibles = sorted.filter(([,v])=>v===minVal);
+  roleKey = eligibles[Math.floor(Math.random()*eligibles.length)][0];
 
   // Enregistrement Firebase
   const jRef = push(ref(db,'v13/joueurs'));
