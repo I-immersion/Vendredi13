@@ -387,7 +387,7 @@ body{ display:flex; flex-direction:column; }
   </div>
 
 </div>
-<div id="version-badge">ADMIN v2.23</div>
+<div id="version-badge">ADMIN v2.24</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -615,11 +615,18 @@ function drawRoue(highlight=-1){
   ROUE_ITEMS.forEach((item,i)=>{
     const a1=roueAngle+i*(2*Math.PI/n), a2=a1+(2*Math.PI/n);
     ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,a1,a2); ctx.closePath();
-    ctx.fillStyle = i===highlight?'#fff':COULEURS_ROUE[i%COULEURS_ROUE.length];
+    const couleur = COULEURS_ROUE[i%COULEURS_ROUE.length];
+    ctx.fillStyle = couleur;
     ctx.fill();
+    // Bordure blanche sur la case gagnante
+    if(i===highlight){
+      ctx.strokeStyle='#fff';
+      ctx.lineWidth=4;
+      ctx.stroke();
+    }
     ctx.save(); ctx.translate(cx,cy);
     ctx.rotate(a1+(a2-a1)/2);
-    ctx.fillStyle = i===highlight?'#111':'rgba(0,0,0,.75)';
+    ctx.fillStyle = i===highlight?'#fff':'rgba(0,0,0,.75)';
     ctx.font='bold 13px Nunito,sans-serif';
     ctx.textAlign='right'; ctx.textBaseline='middle';
     ctx.fillText(item.substring(0,20), r-8, 0);

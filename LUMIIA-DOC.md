@@ -233,6 +233,7 @@ INIT                → initialisation
 
 | Version | Date | Changements |
 |---------|------|-------------|
+| **v2.24 / v2.24** | 13/03/2026 | déploiement client v2.24 / admin v2.24 |
 | **v2.23 / v2.23** | 13/03/2026 | déploiement client v2.23 / admin v2.23 |
 | **v2.21 / v2.21** | 13/03/2026 | déploiement client v2.21 / admin v2.21 |
 | **v2.20 / v2.20** | 13/03/2026 | déploiement client v2.20 / admin v2.20 |
