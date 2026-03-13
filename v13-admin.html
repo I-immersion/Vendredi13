@@ -377,7 +377,7 @@ body{ display:flex; flex-direction:column; }
 
 
 </div>
-<div id="version-badge">ADMIN v2.9.3</div>
+<div id="version-badge">ADMIN v2.9.4</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -858,10 +858,13 @@ function updateJoueursList(){
     const deja=derniersPerformers.includes(j.key) && !isPerformer;
     const card=document.createElement('div');
     card.className='joueur-card'+(isPerformer?' performer':'')+(deja?' joueur-deja':'');
+    const eqCol  = eq ? eq.col : '#888';
+    const roleEmoji = ROLES_DEF.find(r=>r.id===j.role)?.emoji || '?';
+    console.log('[LUMIIA] joueur:', j.prenom, 'equipe:', j.equipe, 'eq:', eq, 'role:', j.role);
     card.innerHTML=`
-      <div class="joueur-eq-dot" style="background:${eq?eq.col:'#fff'}"></div>
+      <div class="joueur-eq-dot" style="background:${eqCol}"></div>
       <div class="joueur-nom">${esc(j.prenom)}</div>
-      <div class="joueur-role">${ROLES_DEF.find(r=>r.id===j.role)?.emoji||'?'}</div>
+      <div class="joueur-role">${roleEmoji}</div>
       <div class="joueur-pts">${j.pointsPerso||0}pts</div>
       ${isPerformer?'<div class="joueur-crown">👑</div>':''}
     `;
