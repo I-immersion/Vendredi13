@@ -377,7 +377,7 @@ body{ display:flex; flex-direction:column; }
 
 
 </div>
-<div id="version-badge">ADMIN v2.14</div>
+<div id="version-badge">ADMIN v2.15</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -609,8 +609,9 @@ window.spinRoue = () => {
       document.getElementById('mission-result-titre').textContent=missionActuelle.titre;
       document.getElementById('mission-result-desc').textContent=missionActuelle.desc;
       document.getElementById('mission-result').style.display='block';
-      // Mission démarre après 5s (temps de lire)
-      setTimeout(()=>{ lancerChrono(); }, 5000);
+      // Afficher le bouton — lancement manuel
+      document.getElementById('btn-lancer').style.display='block';
+      document.getElementById('btn-lancer').disabled=false;
     }
   }
   requestAnimationFrame(animate);
@@ -987,7 +988,8 @@ function buildMissionsList(){
       document.getElementById('mission-result-titre').textContent=m.titre;
       document.getElementById('mission-result-desc').textContent=m.desc;
       document.getElementById('mission-result').style.display='block';
-      setTimeout(()=>{ lancerChrono(); }, 1000);
+      document.getElementById('btn-lancer').style.display='block';
+      document.getElementById('btn-lancer').disabled=false;
     };
     container.appendChild(div);
   });

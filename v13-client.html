@@ -219,7 +219,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.14</div>
+<div id="version-badge">CLIENT v2.15</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -398,7 +398,7 @@ html,body{
       <div class="smileys" id="smileys-origi"></div>
     </div>
   </div>
-  <button class="btn-voter" id="btn-voter" onclick="envoyerVote()" disabled>Envoyer mon vote</button>
+  <button class="btn-voter" id="btn-voter" onclick="envoyerVote()" disabled style="display:none">Envoyer mon vote</button>
 </div>
 
 <!-- ════════════════════════════════════════════
@@ -781,23 +781,27 @@ function listenAdmin(){
 let chenilleInterval = null;
 function jouerChenille(){
   stopChenille();
-  const ctx = new (window.AudioContext||window.webkitAudioContext)();
+  const ctx = getCtx();
+  // Forcer le resume si suspendu (politique autoplay navigateur)
+  if(ctx.state === 'suspended') ctx.resume();
   let beat = 0;
-  const pattern = [200,0,200,0,150,0,150,0,180,0,0,0];
+  // Mélodie chenille : do-mi-sol-mi-do-sol (boucle festive)
+  const notes = [261,330,392,330,261,392,523,392,330,261,0,0];
   chenilleInterval = setInterval(()=>{
-    const freq = pattern[beat % pattern.length];
+    const freq = notes[beat % notes.length];
     if(freq > 0){
       const o = ctx.createOscillator();
       const g = ctx.createGain();
       o.connect(g); g.connect(ctx.destination);
       o.frequency.value = freq;
-      o.type = 'square';
-      g.gain.setValueAtTime(0.15, ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.12);
-      o.start(); o.stop(ctx.currentTime+0.12);
+      o.type = 'triangle';
+      g.gain.setValueAtTime(0.25, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.18);
+      o.start(ctx.currentTime);
+      o.stop(ctx.currentTime+0.18);
     }
     beat++;
-  }, 200);
+  }, 180);
 }
 function stopChenille(){
   if(chenilleInterval){ clearInterval(chenilleInterval); chenilleInterval=null; }
@@ -909,7 +913,11 @@ function choixSmiley(key,val,wrap){
 
 function checkVoteReady(){
   const ok = noteEtoiles!==null && smileys.perso!==null && smileys.origi!==null;
-  document.getElementById('btn-voter').disabled=!ok;
+  if(ok){
+    // Tout coché → envoi automatique après 0.4s (feedback visuel)
+    document.getElementById('btn-voter').disabled=false;
+    setTimeout(()=>{ envoyerVote(); }, 400);
+  }
 }
 
 /* ════════════════════════════════════════════════
