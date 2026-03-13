@@ -219,7 +219,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.9.2</div>
+<div id="version-badge">CLIENT v2.9.3</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -612,7 +612,7 @@ async function affecterEquipe(){
     // Afficher une alerte visible sur le téléphone
     const errDiv = document.createElement('div');
     errDiv.style.cssText = 'position:fixed;top:10px;left:10px;right:10px;background:#f87171;color:#1a0a00;padding:12px;border-radius:10px;font-size:.85rem;z-index:9999;font-family:monospace;';
-    errDiv.textContent = 'Erreur Firebase: ' + (err.message || err) + ' — Montre cet écran à l'animateur';
+    errDiv.textContent = `Erreur Firebase: ${err.message || err} — Montre cet ecran a l'animateur`;
     document.body.appendChild(errDiv);
     // On continue quand même pour ne pas bloquer le joueur
   }
