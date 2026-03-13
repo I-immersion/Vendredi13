@@ -324,6 +324,7 @@ body{ display:flex; flex-direction:column; }
     <div class="stat-pill">Tours : <b id="nb-tours">0</b></div>
     <button class="btn-reset" onclick="resetSoiree()">↺ Reset</button>
     <button class="btn-settings" id="btn-settings" onclick="toggleSettings()">⚙️ Settings</button>
+    <button class="btn-settings" id="btn-fs" onclick="toggleFullscreen()" title="Plein écran">⛶</button>
   </div>
 </div>
 
@@ -387,7 +388,7 @@ body{ display:flex; flex-direction:column; }
   </div>
 
 </div>
-<div id="version-badge">ADMIN v2.24</div>
+<div id="version-badge">ADMIN v2.25</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -887,6 +888,23 @@ window.fermerVote = () => {
    RESET SOIRÉE
 ════════════════════════════════════════════════ */
 // ── Settings panel ──
+window.toggleFullscreen = () => {
+  const btn = document.getElementById('btn-fs');
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen();
+    btn.textContent = '✕';
+    btn.title = 'Quitter plein écran';
+  } else {
+    document.exitFullscreen();
+    btn.textContent = '⛶';
+    btn.title = 'Plein écran';
+  }
+};
+document.addEventListener('fullscreenchange', ()=>{
+  const btn = document.getElementById('btn-fs');
+  if(btn) btn.textContent = document.fullscreenElement ? '✕' : '⛶';
+});
+
 window.toggleSettings = () => {
   const panel = document.getElementById('settings-panel');
   const btn = document.getElementById('btn-settings');
