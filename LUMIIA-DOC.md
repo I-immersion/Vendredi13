@@ -233,6 +233,7 @@ INIT                → initialisation
 
 | Version | Date | Changements |
 |---------|------|-------------|
+| **v2.7 / v2.7** | 13/03/2026 | nouvel onglet admin |
 | **v2.6 / v2.6** | 13/03/2026 | - |
 | **v2.6 / v2.6** | 13/03/2026 | MAJ des missions et interfaces |
 | **v2.5 / v2.5** | 13/03/2026 | - |

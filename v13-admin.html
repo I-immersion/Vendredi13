@@ -357,7 +357,27 @@ body{ display:flex; flex-direction:column; }
   </div>
 
 </div>
-<div id="version-badge">ADMIN v2.6</div>
+<div id="version-badge">ADMIN v2.7</div>
+
+<!-- ═══ PANEL SETTINGS ═══ -->
+<div id="settings-panel">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <div class="sp-titre">⚙️ Settings</div>
+    <button onclick="toggleSettings()" style="background:none;border:none;color:var(--texte-dim);font-size:1.2rem;cursor:pointer;">✕</button>
+  </div>
+
+  <!-- Notes personnelles joueurs -->
+  <div class="sp-section">
+    <div class="sp-section-titre">Notes personnelles — joueurs</div>
+    <div id="sp-joueurs-list"><div style="color:var(--texte-dim);font-size:.8rem;">En attente de joueurs…</div></div>
+  </div>
+
+  <!-- Liste des missions -->
+  <div class="sp-section">
+    <div class="sp-section-titre">Missions disponibles</div>
+    <div id="sp-missions-list"></div>
+  </div>
+</div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -473,6 +493,15 @@ let chronoInt = null;
 let voteOuvert = false;
 let nbTours = 0;
 let scoreEquipes = { intuitif:0, stratege:0, chanceux:0, temeraire:0 };
+
+// Lire les scores depuis Firebase au démarrage
+onValue(ref(db,'v13/scores'), snap=>{
+  const data = snap.val();
+  if(data){
+    scoreEquipes = {...scoreEquipes, ...data};
+    buildScoresEquipes();
+  }
+});
 // Anti-répétition : file des 5 derniers performers (clés Firebase)
 let derniersPerformers = [];
 
@@ -544,8 +573,8 @@ window.spinRoue = () => {
       document.getElementById('mission-result-titre').textContent=missionActuelle.titre;
       document.getElementById('mission-result-desc').textContent=missionActuelle.desc;
       document.getElementById('mission-result').style.display='block';
-      document.getElementById('btn-lancer').style.display='block';
-      document.getElementById('btn-lancer').textContent=`▶ Lancer la mission (${missionActuelle.duree}s)`;
+      // Mission démarre automatiquement
+      setTimeout(()=>{ lancerChrono(); }, 1000);
     }
   }
   requestAnimationFrame(animate);
@@ -654,8 +683,8 @@ window.lancerChrono = () => {
       SFX.buzzer();
       chronoActif=false;
       set(ref(db,'v13/etat'),{ type:'mission', actif:false, ts:serverTimestamp() });
-      // Préparer le vote
-      document.getElementById('btn-vote-open').style.display='block';
+      // Vote automatique avec chrono 20s
+      setTimeout(()=>{ ouvrirVote(true); }, 800);
     }
   },1000);
 };
@@ -663,21 +692,36 @@ window.lancerChrono = () => {
 /* ════════════════════════════════════════════════
    VOTE — ouvrir / fermer
 ════════════════════════════════════════════════ */
-window.ouvrirVote = () => {
+window.ouvrirVote = (auto=false) => {
   if(!performerActuel) return;
   voteOuvert=true;
   SFX.voteOpen();
-  // Effacer les anciens votes
   remove(ref(db,'v13/votes'));
   set(ref(db,'v13/etat'),{
     type:'vote',
     joueurKey:performerActuel.key,
     performerNom:performerActuel.prenom,
     actif:true,
+    dureeVote:20,
     ts:serverTimestamp()
   });
   document.getElementById('btn-vote-open').style.display='none';
   document.getElementById('btn-vote-close').style.display='block';
+
+  // Chrono vote 20s
+  const elVote = document.getElementById('chrono-display');
+  elVote.style.display='block';
+  elVote.className='vote-chrono';
+  let tv=20;
+  elVote.textContent='🗳️ '+tv+'s';
+  const voteTimer = setInterval(()=>{
+    tv--;
+    elVote.textContent='🗳️ '+tv+'s';
+    if(tv<=0){
+      clearInterval(voteTimer);
+      fermerVote();
+    }
+  },1000);
 };
 
 window.fermerVote = () => {
@@ -690,6 +734,51 @@ window.fermerVote = () => {
 /* ════════════════════════════════════════════════
    RESET SOIRÉE
 ════════════════════════════════════════════════ */
+// ── Settings panel ──
+window.toggleSettings = () => {
+  const panel = document.getElementById('settings-panel');
+  const btn = document.getElementById('btn-settings');
+  panel.classList.toggle('open');
+  btn.classList.toggle('active');
+  if(panel.classList.contains('open')){
+    buildSettingsMissions();
+    buildSettingsJoueurs();
+  }
+};
+
+function buildSettingsMissions(){
+  const el = document.getElementById('sp-missions-list');
+  el.innerHTML = '';
+  MISSIONS.forEach(m=>{
+    const div = document.createElement('div');
+    div.className = 'sp-mission';
+    const tag = m.type==='equipe' ? '<span class="sp-mission-tag">DÉFI ÉQUIPE</span>' :
+                m.musique ? '<span class="sp-mission-tag" style="background:#38bdf8">MUSIQUE</span>' : '';
+    div.innerHTML = `<div class="sp-mission-titre">${m.titre}</div>
+      <div class="sp-mission-desc">${m.desc}</div>${tag}`;
+    el.appendChild(div);
+  });
+}
+
+function buildSettingsJoueurs(){
+  const el = document.getElementById('sp-joueurs-list');
+  if(!joueurs.length){ el.innerHTML='<div style="color:var(--texte-dim);font-size:.8rem;">Aucun joueur</div>'; return; }
+  el.innerHTML = '';
+  joueurs.forEach(j=>{
+    const eq = EQUIPES[j.equipe];
+    const perso = j.pointsPerso || {perso:0, origi:0};
+    const row = document.createElement('div');
+    row.className = 'sp-joueur-row';
+    row.innerHTML = `
+      <div style="width:10px;height:10px;border-radius:50%;background:${eq?eq.col:'#fff'};flex-shrink:0;"></div>
+      <div class="sp-joueur-nom">${j.prenom} <span style="color:var(--texte-dim);font-size:.7rem;">${eq?eq.nom:''}</span></div>
+      <div class="sp-joueur-perso">😄 ${perso.perso||0} · 🤩 ${perso.origi||0}</div>
+      <div class="sp-joueur-pts">${(perso.perso||0)+(perso.origi||0)} pts</div>
+    `;
+    el.appendChild(row);
+  });
+}
+
 window.resetSoiree = async () => {
   if(!confirm('Effacer tous les joueurs et votes ? Cette action est irréversible.')) return;
   // Signal reset pour effacer les sessions sur les téléphones
@@ -786,8 +875,7 @@ function buildMissionsList(){
       document.getElementById('mission-result-titre').textContent=m.titre;
       document.getElementById('mission-result-desc').textContent=m.desc;
       document.getElementById('mission-result').style.display='block';
-      document.getElementById('btn-lancer').style.display='block';
-      document.getElementById('btn-lancer').textContent=`▶ Lancer la mission (${m.duree}s)`;
+      setTimeout(()=>{ lancerChrono(); }, 1000);
     };
     container.appendChild(div);
   });
@@ -807,6 +895,9 @@ onValue(ref(db,'v13/joueurs'), snap=>{
    FIREBASE — écoute votes en temps réel
 ════════════════════════════════════════════════ */
 onValue(ref(db,'v13/votes'), snap=>{
+  // Rafraîchir settings si ouvert
+  const panel = document.getElementById('settings-panel');
+  if(panel && panel.classList.contains('open')) buildSettingsJoueurs();
   const votes=[];
   snap.forEach(c=>votes.push(c.val()));
   if(!votes.length){ document.getElementById('vr-nb').textContent='0 vote(s)'; return; }
