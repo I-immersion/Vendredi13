@@ -233,6 +233,7 @@ INIT                → initialisation
 
 | Version | Date | Changements |
 |---------|------|-------------|
+| **v2.11 / v2.11** | 13/03/2026 | bug |
 | **v2.10 / v2.10** | 13/03/2026 | interface cliebnt |
 | **v2.9 / v2.9** | 13/03/2026 | bugh |
 | **v2.9 / v2.9** | 13/03/2026 | fix reset session locale + listener reset global au demarrage |

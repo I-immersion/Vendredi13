@@ -377,7 +377,7 @@ body{ display:flex; flex-direction:column; }
 
 
 </div>
-<div id="version-badge">ADMIN v2.10</div>
+<div id="version-badge">ADMIN v2.11</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -515,6 +515,16 @@ let nbTours = 0;
 let scoreEquipes = { intuitif:0, stratege:0, chanceux:0, temeraire:0 };
 
 // Lire les scores depuis Firebase au démarrage
+// Écouter v13/etat pour détecter demande de roue du performer
+onValue(ref(db,'v13/etat'), snap=>{
+  const etat = snap.val();
+  if(!etat) return;
+  if(etat.demandeRoue && !roueSpin && performerActuel){
+    set(ref(db,'v13/etat'), {...etat, demandeRoue:false});
+    spinRoue();
+  }
+});
+
 onValue(ref(db,'v13/scores'), snap=>{
   const data = snap.val();
   if(data){
