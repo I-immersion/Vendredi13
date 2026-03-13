@@ -219,7 +219,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.9.8</div>
+<div id="version-badge">CLIENT v2.10</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -276,12 +276,42 @@ html,body{
      PAGE ATTENTE
 ════════════════════════════════════════════ -->
 <div class="page" id="pg-attente">
-  <div class="lumiia-header"><img class="lumiia-logo-img" src="lumiia_Logo1.png" alt="LUMIIA"></div>
-  <div class="att-icon" id="att-icon">⏳</div>
-  <div class="att-titre">Prêt à jouer !</div>
-  <div class="att-role-badge" id="att-role-badge">—</div>
-  <div class="att-sub">L'animateur va tirer un nom au sort.<br>Si c'est toi, tu verras ta mission ici !</div>
-  <div class="att-pulse"><div class="dot-pulse"></div>En attente…</div>
+
+  <!-- Haut : statut -->
+  <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:8px;">
+    <div class="lumiia-header"><img class="lumiia-logo-img" src="lumiia_Logo1.png" alt="LUMIIA"></div>
+    <div class="att-titre">Prêt à jouer !</div>
+    <div class="att-role-badge" id="att-role-badge">—</div>
+    <div class="att-sub">L'animateur va tirer un nom au sort.<br>Si c'est toi, tu verras ta mission ici !</div>
+    <div class="att-pulse"><div class="dot-pulse"></div>En attente…</div>
+  </div>
+
+  <!-- Bas : carte identité permanente -->
+  <div style="
+    width:100%;max-width:360px;
+    background:rgba(255,255,255,.04);
+    border:1.5px solid var(--eq-col, var(--border));
+    border-radius:20px;
+    padding:18px 20px;
+    display:flex;flex-direction:column;gap:10px;
+    box-shadow:0 0 24px rgba(124,58,237,.15);
+  ">
+    <!-- Prénom -->
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,7vw,2.6rem);letter-spacing:.06em;color:var(--texte);line-height:1;" id="att-prenom">—</div>
+
+    <!-- Groupe + score -->
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.1rem,4.5vw,1.5rem);letter-spacing:.06em;color:var(--eq-col, #fff);" id="att-groupe">—</div>
+        <div style="font-size:.72rem;color:var(--eq-col, #fff);opacity:.7;letter-spacing:.08em;font-style:italic;" id="att-groupe-sousnom">—</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);">Score équipe</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--or);line-height:1;" id="att-score">0</div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ════════════════════════════════════════════
@@ -647,6 +677,15 @@ function afficherCarte(){
   set('att-prenom',         prenom);
   set('att-groupe',         eq.nom);
   set('att-groupe-sousnom', eq.sousnom);
+  set('att-score',          '0');
+  // Récupérer le score actuel immédiatement
+  get(ref(db,'v13/scores')).then(snap=>{
+    const s = snap.val();
+    if(s && equipeKey){
+      const scoreEl = document.getElementById('att-score');
+      if(scoreEl) scoreEl.textContent = s[equipeKey] || 0;
+    }
+  });
 
   showPage('pg-attente');
   listenAdmin();
@@ -656,6 +695,15 @@ function afficherCarte(){
    ÉCOUTER LES ÉVÉNEMENTS ADMIN (Firebase)
 ════════════════════════════════════════════════ */
 function listenAdmin(){
+  // Écouter les scores équipes
+  onValue(ref(db,'v13/scores'), snap=>{
+    const s = snap.val();
+    if(s && equipeKey){
+      const scoreEl = document.getElementById('att-score');
+      if(scoreEl) scoreEl.textContent = s[equipeKey] || 0;
+    }
+  });
+
   onValue(ref(db,'v13/etat'), snap=>{
     const etat = snap.val();
     if(!etat) return;
