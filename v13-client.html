@@ -219,7 +219,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.16</div>
+<div id="version-badge">CLIENT v2.18</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -741,6 +741,17 @@ function listenAdmin(){
   onValue(ref(db,'v13/etat'), snap=>{
     const etat = snap.val();
     if(!etat) return;
+
+    // Réactiver le bouton roue dès que demandeRoue est false (roue lancée côté admin)
+    if(!etat.demandeRoue){
+      const btnRoue = document.querySelector('#pg-performer button');
+      if(btnRoue && btnRoue.textContent.includes('En cours')){
+        btnRoue.disabled = false;
+        btnRoue.textContent = '🎡 TOURNER LA ROUE';
+      }
+      const status = document.getElementById('perf-roue-status');
+      if(status) status.style.display = 'none';
+    }
 
     if(etat.type==='performer'){
       // Un performer a été tiré au sort
