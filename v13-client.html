@@ -219,7 +219,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.20</div>
+<div id="version-badge">CLIENT v2.21</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -784,12 +784,12 @@ function listenAdmin(){
       const monTour = etat.joueurKey === joueurKey;
       const monEquipe = etat.equipe === equipeKey;
       const defEquipe = etat.defEquipe === true;
+      // Tout le monde voit PERFORMANCE EN COURS (performer inclus)
+      document.getElementById('perf-en-cours-nom').textContent = etat.performerNom || '';
+      showPage('pg-perf-en-cours');
+      // Le performer a aussi son chrono en fond
       if(monTour || (defEquipe && monEquipe)){
         lancerMission(etat);
-      } else {
-        // Tous les autres → écran PERFORMANCE EN COURS
-        document.getElementById('perf-en-cours-nom').textContent = etat.performerNom || '';
-        showPage('pg-perf-en-cours');
       }
 
     } else if(etat.type==='vote' && etat.actif){
