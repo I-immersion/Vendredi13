@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>LUMIIA · V13 Admin v1.1</title>
+<title>LUMIIA · V13 Admin v1.2</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -120,7 +120,7 @@ canvas#roue{border-radius:50%;box-shadow:0 0 40px rgba(255,215,0,.15);}
 </head>
 <body>
 <div id="bg"></div>
-<div style="position:fixed;bottom:8px;right:10px;z-index:999;font-size:.55rem;letter-spacing:.15em;opacity:.3;color:#fff;font-family:monospace;">ADMIN v1.1</div>
+<div style="position:fixed;bottom:8px;right:10px;z-index:999;font-size:.55rem;letter-spacing:.15em;opacity:.3;color:#fff;font-family:monospace;">ADMIN v1.2</div>
 
 <div id="topbar">
   <div class="logo">V13</div>
@@ -283,6 +283,7 @@ let voteOuvert=false;
 
 // ── INIT ──
 let roueAngle=0,roueSpin=false;
+const COULEURS_ROUE=['#a78bfa','#38bdf8','#4ade80','#fb923c','#ffd700','#ff6b9d','#818cf8','#34d399'];
 
 buildEquipesGrid();
 buildMissionsList();
@@ -432,7 +433,6 @@ window.fermerVote=async()=>{
 };
 
 // ── ROUE ──
-const COULEURS_ROUE=['#a78bfa','#38bdf8','#4ade80','#fb923c','#ffd700','#ff6b9d','#818cf8','#34d399'];
 function drawRoue(highlight=-1){
   const canvas=document.getElementById('roue');
   const ctx=canvas.getContext('2d');
