@@ -219,7 +219,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.8.1</div>
+<div id="version-badge">CLIENT v2.9</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -308,6 +308,10 @@ html,body{
      PAGE VOTE
 ════════════════════════════════════════════ -->
 <div class="page" id="pg-vote">
+  <div id="vote-chrono-client" style="
+    display:none;font-family:'Bebas Neue',sans-serif;font-size:1.8rem;
+    color:var(--or);letter-spacing:.1em;text-align:center;
+  ">20s</div>
   <div class="vote-titre">🗳️ Vote !</div>
   <div class="vote-performer" id="vote-performer-nom">—</div>
   <div class="vote-criteres">
@@ -679,6 +683,7 @@ function listenAdmin(){
       ouvrirVote(etat);
 
     } else if(!etat.actif){
+      if(voteClientTimer){ clearInterval(voteClientTimer); voteClientTimer=null; }
       showPage('pg-attente');
       missionActive=false;
       clearInterval(chronoInt);
@@ -749,7 +754,10 @@ function lancerMission(etat){
 /* ════════════════════════════════════════════════
    VOTE — ouverture
 ════════════════════════════════════════════════ */
+let voteClientTimer = null;
+
 function ouvrirVote(etat){
+  if(etat.joueurKey === joueurKey) return; // Le performer ne vote pas
   noteEtoiles=null; smileys={perso:null, origi:null};
   document.getElementById('vote-performer-nom').textContent = etat.performerNom || '';
 
@@ -770,6 +778,24 @@ function ouvrirVote(etat){
 
   document.getElementById('btn-voter').disabled=true;
   showPage('pg-vote');
+
+  // ── Chrono 20s ──
+  if(voteClientTimer) clearInterval(voteClientTimer);
+  let tv = etat.dureeVote || 20;
+  const chronoEl = document.getElementById('vote-chrono-client');
+  if(chronoEl){ chronoEl.textContent = tv+'s'; chronoEl.style.display='block'; }
+  voteClientTimer = setInterval(()=>{
+    tv--;
+    if(chronoEl) chronoEl.textContent = tv+'s';
+    if(tv<=0){
+      clearInterval(voteClientTimer);
+      // Forcer envoi avec valeurs par défaut si non rempli
+      if(noteEtoiles===null) noteEtoiles=3;
+      if(smileys.perso===null) smileys.perso=2;
+      if(smileys.origi===null) smileys.origi=2;
+      envoyerVote();
+    }
+  },1000);
 }
 
 function buildSmileys(containerId, key){
@@ -831,7 +857,16 @@ if(_session){
   try{
     const s = JSON.parse(_session);
     prenom=s.prenom; equipeKey=s.equipeKey; roleKey=s.roleKey; joueurKey=s.joueurKey;
-    afficherCarte();
+    // Vérifier que le joueur existe encore dans Firebase
+    get(ref(db,`v13/joueurs/${joueurKey}`)).then(snap=>{
+      if(snap.exists()){
+        afficherCarte(); // OK, on reprend la session
+      } else {
+        // Le joueur n'est plus dans Firebase (reset) → retour accueil
+        localStorage.removeItem('v13_session');
+        prenom=''; equipeKey=null; roleKey=null; joueurKey=null;
+      }
+    }).catch(()=>{ localStorage.removeItem('v13_session'); });
   } catch(e){ localStorage.removeItem('v13_session'); }
 }
 

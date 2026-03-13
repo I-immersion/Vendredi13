@@ -369,7 +369,6 @@ body{ display:flex; flex-direction:column; }
       <div class="vr-barre-wrap"><div class="vr-barre" id="vr-barre"></div></div>
       <div class="vr-score" id="vr-score">—</div>
       <div class="vr-detail" id="vr-detail"></div>
-      <button class="btn-vote-open" id="btn-vote-open" onclick="ouvrirVote()">📱 Ouvrir le vote sur les téléphones</button>
       <button class="btn-vote-close" id="btn-vote-close" onclick="fermerVote()" style="display:none">✕ Fermer le vote</button>
     </div>
 
@@ -378,7 +377,7 @@ body{ display:flex; flex-direction:column; }
 
 
 </div>
-<div id="version-badge">ADMIN v2.8.1</div>
+<div id="version-badge">ADMIN v2.9</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -726,7 +725,6 @@ window.ouvrirVote = (auto=false) => {
     dureeVote:20,
     ts:serverTimestamp()
   });
-  document.getElementById('btn-vote-open').style.display='none';
   document.getElementById('btn-vote-close').style.display='block';
 
   // Chrono vote 20s
@@ -749,7 +747,6 @@ window.fermerVote = () => {
   voteOuvert=false;
   set(ref(db,'v13/etat'),{ type:'vote', actif:false, ts:serverTimestamp() });
   document.getElementById('btn-vote-close').style.display='none';
-  document.getElementById('btn-vote-open').style.display='block';
 };
 
 /* ════════════════════════════════════════════════
@@ -801,15 +798,26 @@ function buildSettingsJoueurs(){
     const perso = j.pointsPerso || {perso:0, origi:0};
     const row = document.createElement('div');
     row.className = 'sp-joueur-row';
+    const persoTotal = (perso.perso||0)+(perso.origi||0);
     row.innerHTML = `
       <div style="width:10px;height:10px;border-radius:50%;background:${eq?eq.col:'#fff'};flex-shrink:0;"></div>
       <div class="sp-joueur-nom">${j.prenom} <span style="color:var(--texte-dim);font-size:.7rem;">${eq?eq.nom:''}</span></div>
       <div class="sp-joueur-perso">😄 ${perso.perso||0} · 🤩 ${perso.origi||0}</div>
-      <div class="sp-joueur-pts">${(perso.perso||0)+(perso.origi||0)} pts</div>
+      <div class="sp-joueur-pts">${persoTotal} pts</div>
+      <button onclick="sortirJoueur('${j.key}','${j.prenom}')" style="
+        flex-shrink:0;padding:3px 8px;border:1px solid var(--danger,#f87171);
+        background:transparent;border-radius:6px;color:var(--danger,#f87171);
+        font-size:.65rem;cursor:pointer;">✕</button>
     `;
     el.appendChild(row);
   });
 }
+
+window.sortirJoueur = async (key, nom) => {
+  if(!confirm(`Sortir ${nom} du jeu ?`)) return;
+  await remove(ref(db,`v13/joueurs/${key}`));
+  buildSettingsJoueurs();
+};
 
 window.resetSoiree = async () => {
   if(!confirm('Effacer tous les joueurs et votes ? Cette action est irréversible.')) return;
@@ -868,12 +876,14 @@ function buildScoresEquipes(){
   const container=document.getElementById('scores-equipes');
   container.innerHTML='';
   Object.entries(EQUIPES).forEach(([key,eq])=>{
+    const nbJoueurs = joueurs.filter(j=>j.equipe===key).length;
     const div=document.createElement('div');
     div.className='score-eq'; div.id=`score-eq-${key}`;
     div.innerHTML=`
       <span class="score-eq-emoji">${eq.emoji}</span>
       <span class="score-eq-nom" style="color:${eq.col}">${eq.nom}</span>
       <span class="score-eq-sousnom">${eq.sousnom}</span>
+      <span class="score-eq-nb" id="nb-${key}" style="font-size:.7rem;color:${eq.col};opacity:.7;">${nbJoueurs}j</span>
       <span class="score-eq-pts" id="pts-${key}">${scoreEquipes[key]||0}</span>
     `;
     container.appendChild(div);
@@ -921,13 +931,16 @@ onValue(ref(db,'v13/joueurs'), snap=>{
   snap.forEach(c=>joueurs.push({key:c.key,...c.val()}));
   document.getElementById('nb-inscrits').textContent=joueurs.length;
   updateJoueursList();
+  buildScoresEquipes();
+  // Rafraîchir settings si ouvert
+  const panel = document.getElementById('settings-panel');
+  if(panel && panel.classList.contains('open')) buildSettingsJoueurs();
 });
 
 /* ════════════════════════════════════════════════
    FIREBASE — écoute votes en temps réel
 ════════════════════════════════════════════════ */
 onValue(ref(db,'v13/votes'), snap=>{
-  // Rafraîchir settings si ouvert
   const panel = document.getElementById('settings-panel');
   if(panel && panel.classList.contains('open')) buildSettingsJoueurs();
   const votes=[];
