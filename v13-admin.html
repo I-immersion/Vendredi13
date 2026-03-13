@@ -194,12 +194,13 @@ body{ display:flex; flex-direction:column; }
 .btn-roue:active{ transform:scale(.97); }
 .btn-roue:disabled{ opacity:.4; cursor:default; transform:none; }
 #mission-result{
-  margin-top:12px; padding:12px 16px;
-  background:rgba(255,215,0,.08); border:1px solid rgba(255,215,0,.3);
-  border-radius:12px; display:none;
+  margin-top:12px; padding:20px 24px;
+  background:rgba(255,215,0,.08); border:2px solid rgba(255,215,0,.4);
+  border-radius:16px; display:none;
+  box-shadow:0 0 30px rgba(255,215,0,.1);
 }
-#mission-result-titre{ font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:.04em; color:var(--or); }
-#mission-result-desc{ font-size:1rem; color:var(--texte-dim); margin-top:6px; line-height:1.6; }
+#mission-result-titre{ font-family:'Bebas Neue',sans-serif; font-size:clamp(2rem,3.5vw,3rem); letter-spacing:.06em; color:var(--or); line-height:1.1; }
+#mission-result-desc{ font-size:clamp(1rem,1.8vw,1.4rem); color:var(--texte); margin-top:10px; line-height:1.6; }
 
 /* ── Chrono ── */
 #chrono-wrap{
@@ -386,7 +387,7 @@ body{ display:flex; flex-direction:column; }
   </div>
 
 </div>
-<div id="version-badge">ADMIN v2.18</div>
+<div id="version-badge">ADMIN v2.19</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -633,6 +634,7 @@ window.spinRoue = () => {
   if(roueSpin || !performerActuel) return;
   roueSpin=true;
   document.getElementById('btn-roue').disabled=true;
+  document.getElementById('btn-roue').style.display='block';
   document.getElementById('mission-result').style.display='none';
   missionActuelle=null;
   document.getElementById('btn-lancer').style.display='none';
@@ -668,6 +670,7 @@ window.spinRoue = () => {
       document.getElementById('mission-result-titre').textContent=missionActuelle.titre;
       document.getElementById('mission-result-desc').textContent=missionActuelle.desc;
       document.getElementById('mission-result').style.display='block';
+      document.getElementById('btn-roue').style.display='none';
       // Afficher le bouton — lancement manuel
       document.getElementById('btn-lancer').style.display='block';
       document.getElementById('btn-lancer').disabled=false;
@@ -1057,6 +1060,7 @@ function buildMissionsList(){
       document.getElementById('mission-result-titre').textContent=m.titre;
       document.getElementById('mission-result-desc').textContent=m.desc;
       document.getElementById('mission-result').style.display='block';
+      document.getElementById('btn-roue').style.display='none';
       document.getElementById('btn-lancer').style.display='block';
       document.getElementById('btn-lancer').disabled=false;
     };
