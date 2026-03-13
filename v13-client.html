@@ -219,7 +219,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.19</div>
+<div id="version-badge">CLIENT v2.20</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -282,6 +282,23 @@ html,body{
 <!-- ════════════════════════════════════════════
      PAGE ATTENTE
 ════════════════════════════════════════════ -->
+<div class="page" id="pg-perf-en-cours" style="justify-content:center;align-items:center;gap:24px;text-align:center;">
+  <div style="
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(2.8rem,14vw,5rem);
+    letter-spacing:.08em;
+    color:var(--or);
+    text-shadow:0 0 40px rgba(255,215,0,.4);
+    line-height:1.1;
+    animation:pulse-glow 2s ease-in-out infinite;
+  ">🎭 PERFORMANCE<br>EN COURS</div>
+  <div id="perf-en-cours-nom" style="
+    font-family:'Nunito',sans-serif;font-weight:800;
+    font-size:clamp(1.2rem,6vw,2rem);
+    color:var(--texte-dim);letter-spacing:.05em;
+  "></div>
+</div>
+
 <div class="page" id="pg-attente">
 
   <!-- Haut : statut -->
@@ -770,7 +787,9 @@ function listenAdmin(){
       if(monTour || (defEquipe && monEquipe)){
         lancerMission(etat);
       } else {
-        showPage('pg-attente');
+        // Tous les autres → écran PERFORMANCE EN COURS
+        document.getElementById('perf-en-cours-nom').textContent = etat.performerNom || '';
+        showPage('pg-perf-en-cours');
       }
 
     } else if(etat.type==='vote' && etat.actif){

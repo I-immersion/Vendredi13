@@ -387,7 +387,7 @@ body{ display:flex; flex-direction:column; }
   </div>
 
 </div>
-<div id="version-badge">ADMIN v2.19</div>
+<div id="version-badge">ADMIN v2.20</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -785,9 +785,9 @@ window.lancerChrono = () => {
       playTone(880,'square',.10,.5);  // bip fort
       playTone(1100,'square',.06,.3,.08); // + aigu
     }
+    if(t===2){ SFX.stopGameMusic(); } // arrêt musique 2s avant le buzzer
     if(t<=0){
       clearInterval(chronoInt);
-      SFX.stopGameMusic();
       SFX.buzzer();
       chronoActif=false;
       set(ref(db,'v13/etat'),{ type:'mission', actif:false, ts:serverTimestamp() });
