@@ -219,11 +219,18 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.12</div>
+<div id="version-badge">CLIENT v2.13</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
 ════════════════════════════════════════════ -->
+<div class="page" id="pg-loading" style="justify-content:center;align-items:center;gap:16px;">
+  <img class="lumiia-logo-img" src="lumiia_Logo1.png" alt="LUMIIA" style="width:120px;opacity:.7;">
+  <div style="display:flex;align-items:center;gap:10px;color:var(--texte-dim);font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;">
+    <div class="dot-pulse"></div>Chargement…
+  </div>
+</div>
+
 <div class="page on" id="pg-accueil">
   <div class="lumiia-header"><img class="lumiia-logo-img" src="lumiia_Logo1.png" alt="LUMIIA"></div>
   <div class="acc-emoji">🔮</div>
@@ -966,16 +973,15 @@ if(_session){
   try{
     const s = JSON.parse(_session);
     prenom=s.prenom; equipeKey=s.equipeKey; roleKey=s.roleKey; joueurKey=s.joueurKey;
-    // Double vérification : joueur dans Firebase + v13/joueurs non vide
-    Promise.all([
-      get(ref(db,`v13/joueurs/${joueurKey}`)),
-      get(ref(db,'v13/joueurs'))
-    ]).then(([joueurSnap, tousSnap])=>{
-      if(joueurSnap.exists() && tousSnap.exists()){
-        afficherCarte(); // OK, session valide
+    // Afficher un écran de chargement pendant la vérification Firebase
+    showPage('pg-loading');
+    // Vérifier que le joueur existe encore
+    get(ref(db,`v13/joueurs/${joueurKey}`))
+    .then(snap=>{
+      if(snap.exists()){
+        afficherCarte(); // session valide
       } else {
-        // Joueur absent ou Firebase vide (reset) → accueil
-        clearSession();
+        clearSession(); // reset ou joueur supprimé
       }
     }).catch(()=>{ clearSession(); });
   } catch(e){ clearSession(); }

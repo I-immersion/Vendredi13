@@ -233,6 +233,7 @@ INIT                → initialisation
 
 | Version | Date | Changements |
 |---------|------|-------------|
+| **v2.13 / v2.13** | 13/03/2026 | bug |
 | **v2.12 / v2.12** | 13/03/2026 | bug |
 | **v2.11 / v2.11** | 13/03/2026 | bug |
 | **v2.10 / v2.10** | 13/03/2026 | interface cliebnt |

@@ -377,7 +377,7 @@ body{ display:flex; flex-direction:column; }
 
 
 </div>
-<div id="version-badge">ADMIN v2.12</div>
+<div id="version-badge">ADMIN v2.13</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -863,6 +863,7 @@ window.resetSoiree = async () => {
     remove(ref(db,'v13/joueurs')),
     remove(ref(db,'v13/votes')),
     remove(ref(db,'v13/etat')),
+    set(ref(db,'v13/scores'), {intuitif:0, stratege:0, chanceux:0, temeraire:0}),
   ]);
   scoreEquipes={ intuitif:0, stratege:0, chanceux:0, temeraire:0 };
   derniersPerformers=[];
