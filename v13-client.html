@@ -620,8 +620,10 @@ function afficherCarte(){
   document.getElementById('c-role').textContent       = role.emoji+' '+role.nom;
   document.getElementById('c-role-desc').textContent  = role.desc;
   document.getElementById('c-prenom').textContent     = prenom;
-  document.getElementById('att-role-badge').textContent = role.emoji+' '+role.nom;
-  document.getElementById('att-icon').textContent     = eq.emoji;
+  document.getElementById('att-role-badge').textContent    = role.emoji+' '+role.nom;
+  document.getElementById('att-prenom').textContent        = prenom;
+  document.getElementById('att-groupe').textContent        = eq.nom;
+  document.getElementById('att-groupe-sousnom').textContent = eq.sousnom;
   showPage('pg-attente');
   listenAdmin();
 }
