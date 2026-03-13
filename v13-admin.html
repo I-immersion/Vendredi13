@@ -377,7 +377,7 @@ body{ display:flex; flex-direction:column; }
 
 
 </div>
-<div id="version-badge">ADMIN v2.9.4</div>
+<div id="version-badge">ADMIN v2.9.6</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -853,22 +853,25 @@ function updateJoueursList(){
   }
   container.innerHTML='';
   joueurs.forEach(j=>{
-    const eq=EQUIPES[j.equipe];
-    const isPerformer=performerActuel && performerActuel.key===j.key;
-    const deja=derniersPerformers.includes(j.key) && !isPerformer;
-    const card=document.createElement('div');
-    card.className='joueur-card'+(isPerformer?' performer':'')+(deja?' joueur-deja':'');
-    const eqCol  = eq ? eq.col : '#888';
-    const roleEmoji = ROLES_DEF.find(r=>r.id===j.role)?.emoji || '?';
-    console.log('[LUMIIA] joueur:', j.prenom, 'equipe:', j.equipe, 'eq:', eq, 'role:', j.role);
-    card.innerHTML=`
-      <div class="joueur-eq-dot" style="background:${eqCol}"></div>
-      <div class="joueur-nom">${esc(j.prenom)}</div>
-      <div class="joueur-role">${roleEmoji}</div>
-      <div class="joueur-pts">${j.pointsPerso||0}pts</div>
-      ${isPerformer?'<div class="joueur-crown">👑</div>':''}
-    `;
-    container.appendChild(card);
+    try {
+      const eq=EQUIPES[j.equipe];
+      const isPerformer=performerActuel && performerActuel.key===j.key;
+      const deja=derniersPerformers.includes(j.key) && !isPerformer;
+      const card=document.createElement('div');
+      card.className='joueur-card'+(isPerformer?' performer':'')+(deja?' joueur-deja':'');
+      const eqCol  = eq ? eq.col : '#888';
+      const roleEmoji = ROLES_DEF.find(r=>r.id===j.role)?.emoji || '?';
+      card.innerHTML=`
+        <div class="joueur-eq-dot" style="background:${eqCol}"></div>
+        <div class="joueur-nom">${esc(j.prenom)}</div>
+        <div class="joueur-role">${roleEmoji}</div>
+        <div class="joueur-pts">${j.pointsPerso||0}pts</div>
+        ${isPerformer?'<div class="joueur-crown">👑</div>':''}
+      `;
+      container.appendChild(card);
+    } catch(e) {
+      console.error('[LUMIIA] Erreur rendu joueur', j.prenom, j.equipe, e);
+    }
   });
 }
 

@@ -219,7 +219,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.9.4</div>
+<div id="version-badge">CLIENT v2.9.6</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -656,20 +656,6 @@ function afficherCarte(){
    ÉCOUTER LES ÉVÉNEMENTS ADMIN (Firebase)
 ════════════════════════════════════════════════ */
 function listenAdmin(){
-  // Écouter le signal reset — efface la session et retourne à l'accueil
-  onValue(ref(db,'v13/reset'), snap=>{
-    const data = snap.val();
-    if(!data) return;
-    // Si le reset est récent (moins de 10s) → effacer session
-    if(Date.now() - data.ts < 10000){
-      localStorage.removeItem('v13_session');
-      prenom=''; equipeKey=null; roleKey=null; joueurKey=null;
-      showPage('pg-accueil');
-      document.getElementById('btn-start').disabled=false;
-      document.getElementById('prenom-inp').value='';
-    }
-  });
-
   onValue(ref(db,'v13/etat'), snap=>{
     const etat = snap.val();
     if(!etat) return;
@@ -867,6 +853,23 @@ window.envoyerVote = async () => {
 /* ════════════════════════════════════════════════
    SESSION — restaurer si le joueur revient
 ════════════════════════════════════════════════ */
+// ── Écouter le reset dès le démarrage ──
+// Stocker le dernier timestamp reset connu
+onValue(ref(db,'v13/reset'), snap=>{
+  const data = snap.val();
+  if(!data) return;
+  localStorage.setItem('v13_last_reset', data.ts);
+  // Si on est déjà sur une page active, retour accueil
+  if(joueurKey){
+    localStorage.removeItem('v13_session');
+    prenom=''; equipeKey=null; roleKey=null; joueurKey=null;
+    if(voteClientTimer){ clearInterval(voteClientTimer); voteClientTimer=null; }
+    showPage('pg-accueil');
+    document.getElementById('btn-start').disabled=false;
+    document.getElementById('prenom-inp').value='';
+  }
+});
+
 const _session = localStorage.getItem('v13_session');
 if(_session){
   try{
@@ -877,9 +880,11 @@ if(_session){
       if(snap.exists()){
         afficherCarte(); // OK, on reprend la session
       } else {
-        // Le joueur n'est plus dans Firebase (reset) → retour accueil
+        // Le joueur n'est plus dans Firebase (reset soirée) → retour accueil propre
         localStorage.removeItem('v13_session');
+        localStorage.removeItem('v13_last_reset');
         prenom=''; equipeKey=null; roleKey=null; joueurKey=null;
+        document.getElementById('prenom-inp').value='';
       }
     }).catch(()=>{ localStorage.removeItem('v13_session'); });
   } catch(e){ localStorage.removeItem('v13_session'); }
