@@ -68,6 +68,7 @@ body{ display:flex; flex-direction:column; }
 }
 .score-eq-emoji{ font-size:1.1rem; }
 .score-eq-nom{ font-family:'Bebas Neue',sans-serif; font-size:.9rem; letter-spacing:.06em; }
+.score-eq-sousnom{ font-size:.65rem; color:rgba(255,255,255,.4); font-style:italic; }
 .score-eq-pts{ font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:var(--or); margin-left:4px; }
 .topbar-stats{ display:flex; gap:16px; align-items:center; flex-shrink:0; }
 .stat-pill{ font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--texte-dim); }
@@ -356,7 +357,7 @@ body{ display:flex; flex-direction:column; }
   </div>
 
 </div>
-<div id="version-badge">ADMIN v2.3</div>
+<div id="version-badge">ADMIN v2.4</div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -382,10 +383,10 @@ const db  = getDatabase(app);
    CONFIG ÉQUIPES
 ════════════════════════════════════════════════ */
 const EQUIPES = {
-  intuitif:  { nom:"L'Intuitif",   emoji:"🔮", col:"#a78bfa" },
-  stratege:  { nom:"Le Stratège",  emoji:"♟️", col:"#38bdf8" },
-  chanceux:  { nom:"Le Chanceux",  emoji:"🍀", col:"#4ade80" },
-  temeraire: { nom:"Le Téméraire", emoji:"⚡", col:"#fb923c" },
+  intuitif:  { nom:"Groupe A", sousnom:"L'Intuitif",   emoji:"🔮", col:"#a78bfa" },
+  stratege:  { nom:"Groupe B", sousnom:"Le Stratège",  emoji:"♟️", col:"#38bdf8" },
+  chanceux:  { nom:"Groupe C", sousnom:"Le Chanceux",  emoji:"🍀", col:"#4ade80" },
+  temeraire: { nom:"Groupe D", sousnom:"Le Téméraire", emoji:"⚡", col:"#fb923c" },
 };
 
 /* ════════════════════════════════════════════════
@@ -744,6 +745,7 @@ function buildScoresEquipes(){
     div.innerHTML=`
       <span class="score-eq-emoji">${eq.emoji}</span>
       <span class="score-eq-nom" style="color:${eq.col}">${eq.nom}</span>
+      <span class="score-eq-sousnom">${eq.sousnom}</span>
       <span class="score-eq-pts" id="pts-${key}">${scoreEquipes[key]||0}</span>
     `;
     container.appendChild(div);
@@ -817,6 +819,10 @@ onValue(ref(db,'v13/votes'), snap=>{
   if(!voteOuvert && performerActuel && votes.length>0){
     scoreEquipes[performerActuel.equipe]=(scoreEquipes[performerActuel.equipe]||0)+Math.round(totalEtoiles);
     buildScoresEquipes();
+    // Écrire dans Firebase pour que les clients voient leur score
+    set(ref(db,'v13/scores'), scoreEquipes);
+    // Mettre à jour pts affichés
+    document.getElementById('pts-'+performerActuel.equipe).textContent = scoreEquipes[performerActuel.equipe];
   }
 });
 

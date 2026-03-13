@@ -109,6 +109,7 @@ html,body{
 .carte-top{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--texte-dim);margin-bottom:12px;}
 .carte-emoji{font-size:clamp(3.5rem,15vw,5.5rem);line-height:1;margin-bottom:8px;filter:drop-shadow(0 0 20px var(--eq-glow));}
 .carte-equipe{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,9vw,3.5rem);letter-spacing:.06em;color:var(--eq-col);line-height:1;margin-bottom:4px;}
+.carte-equipe-sousnom{font-size:.8rem;color:var(--eq-col);font-weight:700;letter-spacing:.1em;margin-bottom:2px;opacity:.8;}
 .carte-equipe-desc{font-size:.8rem;color:var(--texte-dim);font-weight:600;margin-bottom:20px;line-height:1.5;}
 .carte-sep{width:60%;height:1px;background:var(--border);margin:0 auto 16px;}
 .carte-role-lbl{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--texte-dim);margin-bottom:6px;}
@@ -123,10 +124,20 @@ html,body{
    PAGE ATTENTE
 ════════════════════════════════════════════════ */
 #pg-attente{justify-content:center;text-align:center;gap:16px;}
-.att-icon{font-size:clamp(3rem,14vw,5rem);animation:float 3s ease-in-out infinite;}
-.att-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,8vw,3rem);letter-spacing:.06em;}
+.att-profil{
+  width:100%;max-width:320px;
+  background:var(--surface);border:2px solid var(--eq-col);border-radius:20px;
+  padding:20px;display:flex;flex-direction:column;align-items:center;gap:10px;
+  box-shadow:0 0 30px var(--eq-glow);
+}
+.att-prenom{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,9vw,3rem);letter-spacing:.06em;color:var(--texte);}
+.att-groupe-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.att-groupe{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,6vw,2rem);letter-spacing:.06em;color:var(--eq-col);}
+.att-groupe-sousnom{font-size:.75rem;color:var(--eq-col);opacity:.7;letter-spacing:.1em;font-style:italic;}
 .att-role-badge{display:inline-block;padding:6px 18px;border:2px solid var(--eq-col);border-radius:50px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.08em;color:var(--eq-col);}
-.att-sub{font-size:.82rem;color:var(--texte-dim);line-height:1.6;max-width:280px;font-weight:600;}
+.att-score-wrap{margin-top:4px;text-align:center;}
+.att-score-lbl{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);}
+.att-score{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--or);}
 .att-pulse{display:flex;align-items:center;gap:8px;justify-content:center;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--texte-dim);}
 .dot-pulse{width:8px;height:8px;border-radius:50%;background:var(--or);animation:pdot 1.5s ease-in-out infinite;}
 @keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
@@ -139,6 +150,12 @@ html,body{
 @keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-10px)}}
 .perf-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,10vw,4rem);letter-spacing:.05em;background:linear-gradient(135deg,var(--or),#ff9f2e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .perf-sub{font-size:.9rem;color:var(--texte-dim);line-height:1.6;font-weight:600;max-width:280px;}
+.perf-cta{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,12vw,4.5rem);
+  letter-spacing:.06em;color:var(--or);
+  animation:blink .8s step-end infinite;
+  text-shadow:0 0 30px rgba(255,215,0,.6);
+}
 .perf-attente{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--texte-dim);margin-top:8px;}
 
 /* ════════════════════════════════════════════════
@@ -194,7 +211,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.3</div>
+<div id="version-badge">CLIENT v2.4</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -233,6 +250,7 @@ html,body{
     <div class="carte-top">✦ Ton profil ce soir ✦</div>
     <div class="carte-emoji" id="c-emoji">🔮</div>
     <div class="carte-equipe" id="c-equipe">—</div>
+    <div class="carte-equipe-sousnom" id="c-eq-sousnom">—</div>
     <div class="carte-equipe-desc" id="c-eq-desc">—</div>
     <div class="carte-sep"></div>
     <div class="carte-role-lbl">Ton rôle</div>
@@ -264,8 +282,9 @@ html,body{
 <div class="page" id="pg-performer">
   <div class="perf-couronne">👑</div>
   <div class="perf-titre">C'EST TOI !</div>
-  <div class="perf-sub">Tu as été tiré au sort !<br>La roue va désigner ta mission…</div>
-  <div class="perf-attente">Attends la roue 🎡</div>
+  <div class="perf-cta">LÈVE LA MAIN !</div>
+  <div class="perf-sub">Tu as été tiré au sort !<br>Signale-toi à l'animateur.</div>
+  <div class="perf-attente">La roue va choisir ta mission 🎡</div>
 </div>
 
 <!-- ════════════════════════════════════════════
@@ -341,10 +360,10 @@ const db  = getDatabase(app);
    → Pour modifier : changer nom, emoji, col, desc
 ════════════════════════════════════════════════ */
 const EQUIPES = {
-  intuitif:  { nom:"L'Intuitif",   emoji:"🔮", col:"var(--intuitif)",  glow:"rgba(167,139,250,.3)", desc:"Tu fais confiance à ton instinct.\nLa chance te trouve, tu ne la cherches pas." },
-  stratege:  { nom:"Le Stratège",  emoji:"♟️", col:"var(--stratege)",  glow:"rgba(56,189,248,.3)",  desc:"Tu construis ta chance. Chaque move est calculé.\nRien n'arrive par hasard chez toi." },
-  chanceux:  { nom:"Le Chanceux",  emoji:"🍀", col:"var(--chanceux)",  glow:"rgba(74,222,128,.3)",  desc:"Tu as un don. Les étoiles s'alignent pour toi.\nEt tu le sais très bien." },
-  temeraire: { nom:"Le Téméraire", emoji:"⚡", col:"var(--temeraire)", glow:"rgba(251,146,60,.3)",  desc:"Tu provoques le destin. Audacieux, imprévisible.\nLa chance aime les gens courageux." },
+  intuitif:  { nom:"Groupe A", sousnom:"L'Intuitif",   emoji:"🔮", col:"var(--intuitif)",  glow:"rgba(167,139,250,.3)", desc:"Tu fais confiance à ton instinct.\nLa chance te trouve, tu ne la cherches pas." },
+  stratege:  { nom:"Groupe B", sousnom:"Le Stratège",  emoji:"♟️", col:"var(--stratege)",  glow:"rgba(56,189,248,.3)",  desc:"Tu construis ta chance. Chaque move est calculé.\nRien n'arrive par hasard chez toi." },
+  chanceux:  { nom:"Groupe C", sousnom:"Le Chanceux",  emoji:"🍀", col:"var(--chanceux)",  glow:"rgba(74,222,128,.3)",  desc:"Tu as un don. Les étoiles s'alignent pour toi.\nEt tu le sais très bien." },
+  temeraire: { nom:"Groupe D", sousnom:"Le Téméraire", emoji:"⚡", col:"var(--temeraire)", glow:"rgba(251,146,60,.3)",  desc:"Tu provoques le destin. Audacieux, imprévisible.\nLa chance aime les gens courageux." },
 };
 
 /* ════════════════════════════════════════════════
@@ -589,12 +608,16 @@ function afficherCarte(){
   document.documentElement.style.setProperty('--eq-glow', eq.glow);
   document.getElementById('c-emoji').textContent      = eq.emoji;
   document.getElementById('c-equipe').textContent     = eq.nom;
+  document.getElementById('c-eq-sousnom').textContent = eq.sousnom;
   document.getElementById('c-eq-desc').textContent    = eq.desc;
   document.getElementById('c-role').textContent       = role.emoji+' '+role.nom;
   document.getElementById('c-role-desc').textContent  = role.desc;
   document.getElementById('c-prenom').textContent     = prenom;
   document.getElementById('att-role-badge').textContent = role.emoji+' '+role.nom;
-  document.getElementById('att-icon').textContent     = eq.emoji;
+  // Page attente — infos permanentes
+  document.getElementById('att-prenom').textContent       = prenom;
+  document.getElementById('att-groupe').textContent       = eq.nom;
+  document.getElementById('att-groupe-sousnom').textContent = eq.sousnom;
   showPage('pg-carte');
   setTimeout(()=>{ showPage('pg-attente'); }, 5000);
   listenAdmin();
@@ -604,6 +627,14 @@ function afficherCarte(){
    ÉCOUTER LES ÉVÉNEMENTS ADMIN (Firebase)
 ════════════════════════════════════════════════ */
 function listenAdmin(){
+  // Écouter le score de l'équipe en temps réel
+  onValue(ref(db,'v13/scores'), snap=>{
+    const scores = snap.val() || {};
+    const pts = scores[equipeKey] || 0;
+    const el = document.getElementById('att-score');
+    if(el) el.textContent = pts + ' pts';
+  });
+
   // Écouter le signal reset — efface la session et retourne à l'accueil
   onValue(ref(db,'v13/reset'), snap=>{
     const data = snap.val();

@@ -233,6 +233,7 @@ INIT                → initialisation
 
 | Version | Date | Changements |
 |---------|------|-------------|
+| **v2.4 / v2.4** | 13/03/2026 | MAJ Interface clienbt |
 | **v2.3 / v2.3** | 13/03/2026 | sync v2.3 + logo |
 | **v2.3 / v2.3** | 13/03/2026 | maj |
 | **v2.3 / v2.2** | 13/03/2026 | maj questions quiz |
