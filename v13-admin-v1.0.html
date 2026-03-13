@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0055)file:///Users/emmanuelexbrayat/Downloads/v13-admin.html -->
-<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>LUMIIA · V13 Admin</title>
-<link href="./LUMIIA · V13 Admin_files/css2" rel="stylesheet">
+<title>LUMIIA · V13 Admin v1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -120,6 +120,7 @@ canvas#roue{border-radius:50%;box-shadow:0 0 40px rgba(255,215,0,.15);}
 </head>
 <body>
 <div id="bg"></div>
+<div style="position:fixed;bottom:8px;right:10px;z-index:999;font-size:.55rem;letter-spacing:.15em;opacity:.3;color:#fff;font-family:monospace;">ADMIN v1.0</div>
 
 <div id="topbar">
   <div class="logo">V13</div>
@@ -136,7 +137,9 @@ canvas#roue{border-radius:50%;box-shadow:0 0 40px rgba(255,215,0,.15);}
   <!-- ÉQUIPES -->
   <div class="sec">
     <div class="sec-title">Équipes en temps réel</div>
-    <div class="equipes-grid" id="equipes-grid"><div class="eq-card intuitif" id="eq-intuitif"><div class="eq-emoji">🔮</div><div class="eq-nom intuitif">L'Intuitif</div><div class="eq-count">0 joueur</div><div class="eq-roles"></div></div><div class="eq-card stratege" id="eq-stratege"><div class="eq-emoji">♟️</div><div class="eq-nom stratege">Le Stratège</div><div class="eq-count">0 joueur</div><div class="eq-roles"></div></div><div class="eq-card chanceux" id="eq-chanceux"><div class="eq-emoji">🍀</div><div class="eq-nom chanceux">Le Chanceux</div><div class="eq-count">0 joueur</div><div class="eq-roles"></div></div><div class="eq-card temeraire" id="eq-temeraire"><div class="eq-emoji">⚡</div><div class="eq-nom temeraire">Le Téméraire</div><div class="eq-count">0 joueur</div><div class="eq-roles"></div></div></div>
+    <div class="equipes-grid" id="equipes-grid">
+      <!-- généré JS -->
+    </div>
   </div>
 
   <!-- CONFIG RÔLES -->
@@ -171,7 +174,7 @@ canvas#roue{border-radius:50%;box-shadow:0 0 40px rgba(255,215,0,.15);}
   <div class="sec">
     <div class="sec-title">Lancer une mission</div>
     <div class="card">
-      <div class="missions-list" id="missions-list"><div class="mission-item"><span class="mi-role">🔦 🎪</span><span class="mi-titre">Imitation éclair</span><span class="mi-arrow">→</span></div><div class="mission-item"><span class="mi-role">🔮 👻</span><span class="mi-titre">La pose légendaire</span><span class="mi-arrow">→</span></div><div class="mission-item"><span class="mi-role">🃏 🔦</span><span class="mi-titre">Le vendeur fou</span><span class="mi-arrow">→</span></div><div class="mission-item"><span class="mi-role">🔮</span><span class="mi-titre">La prophétie</span><span class="mi-arrow">→</span></div><div class="mission-item"><span class="mi-role">🎪 👻</span><span class="mi-titre">Le mime express</span><span class="mi-arrow">→</span></div><div class="mission-item"><span class="mi-role">🔦 🃏</span><span class="mi-titre">Le discours de 30 secondes</span><span class="mi-arrow">→</span></div><div class="mission-item"><span class="mi-role">🎪</span><span class="mi-titre">La danse du destin</span><span class="mi-arrow">→</span></div><div class="mission-item"><span class="mi-role">🃏 🔮</span><span class="mi-titre">Le sosie vocal</span><span class="mi-arrow">→</span></div><div class="mission-item"><span class="mi-role">👻 🔦</span><span class="mi-titre">Photo de groupe instantanée</span><span class="mi-arrow">→</span></div><div class="mission-item"><span class="mi-role">Tous</span><span class="mi-titre">DÉFI D'ÉQUIPE : La pyramide</span><span class="mi-arrow">→</span></div></div>
+      <div class="missions-list" id="missions-list"></div>
       <div class="mission-panel" id="mission-panel">
         <div class="mp-titre" id="mp-titre">—</div>
         <div class="mp-desc" id="mp-desc">—</div>
@@ -194,7 +197,7 @@ canvas#roue{border-radius:50%;box-shadow:0 0 40px rgba(255,215,0,.15);}
     <div class="sec-title">Vote du public</div>
     <div class="card">
       <div style="margin-bottom:10px;">
-        <input id="performer-nom" type="text" placeholder="Nom du performeur…" style="width:100%;padding:10px 14px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;color:var(--texte);font-family:&#39;Nunito&#39;,sans-serif;font-size:.95rem;outline:none;">
+        <input id="performer-nom" type="text" placeholder="Nom du performeur…" style="width:100%;padding:10px 14px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;color:var(--texte);font-family:'Nunito',sans-serif;font-size:.95rem;outline:none;">
       </div>
       <button class="btn btn-or" id="btn-ouvrir-vote" onclick="ouvrirVote()">🗳️ Ouvrir le vote</button>
       <button class="btn btn-rouge" id="btn-fermer-vote" style="display:none" onclick="fermerVote()">Fermer le vote</button>
@@ -492,6 +495,5 @@ window.resetTout=async()=>{
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
 </script>
-
-
-</body></html>
+</body>
+</html>
