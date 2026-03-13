@@ -194,13 +194,13 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.2</div>
+<div id="version-badge">CLIENT v2.3</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
 ════════════════════════════════════════════ -->
 <div class="page on" id="pg-accueil">
-  <div class="lumiia-header"><img class="lumiia-logo-img" src="lumiia_Logo1.png" alt="LUMIIA"></div>
+  <div class="lumiia-header"><img class="lumiia-logo-img" src="Visage_Lumiia_horizontal_V2.png" alt="LUMIIA"></div>
   <div class="acc-emoji">🔮</div>
   <div class="acc-titre">Vendredi 13</div>
   <div class="acc-sub">Découvre ton destin ce soir</div>
@@ -228,7 +228,7 @@ html,body{
      PAGE CARTE IDENTITÉ
 ════════════════════════════════════════════ -->
 <div class="page" id="pg-carte">
-  <div class="lumiia-header"><img class="lumiia-logo-img" src="lumiia_Logo1.png" alt="LUMIIA"></div>
+  <div class="lumiia-header"><img class="lumiia-logo-img" src="Visage_Lumiia_horizontal_V2.png" alt="LUMIIA"></div>
   <div class="carte-wrap" id="carte-wrap">
     <div class="carte-top">✦ Ton profil ce soir ✦</div>
     <div class="carte-emoji" id="c-emoji">🔮</div>
@@ -250,7 +250,7 @@ html,body{
      PAGE ATTENTE
 ════════════════════════════════════════════ -->
 <div class="page" id="pg-attente">
-  <div class="lumiia-header"><img class="lumiia-logo-img" src="lumiia_Logo1.png" alt="LUMIIA"></div>
+  <div class="lumiia-header"><img class="lumiia-logo-img" src="Visage_Lumiia_horizontal_V2.png" alt="LUMIIA"></div>
   <div class="att-icon" id="att-icon">⏳</div>
   <div class="att-titre">Prêt à jouer !</div>
   <div class="att-role-badge" id="att-role-badge">—</div>
@@ -368,9 +368,9 @@ const QUESTIONS = [
   {
     q: "Une décision importante à prendre. Tu fais quoi ?",
     opts: [
-      { txt:"Je ferme les yeux et je ressens",   scores:{intuitif:3,stratege:0,chanceux:1,temeraire:0} },
-      { txt:"Je fais une liste pro/contra",        scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0} },
-      { txt:"Je m'en remets au sort",              scores:{intuitif:1,stratege:0,chanceux:3,temeraire:0} },
+      { txt:"Je fais l'autruche",                scores:{intuitif:3,stratege:0,chanceux:1,temeraire:0} },
+      { txt:"Je fais une liste pour / contre",     scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0} },
+      { txt:"Je choisis au hasard",                scores:{intuitif:1,stratege:0,chanceux:3,temeraire:0} },
       { txt:"Je fonce et on verra bien",           scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3} },
     ]
   },
@@ -378,7 +378,7 @@ const QUESTIONS = [
     q: "Tu trouves 20€ par terre. Tu fais quoi ?",
     opts: [
       { txt:"Je les garde, c'est le destin",       scores:{intuitif:1,stratege:0,chanceux:3,temeraire:0} },
-      { txt:"Je les investis dans quelque chose",  scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0} },
+      { txt:"Je les mets de côté",                 scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0} },
       { txt:"Je les offre à quelqu'un",            scores:{intuitif:3,stratege:0,chanceux:0,temeraire:1} },
       { txt:"Je mise tout sur une chose folle",    scores:{intuitif:0,stratege:0,chanceux:1,temeraire:3} },
     ]
@@ -420,12 +420,12 @@ const QUESTIONS = [
     ]
   },
   {
-    q: "Face à un défi impossible, tu…",
+    q: "Tu arrives à une soirée où tu ne connais presque personne.",
     opts: [
-      { txt:"Médite, l'intuition vient",            scores:{intuitif:3,stratege:0,chanceux:0,temeraire:0} },
-      { txt:"Décompose en étapes",                  scores:{intuitif:0,stratege:3,chanceux:0,temeraire:0} },
-      { txt:"Croise les doigts et y vas",           scores:{intuitif:0,stratege:0,chanceux:3,temeraire:1} },
-      { txt:"Fonce tête baissée",                   scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3} },
+      { txt:"Je trouve le chat et je reste avec lui 🐈", scores:{intuitif:3,stratege:0,chanceux:0,temeraire:0} },
+      { txt:"Je colle la première personne sympa",       scores:{intuitif:0,stratege:0,chanceux:3,temeraire:1} },
+      { txt:"Je prends un verre et j'observe",           scores:{intuitif:1,stratege:3,chanceux:0,temeraire:0} },
+      { txt:"Dans 10 minutes j'organise un jeu",         scores:{intuitif:0,stratege:0,chanceux:0,temeraire:3} },
     ]
   },
 ];
