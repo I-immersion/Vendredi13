@@ -387,7 +387,7 @@ body{ display:flex; flex-direction:column; }
   </div>
 
 </div>
-<div id="version-badge">ADMIN v2.21</div>
+<div id="version-badge">ADMIN v2.23</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -643,8 +643,16 @@ window.spinRoue = () => {
   const n=ROUE_ITEMS.length;
   const tours=5+Math.random()*5;
   const targetIdx=Math.floor(Math.random()*n);
-  const targetAngle=roueAngle+(tours*2*Math.PI)+targetIdx*(2*Math.PI/n);
+  const slice=2*Math.PI/n;
+  // Angle final : section targetIdx centrée sous le pointeur (angle=0)
+  // roueAngle_final = -(targetIdx + 0.5) * slice  (mod 2π, toujours négatif pour tourner dans le bon sens)
+  const targetFinal = -(targetIdx+0.5)*slice;
+  // On part de l'angle actuel, on fait N tours complets, on arrive à targetFinal
+  const fullTurns = Math.ceil(tours) * 2 * Math.PI;
+  // Normaliser pour que targetFinal soit "après" startAngle + fullTurns
   const startAngle=roueAngle;
+  const rawTarget = targetFinal - ((startAngle + fullTurns) % (2*Math.PI) - targetFinal);
+  const targetAngle = startAngle + fullTurns + (targetFinal - ((startAngle + fullTurns) % (2*Math.PI)));
   const duration=9000+Math.random()*6000;
   const startTime=performance.now();
   let lastTick=0;
@@ -660,15 +668,20 @@ window.spinRoue = () => {
     drawRoue();
     if(t<1){ requestAnimationFrame(animate); }
     else{
-      roueAngle=targetAngle%(2*Math.PI);
-      const idx=Math.floor(((2*Math.PI-roueAngle%(2*Math.PI/n)*n)/(2*Math.PI/n)+0.5+n)%n);
-      const finalIdx=targetIdx;
+      roueAngle=targetFinal; // angle exact, pas d'arrondi
+      const finalIdx=targetIdx; // garanti correct par construction
       drawRoue(finalIdx);
       roueSpin=false;
       SFX.roueDing();
       missionActuelle=MISSIONS[finalIdx];
       document.getElementById('mission-result-titre').textContent=missionActuelle.titre;
       document.getElementById('mission-result-desc').textContent=missionActuelle.desc;
+      const missionColor = COULEURS_ROUE[finalIdx % COULEURS_ROUE.length];
+      const mr = document.getElementById('mission-result');
+      mr.style.background = missionColor+'22'; // fond teinté 13%
+      mr.style.borderColor = missionColor+'99'; // bordure 60%
+      mr.style.boxShadow   = '0 0 30px '+missionColor+'33';
+      document.getElementById('mission-result-titre').style.color = missionColor;
       document.getElementById('mission-result').style.display='block';
       document.getElementById('btn-roue').style.display='none';
       // Afficher le bouton — lancement manuel
@@ -1059,6 +1072,12 @@ function buildMissionsList(){
       missionActuelle=m;
       document.getElementById('mission-result-titre').textContent=m.titre;
       document.getElementById('mission-result-desc').textContent=m.desc;
+      const mc2 = COULEURS_ROUE[Array.from(MISSIONS).indexOf(m) % COULEURS_ROUE.length];
+      const mr2 = document.getElementById('mission-result');
+      mr2.style.background = mc2+'22';
+      mr2.style.borderColor = mc2+'99';
+      mr2.style.boxShadow   = '0 0 30px '+mc2+'33';
+      document.getElementById('mission-result-titre').style.color = mc2;
       document.getElementById('mission-result').style.display='block';
       document.getElementById('btn-roue').style.display='none';
       document.getElementById('btn-lancer').style.display='block';
