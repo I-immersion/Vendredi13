@@ -377,7 +377,7 @@ body{ display:flex; flex-direction:column; }
 
 
 </div>
-<div id="version-badge">ADMIN v2.11</div>
+<div id="version-badge">ADMIN v2.12</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -578,7 +578,7 @@ window.spinRoue = () => {
   const targetIdx=Math.floor(Math.random()*n);
   const targetAngle=roueAngle+(tours*2*Math.PI)+targetIdx*(2*Math.PI/n);
   const startAngle=roueAngle;
-  const duration=3000+Math.random()*2000;
+  const duration=9000+Math.random()*6000;
   const startTime=performance.now();
   let lastTick=0;
 
@@ -757,6 +757,32 @@ window.fermerVote = () => {
   voteOuvert=false;
   set(ref(db,'v13/etat'),{ type:'vote', actif:false, ts:serverTimestamp() });
   document.getElementById('btn-vote-close').style.display='none';
+
+  // Calculer et appliquer les points au moment de la fermeture
+  if(performerActuel){
+    const votes=[];
+    // Lire les votes actuels depuis Firebase
+    get(ref(db,'v13/votes')).then(snap=>{
+      snap.forEach(c=>votes.push(c.val()));
+      if(!votes.length) return;
+      const totalEtoiles = votes.reduce((a,v)=>a+(v.noteEtoiles||0),0);
+      const totalPerso   = votes.reduce((a,v)=>a+(v.pointsPerso||0),0);
+      // Ajouter aux scores équipe
+      scoreEquipes[performerActuel.equipe] = (scoreEquipes[performerActuel.equipe]||0) + Math.round(totalEtoiles);
+      // Ajouter points perso au performer
+      const perfKey = performerActuel.key;
+      if(perfKey){
+        get(ref(db,`v13/joueurs/${perfKey}/pointsPerso`)).then(s=>{
+          const actuel = s.val() || 0;
+          set(ref(db,`v13/joueurs/${perfKey}/pointsPerso`), actuel + totalPerso);
+        });
+      }
+      buildScoresEquipes();
+      set(ref(db,'v13/scores'), scoreEquipes);
+      // Vider les votes pour le prochain tour
+      remove(ref(db,'v13/votes'));
+    });
+  }
 };
 
 /* ════════════════════════════════════════════════
@@ -978,15 +1004,7 @@ onValue(ref(db,'v13/votes'), snap=>{
   document.getElementById('vr-score').textContent=`${moyEtoiles}/5 ⭐`;
   document.getElementById('vr-detail').textContent=`Points équipe : +${Math.round(totalEtoiles)} pts · Points perso : +${totalPerso} pts`;
 
-  // Mise à jour scores équipes quand vote fermé
-  if(!voteOuvert && performerActuel && votes.length>0){
-    scoreEquipes[performerActuel.equipe]=(scoreEquipes[performerActuel.equipe]||0)+Math.round(totalEtoiles);
-    buildScoresEquipes();
-    // Écrire dans Firebase pour que les clients voient leur score
-    set(ref(db,'v13/scores'), scoreEquipes);
-    // Mettre à jour pts affichés
-    // pts-{key} affiche nb joueurs, pas les points — rebuilt par buildScoresEquipes
-  }
+  // Points calculés dans fermerVote()
 });
 
 /* ════════════════════════════════════════════════
