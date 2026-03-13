@@ -219,7 +219,7 @@ html,body{
 </head>
 <body>
 <div id="bg"></div>
-<div id="version-badge">CLIENT v2.9.1</div>
+<div id="version-badge">CLIENT v2.9.2</div>
 
 <!-- ════════════════════════════════════════════
      PAGE ACCUEIL
@@ -602,9 +602,20 @@ async function affecterEquipe(){
   roleKey = eligibles[Math.floor(Math.random()*eligibles.length)][0];
 
   // Enregistrement Firebase
-  const jRef = push(ref(db,'v13/joueurs'));
-  joueurKey = jRef.key;
-  await set(jRef,{prenom, equipe:equipeKey, role:roleKey, scores, pointsPerso:0, joinedAt:serverTimestamp(), voteEnvoye:false});
+  try {
+    const jRef = push(ref(db,'v13/joueurs'));
+    joueurKey = jRef.key;
+    await set(jRef,{prenom, equipe:equipeKey, role:roleKey, scores, pointsPerso:0, joinedAt:serverTimestamp(), voteEnvoye:false});
+    console.log('[LUMIIA] Joueur inscrit Firebase OK:', joueurKey);
+  } catch(err) {
+    console.error('[LUMIIA] ERREUR inscription Firebase:', err.message || err);
+    // Afficher une alerte visible sur le téléphone
+    const errDiv = document.createElement('div');
+    errDiv.style.cssText = 'position:fixed;top:10px;left:10px;right:10px;background:#f87171;color:#1a0a00;padding:12px;border-radius:10px;font-size:.85rem;z-index:9999;font-family:monospace;';
+    errDiv.textContent = 'Erreur Firebase: ' + (err.message || err) + ' — Montre cet écran à l'animateur';
+    document.body.appendChild(errDiv);
+    // On continue quand même pour ne pas bloquer le joueur
+  }
 
   // Sauvegarde session locale
   localStorage.setItem('v13_session', JSON.stringify({prenom, equipeKey, roleKey, joueurKey}));

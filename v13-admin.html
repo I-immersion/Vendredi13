@@ -377,7 +377,7 @@ body{ display:flex; flex-direction:column; }
 
 
 </div>
-<div id="version-badge">ADMIN v2.9.1</div>
+<div id="version-badge">ADMIN v2.9.2</div>
 
 <!-- ═══ PANEL SETTINGS ═══ -->
 <div id="settings-panel">
@@ -883,8 +883,7 @@ function buildScoresEquipes(){
       <span class="score-eq-emoji">${eq.emoji}</span>
       <span class="score-eq-nom" style="color:${eq.col}">${eq.nom}</span>
       <span class="score-eq-sousnom">${eq.sousnom}</span>
-      <span class="score-eq-nb" id="nb-${key}" style="font-size:.7rem;color:${eq.col};opacity:.7;">${nbJoueurs}j</span>
-      <span class="score-eq-pts" id="pts-${key}">${scoreEquipes[key]||0}</span>
+      <span class="score-eq-pts" id="pts-${key}">${nbJoueurs}</span>
     `;
     container.appendChild(div);
   });
@@ -965,7 +964,7 @@ onValue(ref(db,'v13/votes'), snap=>{
     // Écrire dans Firebase pour que les clients voient leur score
     set(ref(db,'v13/scores'), scoreEquipes);
     // Mettre à jour pts affichés
-    document.getElementById('pts-'+performerActuel.equipe).textContent = scoreEquipes[performerActuel.equipe];
+    // pts-{key} affiche nb joueurs, pas les points — rebuilt par buildScoresEquipes
   }
 });
 
